@@ -23,7 +23,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: auto; }
+    html { scroll-behavior: auto; overscroll-behavior: none; }
 
     body {
       font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
@@ -579,7 +579,8 @@
             displayY      = target;
             isSnapping    = false;
             snapActive    = false;
-            window.scrollTo(0, target);
+            try { window.scrollTo({ top: target, behavior: 'instant' }); }
+            catch(e) { window.scrollTo(0, target); }
             infoBar.classList.remove('scrolling');
           }
         }
@@ -648,11 +649,9 @@
         }
       });
 
-      /* ── Scroll geometry ──
-         Usiamo offsetHeight (intero) per pillH così i target di snap
-         sono interi esatti — evita drift float su mobile. */
-      let pillH      = allPills[0].offsetHeight;
-      let singleSetH = pillH * NUM;
+      /* ── Scroll geometry ── */
+      let singleSetH = track.scrollHeight / 3;
+      let pillH      = singleSetH / NUM;
 
       document.body.style.height = singleSetH * 40 + 'px';
       /* suppressUntil dichiarato prima del scrollTo iniziale
@@ -767,7 +766,8 @@
         } else {
           idx = Math.floor(projected / pillH + 0.02); // avanti (su)
         }
-        const target = idx * pillH;
+        /* Arrotonda al pixel intero: evita drift subpixel su mobile */
+        const target = Math.round(idx * pillH);
         if (Math.abs(target - displayY) < 1) return;
 
         isSnapping = true;
@@ -777,6 +777,12 @@
         const dist     = target - start;
         const duration = 520;
         let t0 = null;
+
+        /* scrollTo istantaneo: ferma il momentum iOS/Android */
+        const snapScrollTo = (y) => {
+          try { window.scrollTo({ top: y, behavior: 'instant' }); }
+          catch(e) { window.scrollTo(0, y); }
+        };
 
         function step(t) {
           if (!isSnapping) return;
@@ -789,10 +795,9 @@
             displayY      = target;
             isSnapping    = false;
             snapActive    = false;
-            suppressUntil = performance.now() + 200;
-            window.scrollTo(0, target);
+            suppressUntil = performance.now() + 600;
+            snapScrollTo(target);
             if (isHovered) applyHover();
-            /* Snap completato: rimostro le info */
             infoBar.classList.remove('scrolling');
           }
         }
@@ -859,8 +864,8 @@
         const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
 
         /* Ricalcola geometria con le nuove dimensioni font (vw) */
-        pillH      = allPills[0].offsetHeight;
-        singleSetH = pillH * NUM;
+        singleSetH = track.scrollHeight / 3;
+        pillH      = singleSetH / NUM;
         document.body.style.height = singleSetH * 40 + 'px';
 
         /* Riposiziona allo stesso format, centro del loop infinito */
