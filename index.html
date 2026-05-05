@@ -797,7 +797,10 @@
 
         if (!snapActive) displayY += (window.scrollY - displayY) * 0.11;
 
-        const offset = -(displayY % singleSetH) + xAdj;
+        /* Offset: posiziona sempre Set B (centrale) al frame center.
+           Set A è sempre sopra, Set C sempre sotto → niente bordo visibile
+           dello scroll anche in expanded mode. */
+        const offset = -(displayY % singleSetH) - singleSetH + xAdj;
         track.style.transform = 'translateY(' + offset + 'px)';
 
         /* Format attivo: calcolato direttamente da displayY per evitare
@@ -839,6 +842,10 @@
       requestAnimationFrame(loop);
 
       window.addEventListener('resize', () => {
+        /* Cancella snap in corso per evitare che sovrascriva displayY */
+        isSnapping = false;
+        snapActive = false;
+
         /* Salva quale format è attivo prima di ricalcolare */
         const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
 
