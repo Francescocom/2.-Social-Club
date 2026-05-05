@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open \"/Users/francescobellagamba/Desktop/mio-sito/2. Social Club/index.html\")",
+      "WebFetch(domain:www.spaceandagency.com)",
+      "Bash(curl -s \"https://www.spaceandagency.com/\")",
+      "Bash(curl -s \"https://www.spaceandagency.com/wp-content/themes/spaceandagency/scripts/general.js\")",
+      "Bash(curl -s \"https://www.spaceandagency.com/wp-content/themes/spaceandagency/scripts/blocks.js\")",
+      "Bash(curl -s \"https://www.spaceandagency.com/wp-content/themes/spaceandagency/styles/blocks.css\")",
+      "Bash(curl -s \"https://www.spaceandagency.com/wp-content/themes/spaceandagency/style.css\")",
+      "Bash(cp \"/Users/francescobellagamba/Library/Fonts/Helvetica Now Display Black.otf\" \"/Users/francescobellagamba/Desktop/mio-sito/2. Social Club/fonts/HelveticaNowDisplay-Black.otf\")",
+      "Bash(cp \"/Users/francescobellagamba/Library/Fonts/Helvetica Now Display Bold.otf\" \"/Users/francescobellagamba/Desktop/mio-sito/2. Social Club/fonts/HelveticaNowDisplay-Bold.otf\")",
+      "Bash(cp \"/Users/francescobellagamba/Library/Fonts/Helvetica Now Display.otf\" \"/Users/francescobellagamba/Desktop/mio-sito/2. Social Club/fonts/HelveticaNowDisplay-Regular.otf\")",
+      "Bash(python3 -c \"import PIL; print\\('Pillow OK'\\)\")",
+      "Bash(convert --version)",
+      "Bash(pip3 install *)",
+      "Bash(python3 -c \"import PIL; print\\('OK'\\)\")",
+      "Bash(python3 -)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 /Users/francescobellagamba/Desktop/EXAMPLE/process_gradient.py)"
+    ]
+  }
+}

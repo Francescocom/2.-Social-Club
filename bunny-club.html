@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bunny Club — Social Club</title>
+
+  <style>
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal; font-display: block;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    /* ── Tipo base ── */
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 270px; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-frame {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      border: 12px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.15s ease;
+      /* top & height via JS */
+    }
+    .hero-frame.fade-out { opacity: 0; pointer-events: none; }
+
+    .hero-title {
+      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-weight: 400;
+      line-height: 30pt;
+      white-space: nowrap;
+      color: #fff;
+    }
+
+    /* ── Nav tutti dentro .hero, scrollano via con il video ── */
+
+    .hero-topleft,
+    .hero-topright,
+    .hero-bottomleft,
+    .hero-bottomright {
+      position: absolute;
+      z-index: 60;
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: var(--ls);
+      color: #fff;
+      white-space: pre;
+      text-decoration: none;
+    }
+    .hero-topleft    { top: var(--pad);    left: var(--pad); }
+    .hero-topright   { top: var(--pad);    right: var(--pad); }
+    .hero-bottomleft { bottom: var(--pad); left: var(--pad); }
+    .hero-bottomright{ bottom: var(--pad); right: var(--pad); }
+
+    /* Social Club top-left hover */
+    .sc-nav { cursor: pointer; }
+    .sc-nav .sc-default { color: #fff; text-decoration: none; }
+    .sc-nav .sc-hover   { display: none; }
+    .sc-nav:hover .sc-default { display: none; }
+    .sc-nav:hover .sc-hover   { display: inline; }
+    .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
+
+    /* Format nav top-right hover */
+    .fn-nav { cursor: pointer; text-align: right; }
+    .fn-nav .fn-hover { display: none; }
+    .fn-nav:hover .fn-default { display: none; }
+    .fn-nav:hover .fn-hover   { display: inline; }
+    /* Nasconde Social Club quando il format nav è in hover */
+    .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
+
+    /* ── Contenuto ── */
+    :root { --gap: 80px; }
+    .content {
+      padding: var(--gap) var(--side) 0;
+    }
+
+    /* Bio */
+    .description {
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 30pt;
+      letter-spacing: var(--ls);
+      text-align: left;
+      margin-top: 60pt;
+      padding-bottom: 56px;
+    }
+
+    /* Elenco eventi */
+    .event-list { padding-bottom: 0; }
+
+    .event-row {
+      display: grid;
+      grid-template-columns: 24fr 35fr 20fr 6fr 12fr;
+      align-items: center;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0s;
+    }
+    .event-row:hover { background: #000; }
+    .event-row:hover span { color: #fff; }
+    .event-row:has(.col-status:hover) { background: #87f7a6; }
+    .event-row:has(.col-status:hover) span { color: #000; }
+
+    .event-row span {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .event-row span:first-child { font-feature-settings: "tnum" 1, "onum" 1; letter-spacing: 0; }
+    .date-dot { margin: 0 -0.1em; }
+    .col-status { text-align: right; }
+    .event-row.extra { display: none; }
+
+    /* Cassetto foto */
+    .event-drawer {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .event-drawer.open { max-height: calc(17vh + 35pt); }
+    .drawer-strip-wrap { overflow: hidden; }
+    .drawer-strip {
+      display: flex;
+      gap: 4px;
+      will-change: transform;
+      transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .drawer-card {
+      flex: 0 0 calc((100vw - 560px) / 6);
+      display: flex;
+      flex-direction: column;
+    }
+    .drawer-card img {
+      width: 100%;
+      height: 17vh;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+    }
+    .drawer-card-num {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      color: #000;
+    }
+
+    /* CTAs */
+    .cta-row {
+      display: flex;
+      gap: 80px;
+      padding: 24px 0 calc(var(--gap) + 60pt);
+    }
+    .cta-row a {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ── Griglia foto ── */
+    .photo-grid-wrap { margin: 0 calc(-1 * var(--side)); }
+    .photo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .photo-group {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 25vw);
+      gap: 4px;
+    }
+    .grid-photo-card {
+      display: flex;
+      flex-direction: column;
+    }
+    .grid-photo-card img {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+    }
+    .grid-photo-num {
+      flex-shrink: 0;
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      color: #000;
+    }
+    /* Numeri sui card al bordo sinistro pagina */
+    .group-a .grid-photo-card:nth-child(1) .grid-photo-num,
+    .group-b .grid-photo-card:nth-child(1) .grid-photo-num,
+    .group-c .grid-photo-card:nth-child(1) .grid-photo-num { padding-left: 8px; }
+
+    /* Gruppo A: grande a sinistra */
+    .group-a .grid-photo-card:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
+    .group-a .grid-photo-card:nth-child(2) { grid-column: 3; grid-row: 1; }
+    .group-a .grid-photo-card:nth-child(3) { grid-column: 4; grid-row: 1; }
+    /* Gruppo B: grande a destra */
+    .group-b .grid-photo-card:nth-child(1) { grid-column: 1; grid-row: 1; }
+    .group-b .grid-photo-card:nth-child(2) { grid-column: 2; grid-row: 1; }
+    .group-b .grid-photo-card:nth-child(3) { grid-column: 3 / 5; grid-row: 1 / 3; }
+    /* Gruppo C: grande al centro */
+    .group-c .grid-photo-card:nth-child(1) { grid-column: 1; grid-row: 1; }
+    .group-c .grid-photo-card:nth-child(2) { grid-column: 2 / 4; grid-row: 1 / 3; }
+    .group-c .grid-photo-card:nth-child(3) { grid-column: 4; grid-row: 1; }
+
+    /* ── Download button ── */
+    .photo-download-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 25pt;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 30pt;
+      color: #000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 320;
+      cursor: pointer;
+    }
+    .photo-download-btn.visible { opacity: 1; pointer-events: auto; }
+
+    /* ── Overlay foto ── */
+    .photo-overlay {
+      position: fixed;
+      inset: 0;
+      background: transparent;
+      z-index: 300;
+      display: none;
+      cursor: none;
+    }
+    .photo-overlay.active { display: block; }
+    .photo-overlay * { cursor: none; }
+
+    .overlay-main-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100vh;
+      width: auto;
+      max-width: 100vw;
+      object-fit: contain;
+      z-index: 2;
+      pointer-events: auto;
+    }
+
+    /* Cursore testuale che segue il mouse */
+    .overlay-cursor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 320;
+      font-size: 25pt;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      color: #000;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(-50%);
+      display: none;
+    }
+    .overlay-cursor.visible { opacity: 1; display: block; }
+
+    /* ── Footer ── */
+    .page-footer {
+      height: 200px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 var(--pad) 20px;
+      text-align: center;
+      gap: 0;
+    }
+    .page-footer p {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      color: #000;
+      white-space: pre;
+    }
+    .page-footer a {
+      color: #000;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero con video -->
+  <div class="hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="1. Bad Bunny/1. Video/-VISUAL 4 - B.BUNNY.mp4" type="video/mp4">
+    </video>
+    <div class="hero-frame" id="heroFrame">
+      <span class="hero-title">Bunny Club</span>
+    </div>
+
+    <!-- Tutto il nav scorre via con il video -->
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      About us      IT      ©2026</span></div>
+    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover">Brat Party      After Hours      Only Rihanna      Lana Del Rave      BimbiFest</span></div>
+    <div class="hero-bottomleft">Tickets Available      On Dice</div>
+    <a class="hero-bottomright" href="archive.html">Archive</a>
+  </div>
+
+  <!-- Contenuto -->
+  <div class="content" id="content">
+
+    <p class="description">Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l'artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.</p>
+
+    <div class="event-list" id="eventList">
+      <div class="event-row"><span>02.05.2026</span><span>Il Muretto</span><span>Jesolo</span><span>VE</span><span class="col-status">Tickets</span></div>
+      <div class="event-row"><span>30.04.2026</span><span>Riva Club</span><span>Napoli</span><span>NA</span><span class="col-status">Sold-out</span></div>
+      <div class="event-row"><span>30.04.2026</span><span>NGR Disco</span><span>Cesenatico</span><span>FC</span><span class="col-status">Sold-out</span></div>
+      <div class="event-row"><span>25.04.2026</span><span>Magazzini Generali</span><span>Milano</span><span>MI</span><span class="col-status">Sold-out</span></div>
+      <div class="event-row"><span>25.04.2026</span><span>Madame Butterfly</span><span>Ferrara</span><span>FE</span><span class="col-status">Tickets</span></div>
+      <div class="event-row"><span>25.04.2026</span><span>Hall</span><span>Padova</span><span>PD</span><span class="col-status">Tickets</span></div>
+      <div class="event-row"><span>25.04.2026</span><span>Boma Club</span><span>Bologna</span><span>BO</span><span class="col-status">Tickets</span></div>
+      <div class="event-row"><span>24.04.2026</span><span>Officine Cantelmo</span><span>Lecce</span><span>LE</span><span class="col-status">Tickets</span></div>
+      <div class="event-row"><span>11.04.2026</span><span>Boma Club</span><span>Bologna</span><span>BO</span><span class="col-status">Archive</span></div>
+      <div class="event-row"><span>11.04.2026</span><span>Démodé</span><span>Bari</span><span>BA</span><span class="col-status">Archive</span></div>
+      <!-- extra: visibili dopo "Show more" -->
+      <div class="event-row extra"><span>05.04.2026</span><span>Centralino Club</span><span>Torino</span><span>TO</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>04.04.2026</span><span>Bunker</span><span>Torino</span><span>TO</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>04.04.2026</span><span>Zero Club</span><span>Bergamo</span><span>BG</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>03.04.2026</span><span>Magazzino 27</span><span>Trieste</span><span>TS</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>28.03.2026</span><span>Magazzini Generali</span><span>Milano</span><span>MI</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>28.03.2026</span><span>Hacienda</span><span>Roma</span><span>RM</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>21.03.2026</span><span>New Age</span><span>Treviso</span><span>TV</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>21.03.2026</span><span>Mamamia</span><span>Senigallia</span><span>AN</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>14.03.2026</span><span>Boma Club</span><span>Bologna</span><span>BO</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>13.03.2026</span><span>Five</span><span>Udine</span><span>UD</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>13.03.2026</span><span>Centralino</span><span>Torino</span><span>TO</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>07.03.2026</span><span>Campus Industry</span><span>Parma</span><span>PR</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>07.03.2026</span><span>Afterlife</span><span>Perugia</span><span>PG</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>28.02.2026</span><span>Magazzini Generali</span><span>Milano</span><span>MI</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>28.02.2026</span><span>Hall</span><span>Padova</span><span>PD</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>07.02.2026</span><span>Magazzino 27</span><span>Trieste</span><span>TS</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>31.01.2026</span><span>Base</span><span>Milano</span><span>MI</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>24.01.2026</span><span>Hacienda</span><span>Roma</span><span>RM</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>26.12.2025</span><span>Centralino Club</span><span>Torino</span><span>TO</span><span class="col-status">Archive</span></div>
+      <div class="event-row extra"><span>13.12.2025</span><span>Hacienda</span><span>Roma</span><span>RM</span><span class="col-status">Archive</span></div>
+    </div>
+
+    <div class="cta-row">
+      <a id="showMoreBtn">Show more of Bunny Club</a>
+      <a id="showLessBtn" style="display:none">Show less</a>
+      <a href="#" target="_blank">Open on Dice</a>
+    </div>
+
+    <!-- Griglia foto -->
+    <div class="photo-grid-wrap">
+    <div class="photo-grid" id="photoGrid">
+
+      <div class="photo-group group-a">
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""><span class="grid-photo-num">1—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""><span class="grid-photo-num">2—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""><span class="grid-photo-num">3—9</span></div>
+      </div>
+
+      <div class="photo-group group-b">
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""><span class="grid-photo-num">4—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""><span class="grid-photo-num">5—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""><span class="grid-photo-num">6—9</span></div>
+      </div>
+
+      <div class="photo-group group-c">
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""><span class="grid-photo-num">7—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""><span class="grid-photo-num">8—9</span></div>
+        <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""><span class="grid-photo-num">9—9</span></div>
+      </div>
+
+    </div>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <p>Social Club Srls.      Via Viale Strada 6, 20123 Milano (MI), Italy</p>
+    <p>Instagram      Facebook      Mail us      Privacy Policies      Cookies Policy      Legal Notes</p>
+  </div>
+
+  <!-- Download button -->
+  <div class="photo-download-btn" id="photoDownloadBtn">Download</div>
+
+  <!-- Overlay foto -->
+  <div class="photo-overlay" id="photoOverlay">
+    <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
+  </div>
+  <div class="overlay-cursor" id="overlayCursor"></div>
+
+  <script>
+    const heroFrame = document.getElementById('heroFrame');
+
+    function setFrame() {
+      const fs     = parseFloat(window.getComputedStyle(heroFrame.querySelector('.hero-title')).fontSize);
+      const frameH = fs * 1.5 - 100;
+      const frameTop = (window.innerHeight - frameH) / 2;
+      heroFrame.style.height = frameH + 'px';
+      heroFrame.style.top    = frameTop + 'px';
+    }
+    document.fonts.ready.then(() => {
+      setFrame();
+      setTimeout(() => heroFrame.classList.add('fade-out'), 1200);
+    });
+    window.addEventListener('resize', setFrame);
+
+    /* ── Overlay foto ── */
+    const photoOverlay     = document.getElementById('photoOverlay');
+    const overlayMainImg   = document.getElementById('overlayMainImg');
+    const overlayCursor    = document.getElementById('overlayCursor');
+    const photoDownloadBtn = document.getElementById('photoDownloadBtn');
+
+    let overlayImages   = [];
+    let overlayIdx      = 0;
+    let overlayOnChange = null; // callback(idx) chiamato ad ogni cambio foto
+
+    function updateOverlay() {
+      overlayMainImg.src = overlayImages[overlayIdx];
+      overlayCursor.textContent = `${overlayIdx + 1}\u2014${overlayImages.length}`;
+      if (overlayOnChange) overlayOnChange(overlayIdx);
+    }
+
+    function openOverlay(images, startIdx, onChangeFn) {
+      overlayImages   = images;
+      overlayIdx      = startIdx;
+      overlayOnChange = onChangeFn || null;
+      updateOverlay();
+      photoOverlay.classList.add('active');
+      photoDownloadBtn.classList.add('visible');
+    }
+
+    function closeOverlay() {
+      photoOverlay.classList.remove('active');
+      overlayCursor.classList.remove('visible');
+      photoDownloadBtn.classList.remove('visible');
+    }
+
+    /* Cursore testuale segue il mouse; bianco sopra la foto, nero sul fondo */
+    photoOverlay.addEventListener('mousemove', (e) => {
+      overlayCursor.style.left  = e.clientX + 'px';
+      overlayCursor.style.top   = e.clientY + 'px';
+      overlayCursor.style.color = (e.target === overlayMainImg) ? '#fff' : '#000';
+      overlayCursor.classList.add('visible');
+    });
+    photoOverlay.addEventListener('mouseleave', () => {
+      overlayCursor.classList.remove('visible');
+    });
+
+    overlayMainImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      overlayIdx = (overlayIdx + 1) % overlayImages.length;
+      updateOverlay();
+    });
+
+    photoOverlay.addEventListener('click', closeOverlay);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeOverlay();
+    });
+
+    photoDownloadBtn.addEventListener('click', () => {
+      const src = overlayImages[overlayIdx];
+      const a = document.createElement('a');
+      a.href = src; a.download = src.split('/').pop(); a.click();
+    });
+
+    /* ── Griglia foto ── */
+    const photoGrid = document.getElementById('photoGrid');
+    const allGalleryImages = Array.from(photoGrid.querySelectorAll('img')).map(i => i.src);
+
+    photoGrid.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'IMG') return;
+      const all = Array.from(photoGrid.querySelectorAll('img'));
+      openOverlay(allGalleryImages, all.indexOf(e.target), (i) => {
+        const imgs = Array.from(photoGrid.querySelectorAll('img'));
+        if (imgs[i]) imgs[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    /* Avvicina i punti nelle date */
+    document.querySelectorAll('.event-row span:first-child').forEach(span => {
+      span.innerHTML = span.textContent.replace(/\./g, '<span class="date-dot">.</span>');
+    });
+
+    /* ── Show more ── */
+    const showMoreBtn  = document.getElementById('showMoreBtn');
+    const showLessBtn  = document.getElementById('showLessBtn');
+    const extras       = Array.from(document.querySelectorAll('.event-row.extra'));
+    let   visibleCount = 0;
+
+    showMoreBtn.addEventListener('click', () => {
+      const next = Math.min(visibleCount + 5, extras.length);
+      for (let i = visibleCount; i < next; i++) extras[i].style.display = 'grid';
+      visibleCount = next;
+      showLessBtn.style.display = 'inline';
+      if (visibleCount >= extras.length) showMoreBtn.style.display = 'none';
+    });
+
+    showLessBtn.addEventListener('click', () => {
+      extras.forEach(r => r.style.display = 'none');
+      visibleCount = 0;
+      showLessBtn.style.display = 'none';
+      showMoreBtn.style.display = 'inline';
+    });
+
+    /* ── Cassetto foto per ogni riga evento ── */
+    const eventList  = document.getElementById('eventList');
+    let activeDrawer = null;
+    let activeRow    = null;
+
+    function createDrawer() {
+      const drawer = document.createElement('div');
+      drawer.className = 'event-drawer';
+      const total   = allGalleryImages.length;
+      const cardHtml = allGalleryImages.map((src, i) =>
+        `<div class="drawer-card"><img src="${src}" alt=""><span class="drawer-card-num">${i + 1}—${total}</span></div>`
+      ).join('');
+      drawer.innerHTML = `<div class="drawer-strip-wrap"><div class="drawer-strip">${cardHtml}</div></div>`;
+
+      let dIdx = 0, dLock = false;
+      const dStrip = drawer.querySelector('.drawer-strip');
+      const dWrap  = drawer.querySelector('.drawer-strip-wrap');
+
+      function getDrawerOffset(idx) {
+        const colW = (dWrap.offsetWidth - 5 * 4) / 6;
+        return idx * (colW + 4);
+      }
+      function snapDrawerTo(idx) {
+        dIdx = Math.max(0, Math.min(idx, total - 1));
+        dStrip.style.transform = `translateX(-${getDrawerOffset(dIdx)}px)`;
+        dLock = true; setTimeout(() => dLock = false, 260);
+      }
+      dWrap.addEventListener('wheel', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        if (dLock) return;
+        snapDrawerTo(dIdx + ((e.deltaY > 0 || e.deltaX > 0) ? 1 : -1));
+      }, { passive: false });
+
+      dStrip.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'IMG') return;
+        const cards = Array.from(dStrip.querySelectorAll('.drawer-card'));
+        const idx   = cards.indexOf(e.target.closest('.drawer-card'));
+        openOverlay(allGalleryImages, idx, (i) => snapDrawerTo(i));
+      });
+
+      return drawer;
+    }
+
+    function closeDrawer() {
+      if (!activeDrawer) return;
+      activeDrawer.classList.remove('open');
+      const d = activeDrawer;
+      setTimeout(() => d.remove(), 400);
+      activeDrawer = null;
+      activeRow    = null;
+    }
+
+    eventList.addEventListener('click', (e) => {
+      const row = e.target.closest('.event-row');
+      if (!row) return;
+      if (activeRow === row) { closeDrawer(); return; }
+      closeDrawer();
+      const drawer = createDrawer();
+      row.after(drawer);
+      requestAnimationFrame(() => requestAnimationFrame(() => drawer.classList.add('open')));
+      activeDrawer = drawer;
+      activeRow    = row;
+    });
+  </script>
+
+</body>
+</html>

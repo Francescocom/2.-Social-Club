@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Club</title>
+
+  <style>
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal; font-display: block;
+    }
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Bold.otf') format('opentype');
+      font-weight: 700; font-style: normal; font-display: block;
+    }
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Black.otf') format('opentype');
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+
+    body {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      background: #000;
+    }
+
+    /* ── Header ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 26px 44px;
+    }
+    .logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ── Scene ── */
+    .scene {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* ── Background images ── */
+    .bg-img {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      z-index: 0;
+    }
+    .bg-img.visible { opacity: 1; }
+
+    /* ── Riquadro ── */
+    .frame {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      /* top e height impostati via JS — nessun transform così background-attachment:fixed funziona */
+      overflow: hidden;
+      border: 12px solid #fff;
+      z-index: 10;
+      background: transparent;
+    }
+    /* Hover gestito via JS con classe .hovered */
+    .frame.hovered {
+      background: #fff;
+      border-color: transparent;
+    }
+
+    /* Modalità espansa: mostra il loop anche fuori dal riquadro */
+    .frame.expanded { overflow: visible; }
+
+    /* ── Track ── */
+    .track {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+    }
+
+    /* ── Pill ── */
+    .pill {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+      user-select: none;
+      overflow: visible;
+      flex-shrink: 0;
+    }
+    .pill span {
+      display: block;
+      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-weight: 400;
+      line-height: 1.0;
+      white-space: nowrap;
+      color: #fff;
+    }
+    /* Hover: solo la pill centrata nel rettangolo diventa forata.
+       Le pill fuori dal rettangolo (expanded) restano sempre bianche. */
+    /* Testo forato: image allineata al viewport tramite background-attachment:fixed.
+       Funziona perché il frame non ha più transform come antenato. */
+    /* Testo forato: background-size e background-position aggiornati via JS ogni frame
+       per compensare il movimento del track — immagine appare ferma come il bg dietro */
+    .frame.hovered .pill.in-frame span {
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-image: var(--frame-bg-img, none);
+      /* size e position settati inline via JS */
+    }
+
+    /* ── Bottone overlay ── */
+    .overlay-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      /* width e height = frameH, settati via JS */
+      border-radius: 50%;
+      border: 12px solid #fff;
+      background: transparent;
+      cursor: pointer;
+      z-index: 70;
+      padding: 0;
+    }
+    .overlay-btn.active { background: #fff; }
+
+    /* ── Label "Social Club" al hover del bottone ── */
+    .frame-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-weight: 400;
+      line-height: 1.0;
+      white-space: nowrap;
+      color: #fff;
+      background: transparent;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 5;
+    }
+    .frame-label.visible { opacity: 1; }
+
+    /* ── Info bar in basso ── */
+    .info-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      z-index: 60;
+      cursor: default;
+      transition: opacity 0.25s;
+    }
+    .info-bar.scrolling { opacity: 0; pointer-events: none; }
+
+    /* ── Archive link bottom-right ── */
+    .archive-link {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 25pt;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      color: #fff;
+      text-decoration: none;
+      z-index: 100;
+    }
+
+    /* ── Idle tagline (top center, visibile solo in idle hover) ── */
+    .idle-tagline {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 25pt;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      white-space: pre;
+      color: #000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 65;
+    }
+    .idle-tagline.visible { opacity: 1; }
+
+    /* ── Social Club label top-left ── */
+    .bottom-right {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 60;
+      cursor: pointer;
+    }
+    .bottom-right span {
+      font-size: 25pt;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      color: #fff;
+      white-space: pre;
+    }
+    .br-hover { display: none; }
+    .bottom-right:hover .br-default { display: none; }
+    .bottom-right:hover .br-hover   { display: inline; }
+    .info-default,
+    .info-hover {
+      white-space: pre;
+      font-size: 25pt;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      color: #fff;
+    }
+    .info-hover { display: none; }
+    .info-bar:hover .info-default { display: none; }
+    .info-bar:hover .info-hover   { display: block; }
+    .info-bar.hidden { opacity: 0; pointer-events: none; }
+
+    /* ── Idle mode ── */
+    .idle-screen {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .idle-screen.active { opacity: 1; pointer-events: auto; }
+
+    /* Frame in idle: traccia nera, sfondo trasparente */
+    .frame.idle {
+      background: transparent !important;
+      border-color: #000 !important;
+    }
+
+    /* Label idle dentro il frame */
+    .idle-label {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 7;
+      pointer-events: none;
+    }
+    .idle-label.active { display: flex; pointer-events: auto; cursor: pointer; }
+    .idle-default, .idle-spin {
+      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-weight: 400;
+      line-height: 1.0;
+      white-space: nowrap;
+    }
+    .idle-default { color: #000; }
+    .idle-spin    { color: #fff; display: none; }
+    /* .interactive aggiunto via JS solo dopo il primo mouse move in idle */
+    .frame.idle.interactive:hover { background: #000 !important; }
+    .frame.idle.interactive:hover .idle-default { display: none; }
+    .frame.idle.interactive:hover .idle-spin    { display: block; }
+
+    /* ── Stats bar (visibile solo in idle hover) ── */
+    .stats-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 25pt;
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      white-space: pre;
+      color: #000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 65;
+    }
+    .stats-bar.visible { opacity: 1; }
+
+    /* Nascondi UI durante idle */
+    body.idle-mode .info-bar,
+    body.idle-mode .bottom-right,
+    body.idle-mode .overlay-btn,
+    body.idle-mode .archive-link,
+    body.idle-mode .top-left-block { opacity: 0; pointer-events: none; }
+
+    /* Loader iniziale: colori invertiti (fondo nero) */
+    body.initial-loader .idle-screen          { background: #000; }
+    body.initial-loader .frame.idle           { border-color: #fff !important; }
+    body.initial-loader .idle-default         { color: #fff; }
+    body.initial-loader .idle-spin            { color: #000; }
+    body.initial-loader .frame.idle.interactive:hover { background: #fff !important; }
+    body.initial-loader .idle-tagline         { color: #fff; }
+    body.initial-loader .stats-bar            { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="scene">
+
+    <div class="bg-img" style="background-image:url('Image 2/Bunny.png')"></div>
+    <div class="bg-img" style="background-image:url('Image 2/Brat.png')"></div>
+    <div class="bg-img" style="background-image:url('Image/AFTER HOUR.jpg')"></div>
+    <div class="bg-img" style="background-image:url('Image 2/rihanna.png')"></div>
+    <div class="bg-img" style="background-image:url('Image/IMAGE_LANA DEL RAVE1.jpg')"></div>
+    <div class="bg-img" style="background-image:url('Image/BIMBI.jpg')"></div>
+
+    <!-- Idle overlay: dentro scene così è nello stesso stacking context del frame -->
+    <div class="idle-screen" id="idleScreen"></div>
+
+    <div class="frame" id="frame">
+      <div class="frame-label" id="frameLabel">Discover All</div>
+      <div class="idle-label" id="idleLabel">
+        <span class="idle-default">Social Club</span>
+        <span class="idle-spin">Enter</span>
+      </div>
+      <div class="track" id="track">
+
+        <!-- Set A -->
+        <div class="pill" data-img="0"><span>Bunny Club</span></div>
+        <div class="pill" data-img="1"><span>Brat Party</span></div>
+        <div class="pill" data-img="2"><span>After Hours</span></div>
+        <div class="pill" data-img="3"><span>Only Rihanna</span></div>
+        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
+        <div class="pill" data-img="5"><span>BimbiFest</span></div>
+
+        <!-- Set B -->
+        <div class="pill" data-img="0"><span>Bunny Club</span></div>
+        <div class="pill" data-img="1"><span>Brat Party</span></div>
+        <div class="pill" data-img="2"><span>After Hours</span></div>
+        <div class="pill" data-img="3"><span>Only Rihanna</span></div>
+        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
+        <div class="pill" data-img="5"><span>BimbiFest</span></div>
+
+        <!-- Set C -->
+        <div class="pill" data-img="0"><span>Bunny Club</span></div>
+        <div class="pill" data-img="1"><span>Brat Party</span></div>
+        <div class="pill" data-img="2"><span>After Hours</span></div>
+        <div class="pill" data-img="3"><span>Only Rihanna</span></div>
+        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
+        <div class="pill" data-img="5"><span>BimbiFest</span></div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <a class="archive-link" href="archive.html">Archive</a>
+
+  <!-- Tagline idle: visibile in alto centrato solo durante idle hover -->
+  <div class="idle-tagline" id="idleTagline">Different Sounds, One Club.</div>
+
+  <!-- Label bottom-right -->
+  <div class="bottom-right">
+    <span class="br-default">Social Club</span>
+    <span class="br-hover">About us      IT      ©2026</span>
+  </div>
+
+  <!-- Stats bar: visibile in idle hover -->
+  <div class="stats-bar" id="statsBar"><span id="statSerate">0</span> Events      <span id="statFormat">0</span> Original party      <span id="statCitta">0</span> City reached</div>
+
+  <!-- Info bar in basso -->
+  <div class="info-bar" id="infoBar">
+    <div class="info-default">Tickets available      On Dice</div>
+    <div class="info-hover">Next Events      <span id="infoDate">—</span>      <span id="infoLocation">—</span></div>
+  </div>
+
+  <!-- Bottone: cerchio con stessa traccia del rettangolo, diventa bianco se premuto -->
+  <button class="overlay-btn" id="overlayBtn" aria-label="Mostra tutti i format"></button>
+
+  <script>
+    const track       = document.getElementById('track');
+    const frame       = document.getElementById('frame');
+    const overlayBtn  = document.getElementById('overlayBtn');
+    const frameLabel  = document.getElementById('frameLabel');
+    const infoBar     = document.getElementById('infoBar');
+    const infoDate    = document.getElementById('infoDate');
+    const infoLocation= document.getElementById('infoLocation');
+    const idleScreen  = document.getElementById('idleScreen');
+    const idleLabel   = document.getElementById('idleLabel');
+    const statsBar    = document.getElementById('statsBar');
+    const statSerate  = document.getElementById('statSerate');
+    const statFormat  = document.getElementById('statFormat');
+    const statCitta   = document.getElementById('statCitta');
+    const idleTagline = document.getElementById('idleTagline');
+    const bgImgs      = Array.from(document.querySelectorAll('.bg-img'));
+
+    /* Dati evento per ogni format (ordine: data-img 0→5) */
+    const formatInfo = [
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Bunny Club
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Brat Party
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // After Hours
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Only Rihanna
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Lana Del Rave
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // BimbiFest
+    ];
+
+    overlayBtn.addEventListener('mouseenter', () => {
+      if (expanded) return; /* In modalità elenco il bottone non fa hover */
+      frameLabel.classList.add('visible');
+      track.style.visibility = 'hidden';
+    });
+    overlayBtn.addEventListener('mouseleave', () => {
+      if (expanded) return;
+      frameLabel.classList.remove('visible');
+      track.style.visibility = '';
+    });
+    /* Blocca lo scroll della rotella quando il cursore è sopra il bottone */
+    overlayBtn.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+
+    let currentImgIdx = -1;
+    let expanded      = false;
+
+    function showImg(idx) {
+      if (idx === currentImgIdx) return;
+      currentImgIdx = idx;
+      bgImgs.forEach((el, i) => el.classList.toggle('visible', i === idx));
+      frame.style.setProperty('--frame-bg-img', bgImgs[idx].style.backgroundImage);
+      /* Aggiorna info bar con i dati del format attivo */
+      const d = formatInfo[idx];
+      infoDate.textContent     = d.date;
+      infoLocation.textContent = d.location;
+    }
+
+    /* ── Bottone: toggle modalità espansa ── */
+
+    document.fonts.ready.then(setup);
+
+    function setup() {
+      const allPills = Array.from(track.querySelectorAll('.pill'));
+      const NUM      = 6;
+
+      /* ── Hover: tracciamo isHovered separato dalla classe CSS
+         così durante lo scroll possiamo togliere la classe
+         e rimetterla quando lo snap è completo.
+         Usiamo mousemove sul documento e controlliamo le coordinate reali
+         del frame — così in expanded mode non si attiva sull'overflow ── */
+      let isHovered = false;
+
+      function applyHover()  { frame.classList.add('hovered'); }
+      function removeHover() {
+        frame.classList.remove('hovered');
+        allPills.forEach(p => {
+          const s = p.querySelector('span');
+          s.style.backgroundSize     = '';
+          s.style.backgroundPosition = '';
+        });
+      }
+
+      /* ── Idle state ── */
+      let isIdle    = false;
+      let idleTimer = null;
+
+      /* Animazione contatori velocissima */
+      function animateCounter(el, target, duration) {
+        const start = performance.now();
+        function step(now) {
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = Math.round(p * target);
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(step);
+      }
+
+      let statsVisible = false;
+
+      function showStats() {
+        if (statsVisible) return;
+        statsVisible = true;
+        idleTagline.classList.add('visible');
+        statsBar.classList.add('visible');
+        animateCounter(statSerate, 234, 400);
+        animateCounter(statFormat,  12, 400);
+        animateCounter(statCitta,   32, 400);
+      }
+
+      function hideStats() {
+        if (!statsVisible) return;
+        statsVisible = false;
+        idleTagline.classList.remove('visible');
+        statsBar.classList.remove('visible');
+        statSerate.textContent = '0';
+        statFormat.textContent = '0';
+        statCitta.textContent  = '0';
+      }
+
+      function enterIdle() {
+        if (expanded) return;
+        isIdle = true;
+        if (isHovered) { isHovered = false; removeHover(); }
+        track.style.visibility = 'hidden';
+        document.body.classList.add('idle-mode');
+        idleScreen.classList.add('active');
+        frame.classList.add('idle');
+        frame.classList.remove('interactive');
+        idleLabel.classList.add('active');
+      }
+
+      function exitIdle() {
+        isIdle = false;
+        track.style.visibility = '';
+        document.body.classList.remove('idle-mode');
+        document.body.classList.remove('initial-loader');
+        isInitialLoad = false;
+        idleScreen.classList.remove('active');
+        frame.classList.remove('idle');
+        frame.classList.remove('interactive');
+        idleLabel.classList.remove('active');
+        hideStats();
+      }
+
+      function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(enterIdle, 5000);
+      }
+
+      /* Spin: 1 giro completo + atterraggio su format random in 1.8s */
+      function launchSpin() {
+        const randomFmt  = Math.floor(Math.random() * 6);
+        const curIdx     = Math.round(displayY / pillH);
+        const curInSet   = ((curIdx % 6) + 6) % 6;
+        const extra      = ((randomFmt - curInSet) + 6) % 6;
+        const targetIdx  = curIdx + 8 + extra; // 1 giro
+        const target     = targetIdx * pillH;
+
+        infoBar.classList.add('scrolling');
+        isSnapping    = true;
+        snapActive    = true;
+        suppressUntil = performance.now() + 2200;
+
+        const startY   = displayY;
+        const dist     = target - startY;
+        const duration = 1800;
+        let t0 = null;
+
+        function spinStep(t) {
+          if (!isSnapping) return;
+          if (!t0) t0 = t;
+          const p = Math.min((t - t0) / duration, 1);
+          /* ease-in-out cubico: parte piano, accelera, poi decelera */
+          const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+          displayY = startY + dist * e;
+          if (p < 1) {
+            requestAnimationFrame(spinStep);
+          } else {
+            displayY      = target;
+            isSnapping    = false;
+            snapActive    = false;
+            window.scrollTo(0, target);
+            infoBar.classList.remove('scrolling');
+          }
+        }
+        requestAnimationFrame(spinStep);
+      }
+
+      idleLabel.addEventListener('click', () => {
+        exitIdle();
+        launchSpin();
+        resetIdleTimer();
+      });
+
+      const skipLoader = new URLSearchParams(location.search).get('direct') === '1';
+      let isInitialLoad = !skipLoader;
+      if (!skipLoader) {
+        document.body.classList.add('initial-loader');
+        enterIdle();
+      }
+      resetIdleTimer(); /* countdown per inattività */
+
+      /* Clic su pill Bunny Club (data-img="0") → apre pagina format */
+      allPills.forEach(pill => {
+        if (pill.dataset.img === '0') {
+          pill.style.cursor = 'pointer';
+          pill.addEventListener('click', () => {
+            window.location.href = 'bunny-club.html';
+          });
+        }
+      });
+
+      overlayBtn.addEventListener('click', () => {
+        expanded = !expanded;
+        frame.classList.toggle('expanded', expanded);
+        overlayBtn.classList.toggle('active', expanded);
+        infoBar.classList.toggle('hidden', expanded);
+        if (expanded) {
+          /* Apre elenco: disattiva hover, ripristina track nascosto dall'hover del bottone */
+          isHovered = false;
+          removeHover();
+          track.style.visibility = '';
+          frameLabel.classList.remove('visible');
+        }
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        resetIdleTimer();
+        if (isIdle) {
+          frame.classList.add('interactive');
+          /* Mostra stats solo quando il cursore è dentro il frame */
+          const r = frame.getBoundingClientRect();
+          const inside = e.clientX >= r.left && e.clientX <= r.right &&
+                         e.clientY >= r.top  && e.clientY <= r.bottom;
+          if (inside) showStats(); else hideStats();
+          return;
+        }
+
+        const r      = frame.getBoundingClientRect();
+        const inside = e.clientX >= r.left && e.clientX <= r.right &&
+                       e.clientY >= r.top  && e.clientY <= r.bottom;
+        if (inside && !isHovered && !expanded) {
+          isHovered = true;
+          applyHover();
+        } else if ((!inside || expanded) && isHovered) {
+          isHovered = false;
+          removeHover();
+        }
+      });
+
+      /* ── Scroll geometry ── */
+      const singleSetH = track.scrollHeight / 3;
+      const pillH      = singleSetH / NUM;
+
+      document.body.style.height = singleSetH * 40 + 'px';
+      /* suppressUntil dichiarato prima del scrollTo iniziale
+         così l'evento scroll asincrono che genera non nasconde la info bar */
+      let suppressUntil = performance.now() + 800;
+      window.scrollTo(0, singleSetH * 20);
+      showImg(0);
+      frame.style.setProperty('--frame-bg-img', bgImgs[0].style.backgroundImage);
+
+      /* ── Frame height + centering su cap-height ──
+         Vogliamo: spazio_sopra_capHeight = spazio_sotto_baseline
+         ⟹ centro cap-height allineato al centro del frame
+         xAdj = frameH/2 − (baseline_from_pill_top − capH/2)           */
+      let frameH = 0;
+      let xAdj   = 0;
+
+      function setFrameHeight() {
+        frameH = pillH * 1.5 - 100;
+        const frameTop = (window.innerHeight - frameH) / 2;
+        frame.style.height = frameH + 'px';
+        frame.style.top    = frameTop + 'px';
+
+        /* Bottone: diametro = altezza frame, rimane in basso a dx via CSS */
+        overlayBtn.style.width  = frameH + 'px';
+        overlayBtn.style.height = frameH + 'px';
+
+        const span0   = allPills[0].querySelector('span');
+        const pillTop = allPills[0].getBoundingClientRect().top;
+
+        /* baseline: inline-block height=0, vertical-align=baseline
+           → top = bottom = baseline Y in viewport               */
+        const bEl = document.createElement('span');
+        bEl.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline;';
+
+        /* cap height: inline-block height=1cap, vertical-align=baseline
+           → bottom = baseline, top = baseline − capHeight
+           → getBoundingClientRect().height = capHeight in px      */
+        const cEl = document.createElement('span');
+        cEl.style.cssText = 'display:inline-block;width:0;height:1cap;vertical-align:baseline;';
+
+        span0.appendChild(bEl);
+        span0.appendChild(cEl);
+        void span0.offsetHeight;
+
+        const baselineY = bEl.getBoundingClientRect().top;
+        const capH      = cEl.getBoundingClientRect().height;
+
+        bEl.remove();
+        cEl.remove();
+
+        const baselineFromPillTop = baselineY - pillTop;
+        /* centro cap-height dal top della pill */
+        const capCenterFromPillTop = baselineFromPillTop - capH / 2;
+
+        xAdj = frameH / 2 - capCenterFromPillTop;
+      }
+
+      setFrameHeight();
+
+      /* ── Scroll virtuale ── */
+      let displayY   = window.scrollY;
+      let snapActive = false;
+
+      /* ── Snap con momentum ── */
+      let velHistory = [];
+      let snapTimer  = null;
+      let isSnapping = false;
+      let scrollDir  = 1; // direzione ultimo scroll
+      let lastScrollY = window.scrollY;
+
+      window.addEventListener('scroll', () => {
+        if (performance.now() < suppressUntil) return;
+
+        const now   = performance.now();
+        const delta = window.scrollY - lastScrollY;
+        if (Math.abs(delta) > 0) scrollDir = delta > 0 ? 1 : -1;
+        lastScrollY = window.scrollY;
+
+        velHistory.push({ y: window.scrollY, t: now });
+        velHistory = velHistory.filter(p => now - p.t < 120);
+
+        resetIdleTimer();
+        /* Mentre si scrolla: togli il bianco e nascondi info bar */
+        if (isHovered) removeHover();
+        if (!isIdle) infoBar.classList.add('scrolling');
+
+        if (isSnapping) { isSnapping = false; snapActive = false; }
+        clearTimeout(snapTimer);
+        snapTimer = setTimeout(scheduleSnap, 110);
+      }, { passive: true });
+
+      function getVelocity() {
+        if (velHistory.length < 2) return 0;
+        const a = velHistory[0];
+        const b = velHistory[velHistory.length - 1];
+        const dt = b.t - a.t;
+        return dt > 0 ? (b.y - a.y) / dt : 0;
+      }
+
+      /* Ease-out quadratico — morbido, senza scatto */
+      function easeOut(t) {
+        return 1 - Math.pow(1 - t, 2);
+      }
+
+      function scheduleSnap() {
+        /* Snap sempre nella direzione dello scroll, mai indietro */
+        const vel       = getVelocity();
+        const projected = window.scrollY + vel * 160;
+        let   idx;
+        if (scrollDir > 0) {
+          idx = Math.ceil(projected / pillH - 0.02); // avanti (giù)
+        } else {
+          idx = Math.floor(projected / pillH + 0.02); // avanti (su)
+        }
+        const target = idx * pillH;
+        if (Math.abs(target - displayY) < 1) return;
+
+        isSnapping = true;
+        snapActive = true;
+
+        const start    = displayY;
+        const dist     = target - start;
+        const duration = 520;
+        let t0 = null;
+
+        function step(t) {
+          if (!isSnapping) return;
+          if (!t0) t0 = t;
+          const p = Math.min((t - t0) / duration, 1);
+          displayY = start + dist * easeOut(p);
+          if (p < 1) {
+            requestAnimationFrame(step);
+          } else {
+            displayY      = target;
+            isSnapping    = false;
+            snapActive    = false;
+            suppressUntil = performance.now() + 200;
+            window.scrollTo(0, target);
+            if (isHovered) applyHover();
+            /* Snap completato: rimostro le info */
+            infoBar.classList.remove('scrolling');
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      /* ── RAF loop ── */
+      let prevActiveIdx = -1;
+      function loop() {
+        requestAnimationFrame(loop);
+
+        if (!snapActive) displayY += (window.scrollY - displayY) * 0.11;
+
+        const offset = -(displayY % singleSetH) + xAdj;
+        track.style.transform = 'translateY(' + offset + 'px)';
+
+        /* Pill attiva = più vicina al centro del frame */
+        const frameCY = frame.getBoundingClientRect().top + frameH / 2;
+        let minDist = Infinity, activeIdx = -1;
+        allPills.forEach((pill, i) => {
+          const r = pill.getBoundingClientRect();
+          const d = Math.abs((r.top + r.height / 2) - frameCY);
+          if (d < minDist) { minDist = d; activeIdx = i; }
+        });
+        if (activeIdx !== -1) {
+          showImg(parseInt(allPills[activeIdx].dataset.img));
+
+          /* Pulizia stili inline sulla pill precedente */
+          if (activeIdx !== prevActiveIdx) {
+            if (prevActiveIdx !== -1) {
+              const old = allPills[prevActiveIdx].querySelector('span');
+              old.style.backgroundSize     = '';
+              old.style.backgroundPosition = '';
+            }
+            prevActiveIdx = activeIdx;
+          }
+
+          allPills.forEach((p, i) => p.classList.toggle('in-frame', i === activeIdx));
+
+          /* Aggiorna background-position per simulare immagine ferma.
+             background-position è nel sistema locale (pre-transform), quindi
+             dobbiamo sottrarre l'offset del track da r.top per ottenere
+             la posizione naturale:  naturalTop = r.top - offset  */
+          if (frame.classList.contains('hovered')) {
+            const span = allPills[activeIdx].querySelector('span');
+            const r    = span.getBoundingClientRect();
+            span.style.backgroundSize     = window.innerWidth + 'px ' + window.innerHeight + 'px';
+            span.style.backgroundPosition = (-r.left) + 'px ' + (-r.top + offset) + 'px';
+          }
+        }
+
+      }
+
+      requestAnimationFrame(loop);
+
+      window.addEventListener('resize', () => {
+        setFrameHeight();
+        document.body.style.height = (track.scrollHeight / 3) * 40 + 'px';
+      });
+    }
+  </script>
+
+</body>
+</html>
