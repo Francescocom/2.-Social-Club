@@ -73,7 +73,7 @@
       right: 20px;
       /* top e height impostati via JS — nessun transform così background-attachment:fixed funziona */
       overflow: hidden;
-      border: 12px solid #fff;
+      border: clamp(2px, 1.2vw, 12px) solid #fff;
       z-index: 10;
       background: transparent;
     }
@@ -108,7 +108,7 @@
     }
     .pill span {
       display: block;
-      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-size: clamp(1rem, 11vw, 12.4rem);
       font-weight: 400;
       line-height: 1.0;
       white-space: nowrap;
@@ -135,7 +135,7 @@
       right: 20px;
       /* width e height = frameH, settati via JS */
       border-radius: 50%;
-      border: 12px solid #fff;
+      border: clamp(2px, 1.2vw, 12px) solid #fff;
       background: transparent;
       cursor: pointer;
       z-index: 70;
@@ -150,7 +150,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-size: clamp(1rem, 11vw, 12.4rem);
       font-weight: 400;
       line-height: 1.0;
       white-space: nowrap;
@@ -271,7 +271,7 @@
     }
     .idle-label.active { display: flex; pointer-events: auto; cursor: pointer; }
     .idle-default, .idle-spin {
-      font-size: clamp(5.8rem, 11vw, 12.4rem);
+      font-size: clamp(1rem, 11vw, 12.4rem);
       font-weight: 400;
       line-height: 1.0;
       white-space: nowrap;
@@ -661,7 +661,7 @@
       let xAdj   = 0;
 
       function setFrameHeight() {
-        frameH = pillH * 1.5 - 100;
+        frameH = pillH * 0.875;
         const frameTop = (window.innerHeight - frameH) / 2;
         frame.style.height = frameH + 'px';
         frame.style.top    = frameTop + 'px';

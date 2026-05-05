@@ -17,7 +17,8 @@
       "Bash(python3 -c \"import PIL; print\\('OK'\\)\")",
       "Bash(python3 -)",
       "Bash(python3 -c ' *)",
-      "Bash(python3 /Users/francescobellagamba/Desktop/EXAMPLE/process_gradient.py)"
+      "Bash(python3 /Users/francescobellagamba/Desktop/EXAMPLE/process_gradient.py)",
+      "Bash(git config *)"
     ]
   }
 }
