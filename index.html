@@ -791,7 +791,7 @@
       }
 
       /* ── RAF loop ── */
-      let prevActiveIdx = -1;
+      let prevActiveDataImg = -1;
       function loop() {
         requestAnimationFrame(loop);
 
@@ -800,39 +800,38 @@
         const offset = -(displayY % singleSetH) + xAdj;
         track.style.transform = 'translateY(' + offset + 'px)';
 
-        /* Pill attiva = più vicina al centro del frame */
-        const frameCY = frame.getBoundingClientRect().top + frameH / 2;
-        let minDist = Infinity, activeIdx = -1;
-        allPills.forEach((pill, i) => {
-          const r = pill.getBoundingClientRect();
-          const d = Math.abs((r.top + r.height / 2) - frameCY);
-          if (d < minDist) { minDist = d; activeIdx = i; }
-        });
-        if (activeIdx !== -1) {
-          showImg(parseInt(allPills[activeIdx].dataset.img));
+        /* Format attivo: calcolato direttamente da displayY per evitare
+           sfarfallio al wrap tra i tre set identici */
+        const activeDataImg = ((Math.round(displayY / pillH) % NUM) + NUM) % NUM;
+        showImg(activeDataImg);
 
-          /* Pulizia stili inline sulla pill precedente */
-          if (activeIdx !== prevActiveIdx) {
-            if (prevActiveIdx !== -1) {
-              const old = allPills[prevActiveIdx].querySelector('span');
-              old.style.backgroundSize     = '';
-              old.style.backgroundPosition = '';
+        /* Pulizia stili inline quando cambia format */
+        if (activeDataImg !== prevActiveDataImg) {
+          allPills.forEach(p => {
+            if (parseInt(p.dataset.img) === prevActiveDataImg) {
+              const s = p.querySelector('span');
+              s.style.backgroundSize     = '';
+              s.style.backgroundPosition = '';
             }
-            prevActiveIdx = activeIdx;
-          }
+          });
+          prevActiveDataImg = activeDataImg;
+        }
 
-          allPills.forEach((p, i) => p.classList.toggle('in-frame', i === activeIdx));
+        /* in-frame su TUTTE le pill con lo stesso data-img → nessun salto
+           al confine tra Set A / B / C (stesso contenuto, effetto continuo) */
+        allPills.forEach(p => {
+          p.classList.toggle('in-frame', parseInt(p.dataset.img) === activeDataImg);
+        });
 
-          /* Aggiorna background-position per simulare immagine ferma.
-             background-position è nel sistema locale (pre-transform), quindi
-             dobbiamo sottrarre l'offset del track da r.top per ottenere
-             la posizione naturale:  naturalTop = r.top - offset  */
-          if (frame.classList.contains('hovered')) {
-            const span = allPills[activeIdx].querySelector('span');
+        /* Aggiorna background-position per ogni pill in-frame */
+        if (frame.classList.contains('hovered')) {
+          allPills.forEach(p => {
+            if (parseInt(p.dataset.img) !== activeDataImg) return;
+            const span = p.querySelector('span');
             const r    = span.getBoundingClientRect();
             span.style.backgroundSize     = window.innerWidth + 'px ' + window.innerHeight + 'px';
             span.style.backgroundPosition = (-r.left) + 'px ' + (-r.top + offset) + 'px';
-          }
+          });
         }
 
       }
