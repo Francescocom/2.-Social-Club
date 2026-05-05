@@ -317,6 +317,13 @@
     body.initial-loader .frame.idle.interactive:hover { background: #fff !important; }
     body.initial-loader .idle-tagline         { color: #fff; }
     body.initial-loader .stats-bar            { color: #fff; }
+
+    @media (max-width: 767px) {
+      .pill span,
+      .frame-label,
+      .idle-default,
+      .idle-spin { font-size: clamp(1rem, 13vw, 12.4rem); }
+    }
   </style>
 </head>
 <body>
@@ -641,9 +648,11 @@
         }
       });
 
-      /* ── Scroll geometry ── */
-      let singleSetH = track.scrollHeight / 3;
-      let pillH      = singleSetH / NUM;
+      /* ── Scroll geometry ──
+         Usiamo offsetHeight (intero) per pillH così i target di snap
+         sono interi esatti — evita drift float su mobile. */
+      let pillH      = allPills[0].offsetHeight;
+      let singleSetH = pillH * NUM;
 
       document.body.style.height = singleSetH * 40 + 'px';
       /* suppressUntil dichiarato prima del scrollTo iniziale
@@ -850,8 +859,8 @@
         const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
 
         /* Ricalcola geometria con le nuove dimensioni font (vw) */
-        singleSetH = track.scrollHeight / 3;
-        pillH      = singleSetH / NUM;
+        pillH      = allPills[0].offsetHeight;
+        singleSetH = pillH * NUM;
         document.body.style.height = singleSetH * 40 + 'px';
 
         /* Riposiziona allo stesso format, centro del loop infinito */
