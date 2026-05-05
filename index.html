@@ -642,8 +642,8 @@
       });
 
       /* ── Scroll geometry ── */
-      const singleSetH = track.scrollHeight / 3;
-      const pillH      = singleSetH / NUM;
+      let singleSetH = track.scrollHeight / 3;
+      let pillH      = singleSetH / NUM;
 
       document.body.style.height = singleSetH * 40 + 'px';
       /* suppressUntil dichiarato prima del scrollTo iniziale
@@ -661,7 +661,7 @@
       let xAdj   = 0;
 
       function setFrameHeight() {
-        frameH = pillH * 0.875;
+        frameH = pillH * 1.1;
         const frameTop = (window.innerHeight - frameH) / 2;
         frame.style.height = frameH + 'px';
         frame.style.top    = frameTop + 'px';
@@ -840,8 +840,22 @@
       requestAnimationFrame(loop);
 
       window.addEventListener('resize', () => {
+        /* Salva quale format è attivo prima di ricalcolare */
+        const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
+
+        /* Ricalcola geometria con le nuove dimensioni font (vw) */
+        singleSetH = track.scrollHeight / 3;
+        pillH      = singleSetH / NUM;
+        document.body.style.height = singleSetH * 40 + 'px';
+
+        /* Riposiziona allo stesso format, centro del loop infinito */
+        const newY = singleSetH * 20 + oldIdx * pillH;
+        suppressUntil = performance.now() + 600;
+        displayY = newY;
+        window.scrollTo(0, newY);
+
+        /* Ricalcola frame e xAdj con le nuove metriche font */
         setFrameHeight();
-        document.body.style.height = (track.scrollHeight / 3) * 40 + 'px';
       });
     }
   </script>
