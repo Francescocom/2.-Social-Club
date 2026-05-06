@@ -323,6 +323,10 @@
       .frame-label,
       .idle-default,
       .idle-spin { font-size: clamp(1rem, 13vw, 12.4rem); }
+
+      /* Mobile: info-bar mostra solo "Tickets available", nessun hover */
+      .info-bar:hover .info-default { display: block; }
+      .info-bar:hover .info-hover   { display: none; }
     }
   </style>
 </head>
