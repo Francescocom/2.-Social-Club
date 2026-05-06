@@ -673,10 +673,13 @@
         overlayBtn.style.width  = frameH + 'px';
         overlayBtn.style.height = frameH + 'px';
 
-        /* 3. Imposta ogni pill alta quanto il frame → align-items:center
-              centra il testo in frameH, identico all'idle-label "Social Club" */
-        allPills.forEach(p => p.style.height = frameH + 'px');
-        pillH      = frameH;
+        /* 3. Pill height = CONTENT area del frame (dentro al bordo).
+              L'idle-label usa inset:0 → altezza = frameH − 2×borderWidth.
+              Stessa misura qui → align-items:center produce centering identico. */
+        const borderW  = parseFloat(getComputedStyle(frame).borderTopWidth);
+        const contentH = frameH - 2 * borderW;
+        allPills.forEach(p => p.style.height = contentH + 'px');
+        pillH      = contentH;
         singleSetH = pillH * NUM;
       }
 
