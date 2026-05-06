@@ -649,12 +649,38 @@
         }
       });
 
-      /* ── Scroll geometry ──
-         pillH = altezza reale misurata di 1 pill (nessun arrotondamento subpixel).
-         singleSetH derivato da pillH → snap esatto per tutti i 6 format.       */
-      let pillH      = allPills[0].getBoundingClientRect().height;
-      let singleSetH = pillH * NUM;
+      /* ── Scroll geometry + Frame height ──
+         Strategia identica all'idle-label "Social Club":
+           idle-label → position:absolute; inset:0; display:flex; align-items:center
+           Ogni pill  → height = frameH; display:flex; align-items:center
+         In entrambi i casi il CSS centra il testo in frameH, zero matematica JS. */
+      let pillH      = 0;
+      let singleSetH = 0;
+      let frameH     = 0;
+      const xAdj     = 0;   // non serve: pill riempie il frame come l'idle-label
 
+      function setFrameHeight() {
+        /* 1. Leggi altezza naturale del testo (rimuovi height esplicita se c'è) */
+        allPills.forEach(p => p.style.height = '');
+        void allPills[0].offsetHeight;
+        const naturalH = allPills[0].getBoundingClientRect().height;
+
+        /* 2. Frame: 10% più alto del testo, centrato nel viewport */
+        frameH = naturalH * 1.1;
+        const frameTop = (window.innerHeight - frameH) / 2;
+        frame.style.height = frameH + 'px';
+        frame.style.top    = frameTop + 'px';
+        overlayBtn.style.width  = frameH + 'px';
+        overlayBtn.style.height = frameH + 'px';
+
+        /* 3. Imposta ogni pill alta quanto il frame → align-items:center
+              centra il testo in frameH, identico all'idle-label "Social Club" */
+        allPills.forEach(p => p.style.height = frameH + 'px');
+        pillH      = frameH;
+        singleSetH = pillH * NUM;
+      }
+
+      setFrameHeight();
       document.body.style.height = singleSetH * 40 + 'px';
       /* suppressUntil dichiarato prima del scrollTo iniziale
          così l'evento scroll asincrono che genera non nasconde la info bar */
@@ -662,27 +688,6 @@
       window.scrollTo(0, singleSetH * 20);
       showImg(0);
       frame.style.setProperty('--frame-bg-img', bgImgs[0].style.backgroundImage);
-
-      /* ── Frame height + centering ──
-         xAdj centra la pill nel frame: pill top = (frameH - pillH) / 2
-         → stesso effetto di align-items:center del loader "Social Club"  */
-      let frameH = 0;
-      let xAdj   = 0;
-
-      function setFrameHeight() {
-        frameH = pillH * 1.1;
-        const frameTop = (window.innerHeight - frameH) / 2;
-        frame.style.height = frameH + 'px';
-        frame.style.top    = frameTop + 'px';
-
-        /* Bottone: diametro = altezza frame, rimane in basso a dx via CSS */
-        overlayBtn.style.width  = frameH + 'px';
-        overlayBtn.style.height = frameH + 'px';
-
-        xAdj = (frameH - pillH) / 2;
-      }
-
-      setFrameHeight();
 
       /* ── Scroll virtuale ── */
       let displayY   = window.scrollY;
@@ -836,9 +841,8 @@
         /* Salva quale format è attivo prima di ricalcolare */
         const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
 
-        /* Ricalcola geometria con le nuove dimensioni font (vw) */
-        pillH      = allPills[0].getBoundingClientRect().height;
-        singleSetH = pillH * NUM;
+        /* Ricalcola tutto (font-size cambia con vw) */
+        setFrameHeight();
         document.body.style.height = singleSetH * 40 + 'px';
 
         /* Riposiziona allo stesso format, centro del loop infinito */
@@ -846,9 +850,6 @@
         suppressUntil = performance.now() + 600;
         displayY = newY;
         window.scrollTo(0, newY);
-
-        /* Ricalcola frame e xAdj con le nuove metriche font */
-        setFrameHeight();
       });
     }
   </script>
