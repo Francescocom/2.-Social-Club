@@ -18,7 +18,8 @@
       "Bash(python3 -)",
       "Bash(python3 -c ' *)",
       "Bash(python3 /Users/francescobellagamba/Desktop/EXAMPLE/process_gradient.py)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(python3)"
     ]
   }
 }

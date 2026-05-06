@@ -661,10 +661,9 @@
       showImg(0);
       frame.style.setProperty('--frame-bg-img', bgImgs[0].style.backgroundImage);
 
-      /* ── Frame height + centering su cap-height ──
-         Vogliamo: spazio_sopra_capHeight = spazio_sotto_baseline
-         ⟹ centro cap-height allineato al centro del frame
-         xAdj = frameH/2 − (baseline_from_pill_top − capH/2)           */
+      /* ── Frame height + centering ──
+         xAdj centra la pill nel frame: pill top = (frameH - pillH) / 2
+         → stesso effetto di align-items:center del loader "Social Club"  */
       let frameH = 0;
       let xAdj   = 0;
 
@@ -678,35 +677,7 @@
         overlayBtn.style.width  = frameH + 'px';
         overlayBtn.style.height = frameH + 'px';
 
-        const span0   = allPills[0].querySelector('span');
-        const pillTop = allPills[0].getBoundingClientRect().top;
-
-        /* baseline: inline-block height=0, vertical-align=baseline
-           → top = bottom = baseline Y in viewport               */
-        const bEl = document.createElement('span');
-        bEl.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline;';
-
-        /* cap height: inline-block height=1cap, vertical-align=baseline
-           → bottom = baseline, top = baseline − capHeight
-           → getBoundingClientRect().height = capHeight in px      */
-        const cEl = document.createElement('span');
-        cEl.style.cssText = 'display:inline-block;width:0;height:1cap;vertical-align:baseline;';
-
-        span0.appendChild(bEl);
-        span0.appendChild(cEl);
-        void span0.offsetHeight;
-
-        const baselineY = bEl.getBoundingClientRect().top;
-        const capH      = cEl.getBoundingClientRect().height;
-
-        bEl.remove();
-        cEl.remove();
-
-        const baselineFromPillTop = baselineY - pillTop;
-        /* centro cap-height dal top della pill */
-        const capCenterFromPillTop = baselineFromPillTop - capH / 2;
-
-        xAdj = frameH / 2 - capCenterFromPillTop;
+        xAdj = (frameH - pillH) / 2;
       }
 
       setFrameHeight();
