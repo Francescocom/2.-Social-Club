@@ -147,9 +147,9 @@
     /* CTAs */
     .cta-row {
       display: flex;
-      gap: 80px;
-      padding: 24px 0 calc(var(--gap) + 60pt);
+      justify-content: space-between;
       align-items: baseline;
+      padding: 24px 0 calc(var(--gap) + 60pt);
     }
     .cta-row a {
       font-size: var(--ui);
@@ -195,7 +195,7 @@
     .photo-grid-wrap { margin: 0 calc(-1 * var(--side)); }
     .photo-grid { display: flex; flex-direction: column; gap: 0; }
     .photo-group { display: flex; gap: 0; }
-    .grid-photo-card { flex: 1; display: flex; flex-direction: column; }
+    .grid-photo-card { flex: 1; position: relative; }
     .grid-photo-card img {
       width: 100%;
       aspect-ratio: 2/3;
@@ -204,12 +204,17 @@
       cursor: pointer;
     }
     .photo-caption {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
       font-size: var(--ui);
       font-weight: 400;
       letter-spacing: var(--ls);
       line-height: 30pt;
-      color: #000;
-      padding-bottom: 4px;
+      color: #fff;
+      padding: 8px;
+      pointer-events: none;
     }
 
     /* ── Download button ── */
@@ -315,7 +320,7 @@
     .marquee-text.active { animation: tabloid 5s steps(20, end) infinite; }
 
     @media (max-width: 767px) {
-      :root { --ui: 15pt; }
+      :root { --ui: 17pt; }
 
       /* Interlinea proporzionale */
       .description,
@@ -323,7 +328,7 @@
       .cta-row a,
       .photo-caption,
       .page-footer p,
-      .photo-download-btn { line-height: 18pt; }
+      .photo-download-btn { line-height: 20pt; }
 
       /* Fix scroll orizzontale */
       body { overflow-x: hidden; }
@@ -382,9 +387,8 @@
     </div>
 
     <div class="cta-row">
-      <span class="cta-social-group">Visit Bad Bunny on      <a href="#" target="_blank">Instagram</a>      <a href="#" target="_blank">Facebook</a></span>
+      <span class="cta-social-group">Visit Bunny Club      <a href="#" target="_blank">Instagram</a>      <a href="#" target="_blank">Facebook</a></span>
       <a href="#" target="_blank">Open on Dice</a>
-      <a href="archive.html">Archive</a>
     </div>
 
     <!-- Griglia foto -->
@@ -392,21 +396,21 @@
     <div class="photo-grid" id="photoGrid">
 
       <div class="photo-group group-a">
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>02.05.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
       </div>
 
       <div class="photo-group group-b">
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28.03.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
       </div>
 
       <div class="photo-group group-c">
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>10 agosto 2025</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21.03.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31.01.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
       </div>
 
     </div>
