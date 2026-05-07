@@ -21,7 +21,7 @@
     }
 
     /* ── Tipo base ── */
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 18.75%; }
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13%; }
 
     /* ── Hero ── */
     .hero {
@@ -149,6 +149,7 @@
       display: flex;
       gap: 80px;
       padding: 24px 0 calc(var(--gap) + 60pt);
+      align-items: baseline;
     }
     .cta-row a {
       font-size: var(--ui);
@@ -157,6 +158,37 @@
       color: #000;
       text-decoration: none;
       cursor: pointer;
+    }
+    .cta-social-group {
+      white-space: pre;
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+    }
+    .cta-social-group a {
+      font-size: inherit;
+      font-weight: 400;
+      letter-spacing: inherit;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Bottone "Explore" centrato in fondo al video */
+    .hero-explore {
+      position: absolute;
+      bottom: var(--pad);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: var(--ls);
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     /* ── Griglia foto ── */
@@ -333,8 +365,7 @@
     <!-- Tutto il nav scorre via con il video -->
     <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      About us      IT      ©2026</span></div>
     <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover">Brat Party      After Hours      Only Rihanna      Lana Del Rave      BimbiFest</span></div>
-    <div class="hero-bottomleft">Tickets Available      On Dice</div>
-    <a class="hero-bottomright" href="archive.html">Archive</a>
+    <a class="hero-explore" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">Explore Events and Tickets</a>
   </div>
 
   <!-- Contenuto -->
@@ -351,7 +382,9 @@
     </div>
 
     <div class="cta-row">
+      <span class="cta-social-group">Visit Bad Bunny on      <a href="#" target="_blank">Instagram</a>      <a href="#" target="_blank">Facebook</a></span>
       <a href="#" target="_blank">Open on Dice</a>
+      <a href="archive.html">Archive</a>
     </div>
 
     <!-- Griglia foto -->
