@@ -318,13 +318,18 @@
     body.initial-loader .idle-tagline         { color: #fff; }
     body.initial-loader .stats-bar            { color: #fff; }
 
+    /* Dopo 2s: mostra Enter al posto di Social Club */
+    body.initial-loader.auto-enter .frame.idle { background: #fff !important; }
+    body.initial-loader.auto-enter .idle-default { display: none; }
+    body.initial-loader.auto-enter .idle-spin    { display: block; }
+
     @media (max-width: 767px) {
       .pill span,
       .frame-label,
       .idle-default,
       .idle-spin { font-size: clamp(1rem, 13vw, 12.4rem); }
 
-      /* Mobile: info-bar mostra solo "Tickets available", nessun hover */
+      /* Mobile: info-bar mostra solo "Tickets", nessun hover */
       .info-bar:hover .info-default { display: block; }
       .info-bar:hover .info-hover   { display: none; }
 
@@ -335,6 +340,17 @@
       .archive-link  { bottom: 10px; right: 10px; }
       .idle-tagline  { top: 10px; }
       .bottom-right  { top: 10px; left: 10px; }
+
+      /* Mobile loader: mostra subito CTA sopra e sotto */
+      body.initial-loader .bottom-right,
+      body.initial-loader .info-bar,
+      body.initial-loader .archive-link {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Stats bar: va a capo su due righe invece di uscire dallo schermo */
+      .stats-bar { white-space: normal; text-align: center; }
     }
   </style>
 </head>
@@ -405,7 +421,7 @@
 
   <!-- Info bar in basso -->
   <div class="info-bar" id="infoBar">
-    <div class="info-default">Tickets available      On Dice</div>
+    <div class="info-default">Tickets</div>
     <div class="info-hover">Next Events      <span id="infoDate">—</span>      <span id="infoLocation">—</span></div>
   </div>
 
@@ -439,16 +455,7 @@
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // BimbiFest
     ];
 
-    overlayBtn.addEventListener('mouseenter', () => {
-      if (expanded) return; /* In modalità elenco il bottone non fa hover */
-      frameLabel.classList.add('visible');
-      track.style.visibility = 'hidden';
-    });
-    overlayBtn.addEventListener('mouseleave', () => {
-      if (expanded) return;
-      frameLabel.classList.remove('visible');
-      track.style.visibility = '';
-    });
+    /* Hover overlay-btn disabilitato: mostra solo "Tickets", nessun "Discover All" */
     /* Blocca lo scroll della rotella quando il cursore è sopra il bottone */
     overlayBtn.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
 
@@ -546,6 +553,7 @@
         track.style.visibility = '';
         document.body.classList.remove('idle-mode');
         document.body.classList.remove('initial-loader');
+        document.body.classList.remove('auto-enter');
         isInitialLoad = false;
         idleScreen.classList.remove('active');
         frame.classList.remove('idle');
@@ -599,10 +607,17 @@
         requestAnimationFrame(spinStep);
       }
 
-      idleLabel.addEventListener('click', () => {
+      /* Idle label click: stopPropagation per non triggerare anche il frame listener */
+      idleLabel.addEventListener('click', (e) => {
+        e.stopPropagation();
         exitIdle();
         launchSpin();
         resetIdleTimer();
+      });
+
+      /* Tap sul rettangolo centrale → esce dal loader/idle */
+      frame.addEventListener('click', () => {
+        if (isIdle) { exitIdle(); launchSpin(); resetIdleTimer(); }
       });
 
       const skipLoader = new URLSearchParams(location.search).get('direct') === '1';
@@ -610,6 +625,10 @@
       if (!skipLoader) {
         document.body.classList.add('initial-loader');
         enterIdle();
+        /* Dopo 2s: mostra Enter al posto di Social Club */
+        setTimeout(() => {
+          if (isInitialLoad) document.body.classList.add('auto-enter');
+        }, 2000);
       }
       resetIdleTimer(); /* countdown per inattività */
 
@@ -716,6 +735,9 @@
       let lastScrollY = window.scrollY;
 
       window.addEventListener('scroll', () => {
+        /* Scroll durante il loader iniziale → passa all'homepage */
+        if (isIdle && isInitialLoad) { exitIdle(); resetIdleTimer(); }
+
         if (performance.now() < suppressUntil) return;
 
         const now   = performance.now();
