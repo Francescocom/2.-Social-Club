@@ -328,14 +328,14 @@
     }
 
     @media (max-width: 767px) {
-      :root { --ui: 17pt; }
+      :root { --ui: 15pt; }
 
-      /* Tipografia secondaria: ridotta a 2/3 (tutti gli elementi con 25pt hardcoded) */
+      /* Tipografia secondaria */
       .archive-link,
       .idle-tagline,
       .bottom-right span,
       .info-default, .info-hover,
-      .stats-bar { font-size: 17pt; }
+      .stats-bar { font-size: 15pt; }
 
       .pill span,
       .frame-label,
@@ -792,16 +792,36 @@
         return 1 - Math.pow(1 - t, 3);
       }
 
+      /* ── Touch: misura distanza swipe per distinguere corto da lungo ── */
+      let touchSwipeDist = 0;
+      let touchStartY    = 0;
+      window.addEventListener('touchstart', e => {
+        touchStartY    = e.touches[0].clientY;
+        touchSwipeDist = 0;
+      }, { passive: true });
+      window.addEventListener('touchmove', e => {
+        touchSwipeDist = touchStartY - e.touches[0].clientY;
+      }, { passive: true });
+
       function scheduleSnap() {
-        /* Snap sempre nella direzione dello scroll, mai indietro */
-        const vel       = getVelocity();
-        const projected = window.scrollY + vel * 160;
+        const currentIdx  = Math.round(displayY / pillH);
+        const shortSwipe  = Math.abs(touchSwipeDist) > 0 && Math.abs(touchSwipeDist) < 70;
         let   idx;
-        if (scrollDir > 0) {
-          idx = Math.ceil(projected / pillH - 0.02); // avanti (giù)
+
+        if (shortSwipe) {
+          /* Swipe corto: avanza di esattamente 1 formato */
+          idx = currentIdx + (touchSwipeDist > 0 ? 1 : -1);
         } else {
-          idx = Math.floor(projected / pillH + 0.02); // avanti (su)
+          /* Swipe lungo: comportamento normale (proiettato dalla velocità) */
+          const vel       = getVelocity();
+          const projected = window.scrollY + vel * 160;
+          if (scrollDir > 0) {
+            idx = Math.ceil(projected / pillH - 0.02);
+          } else {
+            idx = Math.floor(projected / pillH + 0.02);
+          }
         }
+        touchSwipeDist = 0;
         /* Arrotonda al pixel intero: evita drift subpixel su mobile */
         const target = Math.round(idx * pillH);
         if (Math.abs(target - displayY) < 1) return;
