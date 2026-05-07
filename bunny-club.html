@@ -21,7 +21,7 @@
     }
 
     /* ── Tipo base ── */
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13%; }
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; }
 
     /* ── Hero ── */
     .hero {
@@ -147,20 +147,13 @@
     /* CTAs */
     .cta-row {
       display: flex;
-      justify-content: space-between;
       align-items: baseline;
       padding: 24px 0 calc(var(--gap) + 60pt);
     }
-    .cta-row a {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
     .cta-social-group {
-      white-space: pre;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0 3em;
       font-size: var(--ui);
       font-weight: 400;
       letter-spacing: var(--ls);
@@ -213,7 +206,7 @@
       letter-spacing: var(--ls);
       line-height: 30pt;
       color: #fff;
-      padding: 8px;
+      padding: var(--pad);
       pointer-events: none;
     }
 
@@ -353,6 +346,7 @@
 
       /* Foto: tutte impilate 2:3 senza margine */
       .photo-group { flex-direction: column; }
+      .photo-caption { padding: 10px; line-height: 20pt; }
     }
   </style>
 </head>
@@ -387,8 +381,7 @@
     </div>
 
     <div class="cta-row">
-      <span class="cta-social-group">Visit Bunny Club      <a href="#" target="_blank">Instagram</a>      <a href="#" target="_blank">Facebook</a></span>
-      <a href="#" target="_blank">Open on Dice</a>
+      <span class="cta-social-group">Visit Bunny Club<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
     </div>
 
     <!-- Griglia foto -->
