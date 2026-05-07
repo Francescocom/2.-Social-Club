@@ -341,8 +341,18 @@
       /* Date: solo giorno/mese */
       .date-sep, .date-yr { display: none; }
 
+      /* Righe elenco: allinea le baseline del testo */
+      .event-row { align-items: baseline; }
+      .marquee-text { vertical-align: baseline; }
+
+      /* Spazio dopo bio: 2 righe */
+      .description { padding-bottom: 40pt; }
+
       /* CTA: solo "Ticket" */
       .cta-long { display: none; }
+
+      /* CTA social: uno sotto l'altro a sinistra */
+      .cta-social-group { flex-direction: column; gap: 0; }
 
       /* Foto: tutte impilate 2:3 senza margine */
       .photo-group { flex-direction: column; }
