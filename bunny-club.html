@@ -207,6 +207,7 @@
       line-height: 30pt;
       color: #fff;
       padding: var(--pad);
+      padding-top: calc(var(--pad) - (1cap - 1ex));
       pointer-events: none;
     }
 
@@ -315,13 +316,13 @@
     @media (max-width: 767px) {
       :root { --ui: 17pt; }
 
-      /* Interlinea proporzionale */
+      /* Interlinea proporzionale + leggerissimo aumento */
       .description,
       .event-row span,
       .cta-row a,
       .photo-caption,
       .page-footer p,
-      .photo-download-btn { line-height: 20pt; }
+      .photo-download-btn { line-height: 22pt; }
 
       /* Fix scroll orizzontale */
       body { overflow-x: hidden; }
@@ -341,9 +342,14 @@
       /* Date: solo giorno/mese */
       .date-sep, .date-yr { display: none; }
 
-      /* Righe elenco: allinea le baseline del testo */
-      .event-row { align-items: baseline; }
-      .marquee-text { vertical-align: baseline; }
+      /* Righe elenco: colonne auto/1fr/auto con gap uguale */
+      .event-row {
+        align-items: center;
+        grid-template-columns: auto 1fr auto;
+        column-gap: 2em;
+      }
+      .date-dot { margin: 0; }
+      .marquee-text { vertical-align: middle; }
 
       /* Spazio dopo bio: 2 righe */
       .description { padding-bottom: 40pt; }
@@ -399,21 +405,21 @@
     <div class="photo-grid" id="photoGrid">
 
       <div class="photo-group group-a">
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>02.05.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>2 Maggio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
       </div>
 
       <div class="photo-group group-b">
-        <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28.03.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
       </div>
 
       <div class="photo-group group-c">
-        <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21.03.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25.04.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31.01.2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
+        <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31 Gennaio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
       </div>
 
     </div>
