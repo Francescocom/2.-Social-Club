@@ -473,7 +473,9 @@
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // BimbiFest
     ];
 
-    /* Hover overlay-btn disabilitato: mostra solo "Tickets", nessun "Discover All" */
+    /* Hover sul bottone circolare → mostra "Discover All" nel rettangolo (solo desktop) */
+    overlayBtn.addEventListener('mouseenter', () => { if (!expanded) frameLabel.classList.add('visible'); });
+    overlayBtn.addEventListener('mouseleave', () => frameLabel.classList.remove('visible'));
     /* Blocca lo scroll della rotella quando il cursore è sopra il bottone */
     overlayBtn.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
 
@@ -506,10 +508,9 @@
          del frame — così in expanded mode non si attiva sull'overflow ── */
       let isHovered = false;
 
-      function applyHover()  { frame.classList.add('hovered'); frameLabel.classList.add('visible'); }
+      function applyHover()  { frame.classList.add('hovered'); }
       function removeHover() {
         frame.classList.remove('hovered');
-        frameLabel.classList.remove('visible');
         allPills.forEach(p => {
           const s = p.querySelector('span');
           s.style.backgroundSize     = '';
