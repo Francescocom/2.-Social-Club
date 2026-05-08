@@ -101,7 +101,7 @@
     .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
 
     /* ── Contenuto ── */
-    :root { --gap: 80px; }
+    :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
     }
@@ -316,13 +316,15 @@
     @media (max-width: 767px) {
       :root { --ui: 17pt; }
 
-      /* Interlinea proporzionale + leggerissimo aumento */
+      /* Interlinea proporzionale */
       .description,
       .event-row span,
+      .event-row .col-status a,
       .cta-row a,
       .photo-caption,
       .page-footer p,
-      .photo-download-btn { line-height: 22pt; }
+      .photo-download-btn { line-height: 20pt; }
+      .cta-social-group { line-height: 20pt; }
 
       /* Fix scroll orizzontale */
       body { overflow-x: hidden; }
@@ -336,6 +338,7 @@
       .hero-bottomleft { bottom: 10px; left: 10px; }
       .hero-bottomright{ bottom: 10px; right: 10px; }
 
+      .hero { height: 100svh; }
       .content { padding: 10px; }
       .photo-grid-wrap { margin: 0 -10px; }
 
@@ -346,7 +349,7 @@
       .event-row {
         align-items: center;
         grid-template-columns: auto 1fr auto;
-        column-gap: 2em;
+        column-gap: 1.2em;
       }
       .date-dot { margin: 0; }
       .marquee-text { vertical-align: middle; }
@@ -380,7 +383,7 @@
     <!-- Tutto il nav scorre via con il video -->
     <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      About us      IT      ©2026</span></div>
     <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover">Brat Party      After Hours      Only Rihanna      Lana Del Rave      BimbiFest</span></div>
-    <a class="hero-explore" onclick="document.getElementById('content').scrollIntoView({behavior:'smooth'})">Explore Events and Tickets</a>
+    <a class="hero-explore" onclick="document.querySelector('.description').scrollIntoView({behavior:'smooth'})">Explore Events and Tickets</a>
   </div>
 
   <!-- Contenuto -->

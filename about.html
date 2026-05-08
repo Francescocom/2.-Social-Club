@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Social Club</title>
+
+  <style>
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal; font-display: block;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
+
+    /* ── Nav ── */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--pad) var(--pad);
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 1.0;
+    }
+    .page-nav a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    /* ── Contenuto ── */
+    .content {
+      padding: var(--gap) var(--side) 0;
+    }
+
+    .description {
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 30pt;
+      letter-spacing: var(--ls);
+      margin-top: 60pt;
+      padding-bottom: 56px;
+    }
+
+    /* ── Elenco ── */
+    .event-list { padding-bottom: 0; }
+
+    .event-row {
+      display: grid;
+      grid-template-columns: 20fr 47fr 33fr;
+      align-items: center;
+      padding: 0;
+      cursor: default;
+      transition: background 0s;
+    }
+    .event-row:hover { background: #f0f0f0; }
+
+    .event-row span {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .event-row span:first-child { font-feature-settings: "tnum" 1, "onum" 1; letter-spacing: 0; }
+    .col-right { text-align: right; }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      align-items: baseline;
+      padding: 24px 0 calc(var(--gap) + 60pt);
+    }
+    .cta-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0 3em;
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+    }
+    .cta-group a {
+      font-size: inherit;
+      font-weight: 400;
+      letter-spacing: inherit;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 var(--pad) 20px;
+      text-align: center;
+      gap: 0;
+      height: 200px;
+    }
+    .page-footer p {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      color: #000;
+      white-space: pre;
+    }
+    .page-footer a { color: #000; text-decoration: none; }
+
+    @media (max-width: 767px) {
+      :root { --ui: 17pt; }
+
+      .description,
+      .event-row span,
+      .cta-group a,
+      .page-footer p { line-height: 20pt; }
+
+      body { overflow-x: hidden; }
+      .page-nav { padding: 10px; }
+      .page-footer p { white-space: normal; }
+
+      .content { padding: 10px; }
+
+      .description { margin-top: 0; padding-bottom: 40pt; }
+
+      .event-row {
+        align-items: center;
+        grid-template-columns: auto 1fr auto;
+        column-gap: 1.2em;
+      }
+
+      .cta-group { flex-direction: column; gap: 0; line-height: 20pt; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-nav">
+    <a href="index.html?direct=1">Social Club</a>
+    <span>About</span>
+  </div>
+
+  <div class="content">
+
+    <p class="description">Social Club è un'agenzia di eventi musicali nata a Milano nel 2025. Creiamo format itineranti dedicati agli artisti più influenti della scena contemporanea, portando esperienze originali nei principali club italiani. Ogni serata è un tributo fatto di musica, identità visiva e community: un luogo dove il sound di un artista diventa collettivo.</p>
+
+    <div class="event-list">
+      <div class="event-row"><span>Format</span><span>Bunny Club</span><span class="col-right">Bad Bunny</span></div>
+      <div class="event-row"><span>Format</span><span>Brat Party</span><span class="col-right">Charli XCX</span></div>
+      <div class="event-row"><span>Format</span><span>After Hours</span><span class="col-right">The Weeknd</span></div>
+      <div class="event-row"><span>Format</span><span>Only Rihanna</span><span class="col-right">Rihanna</span></div>
+      <div class="event-row"><span>Format</span><span>Lana Del Rave</span><span class="col-right">Lana Del Rey</span></div>
+      <div class="event-row"><span>Format</span><span>BimbiFest</span><span class="col-right">2000s</span></div>
+    </div>
+
+    <div class="cta-row">
+      <span class="cta-group">Social Club<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="mailto:info@socialclub.it">Mail us</a></span>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <p>Social Club Srls.      Via Viale Strada 6, 20123 Milano (MI), Italy</p>
+    <p>Instagram      Facebook      Mail us      Privacy Policies      Cookies Policy      Legal Notes</p>
+  </div>
+
+</body>
+</html>

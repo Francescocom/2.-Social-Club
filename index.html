@@ -112,7 +112,7 @@
       display: block;
       font-size: clamp(1rem, 11vw, 12.4rem);
       font-weight: 400;
-      line-height: 1.0;
+      line-height: 1.1;
       white-space: nowrap;
       color: #fff;
     }
@@ -338,9 +338,9 @@
       .stats-bar { font-size: 17pt; }
 
       .pill span,
-      .frame-label,
       .idle-default,
       .idle-spin { font-size: clamp(1rem, 13vw, 12.4rem); }
+      .frame-label { display: none; }
 
       /* Mobile: info-bar mostra solo "Tickets", nessun hover */
       .info-bar:hover .info-default { display: block; }
@@ -506,9 +506,10 @@
          del frame — così in expanded mode non si attiva sull'overflow ── */
       let isHovered = false;
 
-      function applyHover()  { frame.classList.add('hovered'); }
+      function applyHover()  { frame.classList.add('hovered'); frameLabel.classList.add('visible'); }
       function removeHover() {
         frame.classList.remove('hovered');
+        frameLabel.classList.remove('visible');
         allPills.forEach(p => {
           const s = p.querySelector('span');
           s.style.backgroundSize     = '';
