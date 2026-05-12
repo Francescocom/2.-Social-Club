@@ -867,7 +867,7 @@
 
       /* Arrow keys: 1 formato per tasto */
       document.addEventListener('keydown', (e) => {
-        if (isIdle || expanded) return;
+        if (isIdle) return;
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
           e.preventDefault();
           resetIdleTimer();
