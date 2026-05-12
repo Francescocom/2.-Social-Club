@@ -46,21 +46,20 @@
     }
 
     .event {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5em;
+      display: inline;
       color: #000;
       cursor: default;
       transition: color 0s;
     }
     .event::before {
       content: '';
-      display: block;
+      display: inline-block;
       width: 1cap;
       height: 1cap;
       background: #000;
       border-radius: 50%;
-      flex-shrink: 0;
+      vertical-align: baseline;
+      margin-right: 0.25em;
     }
     .event.dimmed { color: #d8d8d8; }
     .event.dimmed::before { background: #d8d8d8; }
