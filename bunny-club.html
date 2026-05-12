@@ -622,9 +622,13 @@
       updateGalleryView();
     });
 
-    /* Wheel scroll to navigate */
+    /* Wheel scroll to navigate — throttled so 1 image per gesture */
+    let wheelLast = 0;
     photoOverlay.addEventListener('wheel', (e) => {
       e.preventDefault();
+      const now = Date.now();
+      if (now - wheelLast < 400) return;
+      wheelLast = now;
       galleryIdx = e.deltaY > 0
         ? (galleryIdx + 1) % galleryImages.length
         : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
