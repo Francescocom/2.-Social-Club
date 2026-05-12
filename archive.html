@@ -51,7 +51,18 @@
       cursor: default;
       transition: color 0s;
     }
-    .event.dimmed { color: #fff; }
+    .event::before {
+      content: '';
+      display: inline-block;
+      width: 1cap;
+      height: 1cap;
+      background: #000;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 0.35em;
+    }
+    .event.dimmed { color: #bbb; }
+    .event.dimmed::before { background: #bbb; }
 
     @media (max-width: 767px) {
       body { padding: 10px; overflow-x: hidden; }

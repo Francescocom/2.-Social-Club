@@ -186,7 +186,7 @@
       text-decoration: none;
       cursor: pointer;
       white-space: nowrap;
-      animation: explore-flicker 1s step-start infinite;
+      animation: explore-flicker 0.7s step-start infinite;
     }
 
     /* ── Griglia foto ── */
@@ -338,14 +338,14 @@
       50%, 100% { color: #87f7a6; }
     }
     .event-row:hover .col-status a {
-      animation: ticket-blink 0.18s step-start infinite;
+      animation: ticket-blink 0.28s step-start infinite;
     }
 
     @keyframes row-flash {
       0%, 100% { background: transparent; }
       30%, 70%  { background: #87f7a6; }
     }
-    .event-row.flash { animation: row-flash 0.4s ease; }
+    .event-row.flash { animation: row-flash 0.2s ease; }
 
     @keyframes tabloid {
       0%, 15%  { transform: translateX(0); }
@@ -486,7 +486,7 @@
       <div class="gallery-download" id="galleryDownload">Download</div>
     </div>
   </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="0.75" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
+  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
 
   <script>
     const heroFrame = document.getElementById('heroFrame');
@@ -540,7 +540,7 @@
     const eventRows = Array.from(document.querySelectorAll('.event-row'));
 
     function flashRows() {
-      const FLASH_DUR = 400;
+      const FLASH_DUR = 200;
       eventRows.forEach((row, i) => {
         setTimeout(() => {
           row.classList.add('flash');

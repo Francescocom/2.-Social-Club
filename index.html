@@ -808,43 +808,22 @@
         touchSwipeDist = touchStartY - e.touches[0].clientY;
       }, { passive: true });
 
-      function scheduleSnap() {
-        const currentIdx  = Math.round(displayY / pillH);
-        const shortSwipe  = Math.abs(touchSwipeDist) > 0 && Math.abs(touchSwipeDist) < 70;
-        let   idx;
+      /* scrollTo istantaneo: ferma il momentum iOS/Android */
+      const snapScrollTo = (y) => {
+        try { window.scrollTo({ top: y, behavior: 'instant' }); }
+        catch(e) { window.scrollTo(0, y); }
+      };
 
-        if (shortSwipe) {
-          /* Swipe corto: avanza di esattamente 1 formato */
-          idx = currentIdx + (touchSwipeDist > 0 ? 1 : -1);
-        } else {
-          /* Swipe lungo: comportamento normale (proiettato dalla velocità) */
-          const vel       = getVelocity();
-          const projected = window.scrollY + vel * 160;
-          if (scrollDir > 0) {
-            idx = Math.ceil(projected / pillH - 0.02);
-          } else {
-            idx = Math.floor(projected / pillH + 0.02);
-          }
-        }
-        touchSwipeDist = 0;
-        /* Arrotonda al pixel intero: evita drift subpixel su mobile */
-        const target = Math.round(idx * pillH);
+      function doSnap(target) {
+        target = Math.round(target);
         if (Math.abs(target - displayY) < 1) return;
-
+        if (isSnapping) { isSnapping = false; snapActive = false; }
         isSnapping = true;
         snapActive = true;
-
         const start    = displayY;
         const dist     = target - start;
         const duration = 260;
         let t0 = null;
-
-        /* scrollTo istantaneo: ferma il momentum iOS/Android */
-        const snapScrollTo = (y) => {
-          try { window.scrollTo({ top: y, behavior: 'instant' }); }
-          catch(e) { window.scrollTo(0, y); }
-        };
-
         function step(t) {
           if (!isSnapping) return;
           if (!t0) t0 = t;
@@ -864,6 +843,41 @@
         }
         requestAnimationFrame(step);
       }
+
+      function scheduleSnap() {
+        const currentIdx = Math.round(displayY / pillH);
+        const shortSwipe = Math.abs(touchSwipeDist) > 0 && Math.abs(touchSwipeDist) < 70;
+        let idx;
+
+        if (shortSwipe) {
+          idx = currentIdx + (touchSwipeDist > 0 ? 1 : -1);
+        } else {
+          const vel       = getVelocity();
+          const projected = window.scrollY + vel * 160;
+          if (scrollDir > 0) {
+            idx = Math.max(Math.ceil(projected / pillH - 0.02), currentIdx + 1);
+          } else {
+            idx = Math.min(Math.floor(projected / pillH + 0.02), currentIdx - 1);
+          }
+        }
+        touchSwipeDist = 0;
+        infoBar.classList.add('scrolling');
+        doSnap(idx * pillH);
+      }
+
+      /* Arrow keys: 1 formato per tasto */
+      document.addEventListener('keydown', (e) => {
+        if (isIdle || expanded) return;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          infoBar.classList.add('scrolling');
+          doSnap((Math.round(displayY / pillH) + 1) * pillH);
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          infoBar.classList.add('scrolling');
+          doSnap((Math.round(displayY / pillH) - 1) * pillH);
+        }
+      });
 
       /* ── RAF loop ── */
       let prevActiveDataImg = -1;
