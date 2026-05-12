@@ -46,23 +46,24 @@
     }
 
     .event {
-      display: inline;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
       color: #000;
       cursor: default;
       transition: color 0s;
     }
     .event::before {
       content: '';
-      display: inline-block;
+      display: block;
       width: 1cap;
       height: 1cap;
       background: #000;
       border-radius: 50%;
-      vertical-align: middle;
-      margin-right: 0.35em;
+      flex-shrink: 0;
     }
-    .event.dimmed { color: #bbb; }
-    .event.dimmed::before { background: #bbb; }
+    .event.dimmed { color: #d8d8d8; }
+    .event.dimmed::before { background: #d8d8d8; }
 
     @media (max-width: 767px) {
       body { padding: 10px; overflow-x: hidden; }

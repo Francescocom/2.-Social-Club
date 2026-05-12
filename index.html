@@ -870,10 +870,12 @@
         if (isIdle || expanded) return;
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
           e.preventDefault();
+          resetIdleTimer();
           infoBar.classList.add('scrolling');
           doSnap((Math.round(displayY / pillH) + 1) * pillH);
         } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
           e.preventDefault();
+          resetIdleTimer();
           infoBar.classList.add('scrolling');
           doSnap((Math.round(displayY / pillH) - 1) * pillH);
         }

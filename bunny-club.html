@@ -186,7 +186,7 @@
       text-decoration: none;
       cursor: pointer;
       white-space: nowrap;
-      animation: explore-flicker 0.7s step-start infinite;
+      animation: explore-flicker 0.5s step-start infinite;
     }
 
     /* ── Griglia foto ── */
@@ -338,14 +338,14 @@
       50%, 100% { color: #87f7a6; }
     }
     .event-row:hover .col-status a {
-      animation: ticket-blink 0.28s step-start infinite;
+      animation: ticket-blink 0.38s step-start infinite;
     }
 
     @keyframes row-flash {
       0%, 100% { background: transparent; }
       30%, 70%  { background: #87f7a6; }
     }
-    .event-row.flash { animation: row-flash 0.2s ease; }
+    .event-row.flash { animation: row-flash 0.1s ease; }
 
     @keyframes tabloid {
       0%, 15%  { transform: translateX(0); }
@@ -540,7 +540,7 @@
     const eventRows = Array.from(document.querySelectorAll('.event-row'));
 
     function flashRows() {
-      const FLASH_DUR = 200;
+      const FLASH_DUR = 100;
       eventRows.forEach((row, i) => {
         setTimeout(() => {
           row.classList.add('flash');
