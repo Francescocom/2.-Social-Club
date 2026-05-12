@@ -163,6 +163,8 @@
       z-index: 5;
     }
     .frame-label.visible { opacity: 1; }
+    /* Discover All replaces the pill text: hide in-frame span when label is visible */
+    .frame:has(.frame-label.visible) .pill.in-frame span { opacity: 0; }
 
     /* ── Info bar in basso ── */
     .info-bar {
@@ -381,7 +383,7 @@
     <div class="bg-img" style="background-image:url('image 3/After.png')"></div>
     <div class="bg-img" style="background-image:url('image 3/Rihanna.png')"></div>
     <div class="bg-img" style="background-image:url('image 3/Lana.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/Bimbi.png')"></div>
+    <div class="bg-img" style="background-image:url('image 3/Bimbi2.png')"></div>
 
     <!-- Idle overlay: dentro scene così è nello stesso stacking context del frame -->
     <div class="idle-screen" id="idleScreen"></div>

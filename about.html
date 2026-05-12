@@ -50,6 +50,7 @@
       margin-top: 60pt;
       padding-bottom: 56px;
     }
+    .description a { color: inherit; text-decoration: none; border-bottom: 1px solid #000; }
 
     /* ── Elenco ── */
     .event-list { padding-bottom: 0; }
@@ -117,7 +118,10 @@
       letter-spacing: var(--ls);
       line-height: 30pt;
       color: #000;
-      white-space: pre;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0 2em;
     }
     .page-footer a { color: #000; text-decoration: none; }
 
@@ -131,7 +135,6 @@
 
       body { overflow-x: hidden; }
       .page-nav { padding: 10px; }
-      .page-footer p { white-space: normal; }
 
       .content { padding: 10px; }
 
@@ -156,7 +159,7 @@
 
   <div class="content">
 
-    <p class="description">Social Club è un'agenzia di eventi musicali nata a Milano nel 2025. Creiamo format itineranti dedicati agli artisti più influenti della scena contemporanea, portando esperienze originali nei principali club italiani. Ogni serata è un tributo fatto di musica, identità visiva e community: un luogo dove il sound di un artista diventa collettivo.</p>
+    <p class="description">Social Club è un collettivo creativo e un'agenzia eventi che porta in giro per l'Italia format musicali contemporanei, costruiti attorno a identità forti e community reali.<br><br>Organizziamo serate, tour e concept che uniscono musica, estetica e cultura clubbing, creando esperienze riconoscibili e immersive.<br><br>Dalle vibes latine di <a href="bunny-club.html">Bunny Club</a> alle sonorità urban pop di Only Rihanna, fino ai concept più notturni e atmosferici, ogni format nasce con un'identità precisa e un pubblico definito.<br><br>Lavoriamo con club, venue e partner in tutta Italia per trasformare ogni evento in qualcosa che le persone vogliono vivere, condividere e ricordare.</p>
 
     <div class="event-list">
       <div class="event-row"><span>Format</span><span>Bunny Club</span><span class="col-right">Bad Bunny</span></div>
@@ -174,8 +177,8 @@
   </div>
 
   <div class="page-footer">
-    <p>Social Club Srls.      Via Viale Strada 6, 20123 Milano (MI), Italy</p>
-    <p>Instagram      Facebook      Mail us      Privacy Policies      Cookies Policy      Legal Notes</p>
+    <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
+    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
   </div>
 
 </body>
