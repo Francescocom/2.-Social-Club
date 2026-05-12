@@ -170,7 +170,7 @@
     /* Bottone "Scroll for Tickets" centrato in fondo al video */
     @keyframes explore-flicker {
       0%, 49%  { opacity: 1; }
-      50%, 100% { opacity: 0.35; }
+      50%, 100% { opacity: 0; }
     }
     .hero-explore {
       position: absolute;
@@ -225,17 +225,21 @@
       display: none;
       overflow: hidden;
     }
-    .photo-overlay.active { display: flex; }
+    .photo-overlay.active { display: block; }
 
     .gallery-left {
+      position: absolute;
+      top: 0; left: 0;
       width: 25vw;
       min-width: 180px;
       max-width: 340px;
-      flex-shrink: 0;
+      height: 100%;
+      overflow-y: auto;
       padding: var(--pad);
       display: flex;
       flex-direction: column;
       cursor: pointer;
+      z-index: 10;
     }
 
     .gallery-event-info {
@@ -257,7 +261,7 @@
     }
     .gallery-num.current { visibility: hidden; }
 
-    .gallery-main { flex: 1; position: relative; }
+    .gallery-main { position: absolute; inset: 0; }
 
     .overlay-main-img {
       position: absolute;
@@ -292,15 +296,12 @@
       top: var(--pad);
       right: var(--pad);
       z-index: 320;
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 1;
-      letter-spacing: var(--ls);
       background: none;
       border: none;
       cursor: pointer;
-      color: #000;
       display: none;
+      padding: 0;
+      line-height: 0;
     }
     .gallery-close-btn.visible { display: block; }
 
@@ -485,7 +486,7 @@
       <div class="gallery-download" id="galleryDownload">Download</div>
     </div>
   </div>
-  <button class="gallery-close-btn" id="galleryClose">×</button>
+  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="0.75" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
 
   <script>
     const heroFrame = document.getElementById('heroFrame');
@@ -504,6 +505,50 @@
     });
     window.addEventListener('resize', setFrame);
 
+    /* ── All photos pool ── */
+    const ALL_PHOTOS = [
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-30.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-31.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-32.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg',
+    ];
+
+    /* ── Row flash cascade (sequential) ── */
+    const eventRows = Array.from(document.querySelectorAll('.event-row'));
+
+    function flashRows() {
+      const FLASH_DUR = 400;
+      eventRows.forEach((row, i) => {
+        setTimeout(() => {
+          row.classList.add('flash');
+          setTimeout(() => row.classList.remove('flash'), FLASH_DUR);
+        }, i * FLASH_DUR);
+      });
+    }
+
     /* ── Scroll for Tickets ── */
     function heroExploreClick() {
       if (window.innerWidth > 767) {
@@ -511,22 +556,8 @@
       } else {
         document.querySelector('.description').scrollIntoView({ behavior: 'smooth' });
       }
+      setTimeout(flashRows, 600);
     }
-
-    /* ── Row flash cascade ── */
-    const eventRows   = Array.from(document.querySelectorAll('.event-row'));
-    const rowObserver = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) return;
-      rowObserver.disconnect();
-      eventRows.forEach((row, i) => {
-        setTimeout(() => {
-          row.classList.add('flash');
-          setTimeout(() => row.classList.remove('flash'), 400);
-        }, i * 120);
-      });
-    }, { threshold: 0.2 });
-    const eventListEl = document.getElementById('eventList');
-    if (eventListEl) rowObserver.observe(eventListEl);
 
     /* ── Gallery ── */
     const photoOverlay     = document.getElementById('photoOverlay');
@@ -556,6 +587,10 @@
         const el = document.createElement('div');
         el.className = 'gallery-num' + (i === startIdx ? ' current' : '');
         el.textContent = String(i + 1).padStart(2, '0');
+        el.addEventListener('mouseenter', () => {
+          galleryIdx = i;
+          updateGalleryView();
+        });
         galleryNums.appendChild(el);
       });
       overlayMainImg.src = images[startIdx];
@@ -568,12 +603,16 @@
       galleryClose.classList.remove('visible');
     }
 
-    /* Per-card click: each card is its own event gallery */
+    /* Per-card click: opens full photo pool starting at clicked photo */
     document.querySelectorAll('.grid-photo-card').forEach(card => {
       const img         = card.querySelector('img');
       const caption     = card.querySelector('.photo-caption');
       const captionHTML = caption ? caption.innerHTML : '';
-      img.addEventListener('click', () => openCardGallery(captionHTML, [img.src], 0));
+      img.addEventListener('click', () => {
+        const filename = img.src.split('/').pop();
+        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p.endsWith(filename)));
+        openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
+      });
     });
 
     /* Click on image = next */
@@ -630,7 +669,7 @@
       a.href = src; a.download = src.split('/').pop(); a.click();
     });
 
-    /* Date: GG<dot>MM<sep><yr> — sep e yr nascosti su mobile */
+    /* Date: GG.MM.YY — sep e yr nascosti su mobile */
     document.querySelectorAll('.event-row span:first-child').forEach(span => {
       const parts = span.textContent.split('.');
       if (parts.length === 3) {
