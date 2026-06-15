@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Only Rihanna — Social Club</title>
+
+  <style>
+    @font-face {
+      font-family: 'Helvetica Now Display';
+      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal; font-display: block;
+    }
+    @font-face {
+      font-family: 'Londrina Solid';
+      src: url('fonts/LondrinaSolid-Black.ttf') format('truetype');
+      font-weight: 900; font-style: normal; font-display: block;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-frame {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      border: clamp(2px, 1.2vw, 12px) solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.15s ease;
+    }
+    .hero-frame.fade-out { opacity: 0; pointer-events: none; }
+
+    .hero-title {
+      font-size: clamp(1rem, 11vw, 12.4rem);
+      font-weight: 400;
+      line-height: 1.1;
+      white-space: nowrap;
+      color: #fff;
+    }
+
+    .hero-topleft,
+    .hero-topright,
+    .hero-bottomleft,
+    .hero-bottomright {
+      position: absolute;
+      z-index: 60;
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: var(--ls);
+      color: #fff;
+      white-space: pre;
+      text-decoration: none;
+    }
+    .hero-topleft    { top: var(--pad);    left: var(--pad); }
+    .hero-topright   { top: var(--pad);    right: var(--pad); }
+    .hero-bottomleft { bottom: var(--pad); left: var(--pad); }
+    .hero-bottomright{ bottom: var(--pad); right: var(--pad); }
+
+    .sc-nav { cursor: pointer; }
+    .sc-nav .sc-default { color: #fff; text-decoration: none; }
+    .sc-nav .sc-hover   { display: none; }
+    .sc-nav:hover .sc-default { display: none; }
+    .sc-nav:hover .sc-hover   { display: inline; }
+    .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
+
+    .fn-nav { cursor: pointer; text-align: right; }
+    .fn-nav .fn-hover { display: none; }
+    .fn-nav:hover .fn-default { display: none; }
+    .fn-nav:hover .fn-hover   { display: inline; }
+    .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
+
+    @keyframes explore-flicker {
+      0%, 49%  { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .hero-explore {
+      position: absolute;
+      bottom: var(--pad);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: var(--ls);
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      animation: explore-flicker 0.5s step-start infinite;
+    }
+
+    /* ── Contenuto ── */
+    :root { --gap: 120px; }
+    .content {
+      padding: var(--gap) var(--side) 0;
+    }
+
+    /* ── Locandine ── */
+    .locandine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px 20px;
+      margin-bottom: 0;
+    }
+    .locandina-card { display: flex; flex-direction: column; }
+    .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
+    .locandina-img-link img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+    }
+    .locandina-info {
+      padding-top: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .locandina-date,
+    .locandina-venue {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+    }
+    .locandina-cta {
+      font-family: 'Londrina Solid', sans-serif;
+      font-size: var(--ui);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 30pt;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .locandina-cta:hover { color: #87f7a6; }
+
+    /* Bio */
+    .description {
+      font-size: var(--ui);
+      font-weight: 400;
+      line-height: 30pt;
+      letter-spacing: var(--ls);
+      text-align: left;
+      margin-top: 60pt;
+      padding-bottom: 0;
+    }
+
+    /* CTAs */
+    .cta-row {
+      display: flex;
+      align-items: baseline;
+      padding: 24px 0 calc(var(--gap) + 60pt);
+    }
+    .cta-social-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0 3em;
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+    }
+    .cta-social-group a {
+      font-size: inherit;
+      font-weight: 400;
+      letter-spacing: inherit;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      height: 200px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 var(--pad) 20px;
+      text-align: center;
+      gap: 0;
+    }
+    .page-footer p {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+      color: #000;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0 2em;
+    }
+    .page-footer a { color: #000; text-decoration: none; }
+
+    @media (max-width: 767px) {
+      :root { --ui: 17pt; }
+
+      .description { line-height: 20pt; padding-bottom: 40pt; }
+      .cta-social-group { line-height: 20pt; }
+
+      body { overflow-x: hidden; }
+      .hero-topleft, .hero-topright,
+      .hero-bottomleft, .hero-bottomright { white-space: normal; }
+
+      .hero-topleft    { top: 10px;    left: 10px; }
+      .hero-topright   { top: 10px;    right: 10px; }
+      .hero-bottomleft { bottom: 10px; left: 10px; }
+      .hero-bottomright{ bottom: 10px; right: 10px; }
+
+      .hero { height: 100svh; }
+      .content { padding: 10px; }
+
+      .locandine-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px 10px;
+      }
+      .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
+
+      .cta-social-group { flex-direction: column; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero con immagine -->
+  <div class="hero">
+    <div class="hero-bg" style="background-image: url('image 4/ONLY RIHANNA.jpg')"></div>
+    <div class="hero-frame" id="heroFrame">
+      <span class="hero-title">Only Rihanna</span>
+    </div>
+
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      <a href="about.html">About us</a>      IT      ©2026</span></div>
+    <div class="hero-topright fn-nav"><span class="fn-default">Only Rihanna</span><span class="fn-hover">Bunny Club      After Hours      Brat Party</span></div>
+    <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
+  </div>
+
+  <!-- Contenuto -->
+  <div class="content" id="content">
+
+    <!-- Griglia locandine -->
+    <div class="locandine-grid">
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/6. Rihanna/@fiveudine Photo by Only Rihanna in Five Udine with @fiveudine, @tende.jpg" alt="Only Rihanna Udine Five">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">06.02</span>
+          <span class="locandina-venue">Udine</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/6. Rihanna/@demodeclub Photo shared by Only Rihanna on January 29, 2026 tagging @.jpg" alt="Only Rihanna Bari Demodè">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">14.02</span>
+          <span class="locandina-venue">Bari</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/6. Rihanna/@vipertheatre Photo by Only Rihanna in Otel with @vipertheatre, @otel_.jpg" alt="Only Rihanna Firenze Otel">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">20.02</span>
+          <span class="locandina-venue">Firenze</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/6. Rihanna/@vibemusiczone Photo by Only Rihanna in VIBE Music Zone with @vibemusi.jpg" alt="Only Rihanna Bergamo Vibe">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">07.03</span>
+          <span class="locandina-venue">Bergamo</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/6. Rihanna/@hacienda_roma Photo by Only Rihanna in hacienda_rome with @hacienda_r.jpg" alt="Only Rihanna Roma Hacienda">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">08.05</span>
+          <span class="locandina-venue">Roma</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="description">Only Rihanna è la serata italiana interamente dedicata alla regina della musica pop mondiale. Una notte di successi senza tempo, dai primi singoli fino agli hit più recenti. Il tributo definitivo a Rihanna, l'artista che ha ridefinito il concetto di star globale.</p>
+
+    <div class="cta-row">
+      <span class="cta-social-group">Visit Only Rihanna<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
+    </div>
+
+  </div>
+  <div class="page-footer">
+    <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
+    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
+  </div>
+
+  <script>
+    const heroFrame = document.getElementById('heroFrame');
+
+    function setFrame() {
+      const titleEl  = heroFrame.querySelector('.hero-title');
+      const naturalH = titleEl.getBoundingClientRect().height;
+      const frameH   = naturalH * 1.1;
+      const frameTop = (window.innerHeight - frameH) / 2;
+      heroFrame.style.height = frameH + 'px';
+      heroFrame.style.top    = frameTop + 'px';
+    }
+    document.fonts.ready.then(() => {
+      setFrame();
+      setTimeout(() => heroFrame.classList.add('fade-out'), 1200);
+    });
+    window.addEventListener('resize', setFrame);
+
+    function heroExploreClick() {
+      if (window.innerWidth > 767) {
+        window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
+      } else {
+        document.querySelector('.locandine-grid').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  </script>
+
+</body>
+</html>
