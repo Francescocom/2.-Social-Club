@@ -11,6 +11,11 @@
       src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
       font-weight: 400; font-style: normal; font-display: block;
     }
+    @font-face {
+      font-family: 'Londrina Solid';
+      src: url('fonts/LondrinaSolid-Black.ttf') format('truetype');
+      font-weight: 900; font-style: normal; font-display: block;
+    }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -105,6 +110,46 @@
     .content {
       padding: var(--gap) var(--side) 0;
     }
+
+    /* ── Locandine ── */
+    .locandine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px 20px;
+      margin-bottom: 80px;
+    }
+    .locandina-card { display: flex; flex-direction: column; }
+    .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
+    .locandina-img-link img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+    }
+    .locandina-info {
+      padding-top: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .locandina-date,
+    .locandina-venue {
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 30pt;
+    }
+    .locandina-cta {
+      font-family: 'Londrina Solid', sans-serif;
+      font-size: var(--ui);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 30pt;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .locandina-cta:hover { color: #87f7a6; }
 
     /* Bio */
     .description {
@@ -395,6 +440,14 @@
       .date-dot { margin: 0; }
       .marquee-text { vertical-align: middle; }
 
+      /* Locandine: 2 colonne su mobile */
+      .locandine-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px 10px;
+        margin-bottom: 40px;
+      }
+      .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
+
       /* Spazio dopo bio: 2 righe */
       .description { padding-bottom: 40pt; }
 
@@ -423,21 +476,82 @@
 
     <!-- Tutto il nav scorre via con il video -->
     <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      <a href="about.html">About us</a>      IT      ©2026</span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover">Brat Party      After Hours      Only Rihanna      Lana Del Rave      BimbiFest</span></div>
+    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover">Brat Party      After Hours      Only Rihanna</span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
 
   <!-- Contenuto -->
   <div class="content" id="content">
 
-    <p class="description">Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l'artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.</p>
+    <!-- Griglia locandine -->
+    <div class="locandine-grid">
 
-    <div class="event-list" id="eventList">
-      <div class="event-row"><span>02.05.26</span><span>Il Muretto, Jesolo</span><span class="col-status"><a href="#" target="_blank"><span class="cta-long">Acquista </span>Ticket</a></span></div>
-      <div class="event-row"><span>30.04.26</span><span>Riva Club, Napoli</span><span class="col-status"><a href="#" target="_blank"><span class="cta-long">Acquista </span>Ticket</a></span></div>
-      <div class="event-row"><span>30.04.26</span><span>NGR Disco, Cesenatico</span><span class="col-status"><a href="#" target="_blank"><span class="cta-long">Acquista </span>Ticket</a></span></div>
-      <div class="event-row"><span>25.04.26</span><span>Magazzini Generali, Milano</span><span class="col-status"><a href="#" target="_blank"><span class="cta-long">Acquista </span>Ticket</a></span></div>
-      <div class="event-row"><span>25.04.26</span><span>Madame Butterfly, Ferrara</span><span class="col-status"><a href="#" target="_blank"><span class="cta-long">Acquista </span>Ticket</a></span></div>
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@acqueminerali_discoteca Photo by Bunny Club in Imola with @acqueminer.jpg" alt="Bunny Club Imola">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">29.05</span>
+          <span class="locandina-venue">Imola</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@demodeclub Photo by Bunny Club in Bloom Beach Bar with @demodeclub, @.jpg" alt="Bunny Club Molfetta">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">31.05</span>
+          <span class="locandina-venue">Molfetta</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@circolomagnolia Photo by Bunny Club in Milano with @circolomagnolia,.jpg" alt="Bunny Club Milano">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">19.06</span>
+          <span class="locandina-venue">Milano</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@ermore_deleo Photo by Bunny Club in MAMAMIA with @ermore_deleo, @mama.jpg" alt="Bunny Club Senigallia">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">20.06</span>
+          <span class="locandina-venue">Senigallia</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@eursocialpark Photo shared by Bunny Club on June 08, 2026 tagging @eu.jpg" alt="Bunny Club Roma">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">25.06</span>
+          <span class="locandina-venue">Roma</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
+      <div class="locandina-card">
+        <a class="locandina-img-link" href="#" target="_blank">
+          <img src="6. Serate/1. Bad Bunny/@ilmuretto_official Photo shared by Bunny Club on June 15, 2026 taggin.jpg" alt="Bunny Club Jesolo">
+        </a>
+        <div class="locandina-info">
+          <span class="locandina-date">30.07 · 6.08 · 13.08</span>
+          <span class="locandina-venue">Jesolo</span>
+          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
+        </div>
+      </div>
+
     </div>
 
     <div class="cta-row">
@@ -468,6 +582,8 @@
 
     </div>
     </div>
+
+    <p class="description">Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l'artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.</p>
 
   </div>
   <div class="page-footer">
@@ -554,9 +670,8 @@
       if (window.innerWidth > 767) {
         window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
       } else {
-        document.querySelector('.description').scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('.locandine-grid').scrollIntoView({ behavior: 'smooth' });
       }
-      setTimeout(flashRows, 600);
     }
 
     /* ── Gallery ── */
