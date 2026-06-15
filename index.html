@@ -649,13 +649,13 @@
       }
       resetIdleTimer(); /* countdown per inattività */
 
-      /* Clic su pill Bunny Club (data-img="0") → apre pagina format */
+      /* Clic su pill → apre pagina format */
+      const FORMAT_PAGES = ['bunny-club.html', 'brat-party.html', 'after-hours.html', 'only-rihanna.html'];
       allPills.forEach(pill => {
-        if (pill.dataset.img === '0') {
+        const page = FORMAT_PAGES[parseInt(pill.dataset.img)];
+        if (page) {
           pill.style.cursor = 'pointer';
-          pill.addEventListener('click', () => {
-            window.location.href = 'bunny-club.html';
-          });
+          pill.addEventListener('click', () => { window.location.href = page; });
         }
       });
 
