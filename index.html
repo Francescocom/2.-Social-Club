@@ -378,12 +378,10 @@
 
   <div class="scene">
 
-    <div class="bg-img" style="background-image:url('image 3/Bunny.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/Brat.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/After.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/Rihanna.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/Lana.png')"></div>
-    <div class="bg-img" style="background-image:url('image 3/Bimbi2.png')"></div>
+    <div class="bg-img" style="background-image:url('image 4/BUNNY CLUB.jpg')"></div>
+    <div class="bg-img" style="background-image:url('image 4/BRAT PARTY.jpg')"></div>
+    <div class="bg-img" style="background-image:url('image 4/AFTER HOURS.jpg')"></div>
+    <div class="bg-img" style="background-image:url('image 4/ONLY RIHANNA.jpg')"></div>
 
     <!-- Idle overlay: dentro scene così è nello stesso stacking context del frame -->
     <div class="idle-screen" id="idleScreen"></div>
@@ -401,24 +399,18 @@
         <div class="pill" data-img="1"><span>Brat Party</span></div>
         <div class="pill" data-img="2"><span>After Hours</span></div>
         <div class="pill" data-img="3"><span>Only Rihanna</span></div>
-        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
-        <div class="pill" data-img="5"><span>BimbiFest</span></div>
 
         <!-- Set B -->
         <div class="pill" data-img="0"><span>Bunny Club</span></div>
         <div class="pill" data-img="1"><span>Brat Party</span></div>
         <div class="pill" data-img="2"><span>After Hours</span></div>
         <div class="pill" data-img="3"><span>Only Rihanna</span></div>
-        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
-        <div class="pill" data-img="5"><span>BimbiFest</span></div>
 
         <!-- Set C -->
         <div class="pill" data-img="0"><span>Bunny Club</span></div>
         <div class="pill" data-img="1"><span>Brat Party</span></div>
         <div class="pill" data-img="2"><span>After Hours</span></div>
         <div class="pill" data-img="3"><span>Only Rihanna</span></div>
-        <div class="pill" data-img="4"><span>Lana Del Rave</span></div>
-        <div class="pill" data-img="5"><span>BimbiFest</span></div>
 
       </div>
     </div>
@@ -466,14 +458,12 @@
     const idleTagline = document.getElementById('idleTagline');
     const bgImgs      = Array.from(document.querySelectorAll('.bg-img'));
 
-    /* Dati evento per ogni format (ordine: data-img 0→5) */
+    /* Dati evento per ogni format (ordine: data-img 0→3) */
     const formatInfo = [
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Bunny Club
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Brat Party
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // After Hours
       { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Only Rihanna
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Lana Del Rave
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // BimbiFest
     ];
 
     /* Hover sul bottone circolare → mostra "Discover All" nel rettangolo (solo desktop) */
@@ -502,7 +492,7 @@
 
     function setup() {
       const allPills = Array.from(track.querySelectorAll('.pill'));
-      const NUM      = 6;
+      const NUM      = 4;
 
       /* ── Hover: tracciamo isHovered separato dalla classe CSS
          così durante lo scroll possiamo togliere la classe
@@ -592,7 +582,7 @@
 
       /* Spin: 1 giro completo + atterraggio su format random in 1.8s */
       function launchSpin() {
-        const randomFmt  = Math.floor(Math.random() * 6);
+        const randomFmt  = Math.floor(Math.random() * 4);
         const curIdx     = Math.round(displayY / pillH);
         const curInSet   = ((curIdx % 6) + 6) % 6;
         const extra      = ((randomFmt - curInSet) + 6) % 6;

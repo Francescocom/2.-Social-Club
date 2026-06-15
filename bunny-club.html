@@ -345,7 +345,7 @@
       0%, 100% { background: transparent; }
       30%, 70%  { background: #87f7a6; }
     }
-    .event-row.flash { animation: row-flash 0.1s ease; }
+    .event-row.flash { animation: row-flash 0.15s ease; }
 
     @keyframes tabloid {
       0%, 15%  { transform: translateX(0); }
@@ -540,7 +540,7 @@
     const eventRows = Array.from(document.querySelectorAll('.event-row'));
 
     function flashRows() {
-      const FLASH_DUR = 100;
+      const FLASH_DUR = 150;
       eventRows.forEach((row, i) => {
         setTimeout(() => {
           row.classList.add('flash');
