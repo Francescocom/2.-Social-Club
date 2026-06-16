@@ -36,6 +36,7 @@
       background: #000;
       overflow: hidden;
     }
+    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 
     .hero-video {
       position: absolute;
@@ -521,7 +522,8 @@
 
   <!-- Hero con video -->
   <div class="hero">
-    <video class="hero-video" autoplay muted loop playsinline>
+    <div class="hero-bg" style="background-image: url('image 4/BUNNY CLUB.jpg')"></div>
+    <video class="hero-video" autoplay muted loop playsinline poster="image 4/BUNNY CLUB.jpg">
       <source src="1. Bad Bunny/1. Video/-VISUAL 4 - B.BUNNY.mp4" type="video/mp4">
     </video>
     <div class="hero-frame" id="heroFrame">
