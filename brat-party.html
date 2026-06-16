@@ -124,9 +124,9 @@
     .gallery-close-btn { position: fixed; top: var(--pad); right: var(--pad); z-index: 320; background: none; border: none; cursor: pointer; display: none; padding: 0; line-height: 0; }
     .gallery-close-btn.visible { display: block; }
 
-    .page-footer { height: 200px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 var(--pad) 20px; text-align: center; gap: 0; }
-    .page-footer p { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #000; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2em; }
-    .page-footer a { color: #000; text-decoration: none; }
+    .page-footer { height: 200px; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 var(--pad) 20px; text-align: center; gap: 0; }
+    .page-footer p { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2em; }
+    .page-footer a { color: #fff; text-decoration: none; }
 
     @media (max-width: 767px) {
       :root { --ui: 17pt; }
@@ -152,8 +152,27 @@
         bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
         left: var(--pad); right: var(--pad); justify-content: space-between; z-index: 10;
       }
-      .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
-      .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
+      /* Reset hover on mobile; use JS click toggle */
+      .sc-nav:hover .sc-default { display: inline; }
+      .sc-nav:hover .sc-hover { display: none; }
+      .fn-nav:hover .fn-default { display: inline; }
+      .fn-nav:hover .fn-hover { display: none; }
+      .hero:has(.fn-nav:hover) .sc-nav { visibility: visible; }
+
+      .sc-nav.expanded .sc-hover {
+        display: flex; flex-direction: column; align-items: flex-start;
+        white-space: normal; margin-top: 4px;
+      }
+      .sc-nav.expanded .sc-hover .nav-sep,
+      .sc-nav.expanded .sc-hover .nav-br { display: none; }
+      .sc-nav.expanded .sc-hover a,
+      .sc-nav.expanded .sc-hover .nav-item { line-height: 20pt; }
+      .fn-nav.expanded .fn-hover {
+        display: flex; flex-direction: column; align-items: flex-end;
+        white-space: normal; margin-top: 4px;
+      }
+      .fn-nav.expanded .fn-hover .nav-sep { display: none; }
+      .fn-nav.expanded .fn-hover a { line-height: 20pt; }
     }
   </style>
 </head>
@@ -162,8 +181,8 @@
   <div class="hero">
     <div class="hero-bg" style="background-image: url('image 4/BRAT PARTY.jpg')"></div>
     <div class="hero-frame" id="heroFrame"><span class="hero-title">Brat Party</span></div>
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      <a href="about.html">About us</a>      IT      ©2026</span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Brat Party</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a>      <a href="after-hours.html">After Hours</a>      <a href="only-rihanna.html">Only Rihanna</a></span></div>
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><br class="nav-br"><span class="nav-item">©2026</span></span></div>
+    <div class="hero-topright fn-nav"><span class="fn-default">Brat Party</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
 
@@ -239,21 +258,21 @@
   <div class="photo-grid" id="photoGrid">
 
     <div class="photo-group">
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_18bd7f05be99fdf6938126f382070371.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_34f05f79e2bed947b8bf4edd381bfca0.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_08d4d91f6d0e86564d56a540713e687c.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
     </div>
 
     <div class="photo-group">
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_3f25065e3f9b4b3e871dfb5bb08a9251.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_4516890c3ddb9f9dd925ecc6f97c2a5c.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_38e4e6b84791cae884d82dea07fdbdae.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
     </div>
 
     <div class="photo-group">
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_8508744d2f1c89adf9bc286813ff4996.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_8c4248f8009ecd70d6d0e0db7f3edf08.jpg" alt=""></div>
-      <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_597717935cf07c719a7d469efad5ae7b.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
     </div>
 
   </div>
@@ -301,15 +320,33 @@
     }
 
     const ALL_PHOTOS = [
-      '3. Brat Party/2. Foto/original_18bd7f05be99fdf6938126f382070371.jpg',
-      '3. Brat Party/2. Foto/original_34f05f79e2bed947b8bf4edd381bfca0.jpg',
-      '3. Brat Party/2. Foto/original_08d4d91f6d0e86564d56a540713e687c.jpg',
-      '3. Brat Party/2. Foto/original_3f25065e3f9b4b3e871dfb5bb08a9251.jpg',
-      '3. Brat Party/2. Foto/original_4516890c3ddb9f9dd925ecc6f97c2a5c.jpg',
-      '3. Brat Party/2. Foto/original_38e4e6b84791cae884d82dea07fdbdae.jpg',
-      '3. Brat Party/2. Foto/original_8508744d2f1c89adf9bc286813ff4996.jpg',
-      '3. Brat Party/2. Foto/original_8c4248f8009ecd70d6d0e0db7f3edf08.jpg',
-      '3. Brat Party/2. Foto/original_597717935cf07c719a7d469efad5ae7b.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-30.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-31.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-32.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg',
+      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg',
     ];
 
     const photoOverlay     = document.getElementById('photoOverlay');
@@ -340,6 +377,7 @@
         galleryNums.appendChild(el);
       });
       overlayMainImg.src = images[startIdx];
+      document.body.style.overflow = 'hidden';
       photoOverlay.classList.add('active');
       galleryClose.classList.add('visible');
     }
@@ -347,6 +385,7 @@
     function closeGallery() {
       photoOverlay.classList.remove('active');
       galleryClose.classList.remove('visible');
+      document.body.style.overflow = '';
     }
 
     document.querySelectorAll('.grid-photo-card').forEach(card => {
@@ -415,6 +454,30 @@
       galleryIdx = (galleryIdx + 1) % galleryImages.length;
       updateGalleryView();
     });
+
+    photoOverlay.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+
+    (function() {
+      const scNav = document.querySelector('.sc-nav');
+      const fnNav = document.querySelector('.fn-nav');
+      function isMobile() { return window.innerWidth <= 767; }
+      scNav.addEventListener('click', function(e) {
+        if (!isMobile()) return;
+        scNav.classList.toggle('expanded');
+        fnNav.classList.remove('expanded');
+        e.stopPropagation();
+      });
+      fnNav.addEventListener('click', function(e) {
+        if (!isMobile()) return;
+        fnNav.classList.toggle('expanded');
+        scNav.classList.remove('expanded');
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function() {
+        scNav.classList.remove('expanded');
+        fnNav.classList.remove('expanded');
+      });
+    })();
   </script>
 
 </body>

@@ -337,7 +337,7 @@
       font-weight: 400;
       letter-spacing: var(--ls);
       line-height: 1;
-      color: #fff;
+      color: #000;
       cursor: pointer;
       z-index: 3;
       white-space: nowrap;
@@ -374,7 +374,7 @@
     /* ── Footer ── */
     .page-footer {
       height: 200px;
-      background: #fff;
+      background: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -388,14 +388,14 @@
       font-weight: 400;
       letter-spacing: var(--ls);
       line-height: 30pt;
-      color: #000;
+      color: #fff;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 0 2em;
     }
     .page-footer a {
-      color: #000;
+      color: #fff;
       text-decoration: none;
     }
 
@@ -492,8 +492,27 @@
       .photo-group { flex-direction: column; }
       .photo-caption { padding: 10px; line-height: 20pt; }
 
-      .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
-      .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
+      /* Reset hover on mobile; use JS click toggle */
+      .sc-nav:hover .sc-default { display: inline; }
+      .sc-nav:hover .sc-hover { display: none; }
+      .fn-nav:hover .fn-default { display: inline; }
+      .fn-nav:hover .fn-hover { display: none; }
+      .hero:has(.fn-nav:hover) .sc-nav { visibility: visible; }
+
+      .sc-nav.expanded .sc-hover {
+        display: flex; flex-direction: column; align-items: flex-start;
+        white-space: normal; margin-top: 4px;
+      }
+      .sc-nav.expanded .sc-hover .nav-sep,
+      .sc-nav.expanded .sc-hover .nav-br { display: none; }
+      .sc-nav.expanded .sc-hover a,
+      .sc-nav.expanded .sc-hover .nav-item { line-height: 20pt; }
+      .fn-nav.expanded .fn-hover {
+        display: flex; flex-direction: column; align-items: flex-end;
+        white-space: normal; margin-top: 4px;
+      }
+      .fn-nav.expanded .fn-hover .nav-sep { display: none; }
+      .fn-nav.expanded .fn-hover a { line-height: 20pt; }
     }
   </style>
 </head>
@@ -509,8 +528,8 @@
     </div>
 
     <!-- Tutto il nav scorre via con il video -->
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      <a href="about.html">About us</a>      IT      ©2026</span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover"><a href="brat-party.html">Brat Party</a>      <a href="after-hours.html">After Hours</a>      <a href="only-rihanna.html">Only Rihanna</a></span></div>
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><br class="nav-br"><span class="nav-item">©2026</span></span></div>
+    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover"><a href="brat-party.html">Brat Party</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
 
@@ -747,6 +766,7 @@
         galleryNums.appendChild(el);
       });
       overlayMainImg.src = images[startIdx];
+      document.body.style.overflow = 'hidden';
       photoOverlay.classList.add('active');
       galleryClose.classList.add('visible');
     }
@@ -754,6 +774,7 @@
     function closeGallery() {
       photoOverlay.classList.remove('active');
       galleryClose.classList.remove('visible');
+      document.body.style.overflow = '';
     }
 
     /* Per-card click: opens full photo pool starting at clicked photo */
@@ -838,6 +859,30 @@
       galleryIdx = (galleryIdx + 1) % galleryImages.length;
       updateGalleryView();
     });
+
+    photoOverlay.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+
+    (function() {
+      const scNav = document.querySelector('.sc-nav');
+      const fnNav = document.querySelector('.fn-nav');
+      function isMobile() { return window.innerWidth <= 767; }
+      scNav.addEventListener('click', function(e) {
+        if (!isMobile()) return;
+        scNav.classList.toggle('expanded');
+        fnNav.classList.remove('expanded');
+        e.stopPropagation();
+      });
+      fnNav.addEventListener('click', function(e) {
+        if (!isMobile()) return;
+        fnNav.classList.toggle('expanded');
+        scNav.classList.remove('expanded');
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function() {
+        scNav.classList.remove('expanded');
+        fnNav.classList.remove('expanded');
+      });
+    })();
 
     /* Date: GG.MM.YY — sep e yr nascosti su mobile */
     document.querySelectorAll('.event-row span:first-child').forEach(span => {
