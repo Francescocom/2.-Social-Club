@@ -123,8 +123,8 @@
     :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: center;
+      background-size: 100% auto;
+      background-position: top center;
       background-repeat: no-repeat;
     }
 
@@ -133,7 +133,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 60px 20px;
-      margin-bottom: 0;
+      margin-bottom: 80px;
     }
     .locandina-card { display: flex; flex-direction: column; }
     .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
@@ -345,6 +345,7 @@
 
       .description { line-height: 20pt; padding-bottom: 40pt; }
       .cta-social-group { line-height: 20pt; }
+      .page-footer p { line-height: 20pt; }
 
       body { overflow-x: hidden; }
       .hero-topleft, .hero-topright,
@@ -362,6 +363,7 @@
       .locandine-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 30px 10px;
+        margin-bottom: 40px;
       }
       .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
 
@@ -369,6 +371,9 @@
 
       .photo-group { flex-direction: column; }
       .photo-caption { padding: 10px; line-height: 20pt; }
+
+      .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
+      .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
     }
   </style>
 </head>
@@ -469,6 +474,25 @@
     <!-- Griglia foto -->
     <div class="photo-grid-wrap">
     <div class="photo-grid" id="photoGrid">
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_08d4d91f6d0e86564d56a540713e687c.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_18bd7f05be99fdf6938126f382070371.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_34f05f79e2bed947b8bf4edd381bfca0.jpg" alt=""></div>
+      </div>
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_38e4e6b84791cae884d82dea07fdbdae.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_3f25065e3f9b4b3e871dfb5bb08a9251.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_4516890c3ddb9f9dd925ecc6f97c2a5c.jpg" alt=""></div>
+      </div>
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_597717935cf07c719a7d469efad5ae7b.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_8508744d2f1c89adf9bc286813ff4996.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="3. Brat Party/2. Foto/original_8c4248f8009ecd70d6d0e0db7f3edf08.jpg" alt=""></div>
+      </div>
+
     </div>
     </div>
 
@@ -517,7 +541,17 @@
     }
 
     /* ── Gallery ── */
-    const ALL_PHOTOS = [];
+    const ALL_PHOTOS = [
+      '3. Brat Party/2. Foto/original_08d4d91f6d0e86564d56a540713e687c.jpg',
+      '3. Brat Party/2. Foto/original_18bd7f05be99fdf6938126f382070371.jpg',
+      '3. Brat Party/2. Foto/original_34f05f79e2bed947b8bf4edd381bfca0.jpg',
+      '3. Brat Party/2. Foto/original_38e4e6b84791cae884d82dea07fdbdae.jpg',
+      '3. Brat Party/2. Foto/original_3f25065e3f9b4b3e871dfb5bb08a9251.jpg',
+      '3. Brat Party/2. Foto/original_4516890c3ddb9f9dd925ecc6f97c2a5c.jpg',
+      '3. Brat Party/2. Foto/original_597717935cf07c719a7d469efad5ae7b.jpg',
+      '3. Brat Party/2. Foto/original_8508744d2f1c89adf9bc286813ff4996.jpg',
+      '3. Brat Party/2. Foto/original_8c4248f8009ecd70d6d0e0db7f3edf08.jpg',
+    ];
 
     const photoOverlay     = document.getElementById('photoOverlay');
     const overlayMainImg   = document.getElementById('overlayMainImg');

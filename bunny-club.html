@@ -110,8 +110,8 @@
     :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: center;
+      background-size: 100% auto;
+      background-position: top center;
       background-repeat: no-repeat;
     }
 
@@ -467,6 +467,9 @@
       /* Foto: tutte impilate 2:3 senza margine */
       .photo-group { flex-direction: column; }
       .photo-caption { padding: 10px; line-height: 20pt; }
+
+      .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
+      .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
     }
   </style>
 </head>

@@ -123,8 +123,8 @@
     :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: center;
+      background-size: 100% auto;
+      background-position: top center;
       background-repeat: no-repeat;
     }
 
@@ -133,7 +133,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 60px 20px;
-      margin-bottom: 0;
+      margin-bottom: 80px;
     }
     .locandina-card { display: flex; flex-direction: column; }
     .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
@@ -348,6 +348,7 @@
 
       .description { line-height: 20pt; padding-bottom: 40pt; }
       .cta-social-group { line-height: 20pt; }
+      .page-footer p { line-height: 20pt; }
 
       body { overflow-x: hidden; }
       .hero-topleft, .hero-topright,
@@ -365,6 +366,7 @@
       .locandine-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 30px 10px;
+        margin-bottom: 40px;
       }
       .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
 
@@ -372,6 +374,9 @@
 
       .photo-group { flex-direction: column; }
       .photo-caption { padding: 10px; line-height: 20pt; }
+
+      .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
+      .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
     }
   </style>
 </head>
@@ -450,6 +455,25 @@
     <!-- Griglia foto -->
     <div class="photo-grid-wrap">
     <div class="photo-grid" id="photoGrid">
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_019256e908de93e194a89626ca5bcc55.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0a104ad0e958a93b5d26572ab592f0f9.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg" alt=""></div>
+      </div>
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1432dac31b0ede5c726466491789ee2f.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1c642d0d5ba31ad520921ba2486fe4bb.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg" alt=""></div>
+      </div>
+
+      <div class="photo-group">
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_2c50c16e2875b97d03d188346a8a7d70.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b0911e904aadbfee604845e281026a7.jpg" alt=""></div>
+        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg" alt=""></div>
+      </div>
+
     </div>
     </div>
 
@@ -498,7 +522,17 @@
     }
 
     /* ── Gallery ── */
-    const ALL_PHOTOS = [];
+    const ALL_PHOTOS = [
+      '2. After Hours/2. Foto/original_019256e908de93e194a89626ca5bcc55.jpg',
+      '2. After Hours/2. Foto/original_0a104ad0e958a93b5d26572ab592f0f9.jpg',
+      '2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg',
+      '2. After Hours/2. Foto/original_1432dac31b0ede5c726466491789ee2f.jpg',
+      '2. After Hours/2. Foto/original_1c642d0d5ba31ad520921ba2486fe4bb.jpg',
+      '2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg',
+      '2. After Hours/2. Foto/original_2c50c16e2875b97d03d188346a8a7d70.jpg',
+      '2. After Hours/2. Foto/original_4b0911e904aadbfee604845e281026a7.jpg',
+      '2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg',
+    ];
 
     const photoOverlay     = document.getElementById('photoOverlay');
     const overlayMainImg   = document.getElementById('overlayMainImg');
