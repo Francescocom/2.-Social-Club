@@ -558,7 +558,7 @@
 
       function resetIdleTimer() {
         clearTimeout(idleTimer);
-        idleTimer = setTimeout(enterIdle, 5000);
+        if (window.innerWidth > 767) idleTimer = setTimeout(enterIdle, 5000);
       }
 
       /* Spin: 1 giro completo + atterraggio su format random in 1.8s */
