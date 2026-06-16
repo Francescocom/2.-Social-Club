@@ -272,7 +272,7 @@
     .photo-overlay {
       position: fixed;
       inset: 0;
-      background: #fff;
+      background: #000;
       z-index: 300;
       display: none;
       overflow: hidden;
@@ -292,6 +292,7 @@
       flex-direction: column;
       cursor: pointer;
       z-index: 10;
+      color: #fff;
     }
 
     .gallery-event-info {
@@ -337,7 +338,7 @@
       font-weight: 400;
       letter-spacing: var(--ls);
       line-height: 1;
-      color: #000;
+      color: #fff;
       cursor: pointer;
       z-index: 3;
       white-space: nowrap;
@@ -364,7 +365,7 @@
       font-weight: 400;
       letter-spacing: var(--ls);
       line-height: 1;
-      color: #000;
+      color: #fff;
       background: none;
       border: none;
       cursor: pointer;
@@ -659,7 +660,7 @@
       <button class="gallery-next" id="galleryNext">Next</button>
     </div>
   </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
+  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
 
   <script>
     const heroFrame = document.getElementById('heroFrame');

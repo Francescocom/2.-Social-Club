@@ -27,11 +27,22 @@
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.52);
-      z-index: 0;
+      z-index: 1;
       pointer-events: none;
     }
 
-    .page-nav, .content, .page-footer { position: relative; z-index: 1; }
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.45s;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-nav, .content, .page-footer { position: relative; z-index: 2; }
 
     .page-nav {
       display: flex;
@@ -146,6 +157,11 @@
 </head>
 <body>
 
+  <div class="bg-layer" id="bg-bunny-club"   style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg')"></div>
+  <div class="bg-layer" id="bg-brat-party"   style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg')"></div>
+  <div class="bg-layer" id="bg-after-hours"  style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg')"></div>
+  <div class="bg-layer" id="bg-only-rihanna" style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg')"></div>
+
   <div class="page-nav">
     <a href="index.html?direct=1">Social Club</a>
     <span>About</span>
@@ -173,5 +189,26 @@
     <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
   </div>
 
+  <script>
+    (function() {
+      const bgMap = {
+        'bunny-club.html':  document.getElementById('bg-bunny-club'),
+        'brat-party.html':  document.getElementById('bg-brat-party'),
+        'after-hours.html': document.getElementById('bg-after-hours'),
+        'only-rihanna.html':document.getElementById('bg-only-rihanna'),
+      };
+      document.querySelectorAll('.format-link').forEach(link => {
+        const bg = bgMap[link.getAttribute('href')];
+        if (!bg) return;
+        link.addEventListener('mouseenter', () => {
+          Object.values(bgMap).forEach(el => { el.style.opacity = '0'; });
+          bg.style.opacity = '1';
+        });
+        link.addEventListener('mouseleave', () => {
+          bg.style.opacity = '0';
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

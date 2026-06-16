@@ -101,10 +101,10 @@
     .grid-photo-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; cursor: pointer; }
     .photo-caption { position: absolute; top: 0; left: 0; z-index: 1; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; padding: var(--pad); padding-top: calc(var(--pad) - (1cap - 1ex)); pointer-events: none; }
 
-    .photo-overlay { position: fixed; inset: 0; background: #fff; z-index: 300; display: none; overflow: hidden; }
+    .photo-overlay { position: fixed; inset: 0; background: #000; z-index: 300; display: none; overflow: hidden; }
     .photo-overlay.active { display: block; }
 
-    .gallery-left { position: absolute; top: 0; left: 0; width: 25vw; min-width: 180px; max-width: 340px; height: 100%; overflow-y: auto; padding: var(--pad); display: flex; flex-direction: column; cursor: pointer; z-index: 10; }
+    .gallery-left { position: absolute; top: 0; left: 0; width: 25vw; min-width: 180px; max-width: 340px; height: 100%; overflow-y: auto; padding: var(--pad); display: flex; flex-direction: column; cursor: pointer; z-index: 10; color: #fff; }
     .gallery-event-info { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); margin-bottom: 30pt; }
     .gallery-nums { display: flex; flex-direction: column; }
     .gallery-num { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: 0; font-feature-settings: "tnum" 1, "onum" 1; }
@@ -112,13 +112,13 @@
 
     .gallery-main { position: absolute; inset: 0; }
     .overlay-main-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); height: 100%; width: auto; max-width: 100%; object-fit: contain; cursor: pointer; z-index: 2; }
-    .gallery-download { position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%); font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 1; color: #000; cursor: pointer; z-index: 3; white-space: nowrap; }
+    .gallery-download { position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%); font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 1; color: #fff; cursor: pointer; z-index: 3; white-space: nowrap; }
 
     .gallery-mobile-nav { display: none; }
     .gallery-prev, .gallery-next {
       font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
       font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls);
-      line-height: 1; color: #000; background: none; border: none; cursor: pointer; padding: 0;
+      line-height: 1; color: #fff; background: none; border: none; cursor: pointer; padding: 0;
     }
 
     .gallery-close-btn { position: fixed; top: var(--pad); right: var(--pad); z-index: 320; background: none; border: none; cursor: pointer; display: none; padding: 0; line-height: 0; }
@@ -297,7 +297,7 @@
       <button class="gallery-next" id="galleryNext">Next</button>
     </div>
   </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
+  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
 
   <script>
     const heroFrame = document.getElementById('heroFrame');

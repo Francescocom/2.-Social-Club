@@ -180,20 +180,6 @@
     }
     .info-bar.scrolling { opacity: 0; pointer-events: none; }
 
-    /* ── Archive link bottom-right ── */
-    .archive-link {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      font-size: 25pt;
-      font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: 0.01em;
-      color: #fff;
-      text-decoration: none;
-      z-index: 100;
-    }
-
     /* ── Idle tagline (top center, visibile solo in idle hover) ── */
     .idle-tagline {
       position: fixed;
@@ -311,7 +297,6 @@
     body.idle-mode .info-bar,
     body.idle-mode .bottom-right,
     body.idle-mode .overlay-btn,
-    body.idle-mode .archive-link,
     body.idle-mode .top-left-block { opacity: 0; pointer-events: none; }
 
     /* Loader iniziale: colori invertiti (fondo nero) */
@@ -334,7 +319,6 @@
       :root { --ui: 17pt; }
 
       /* Tipografia secondaria */
-      .archive-link,
       .idle-tagline,
       .bottom-right span,
       .info-default, .info-hover,
@@ -353,7 +337,6 @@
       .frame         { left: 10px; right: 10px; }
       .overlay-btn   { top: 10px; right: 10px; }
       .info-bar      { bottom: 10px; left: 10px; }
-      .archive-link  { bottom: 10px; right: 10px; }
       .idle-tagline  { top: 10px; }
       .bottom-right  { top: 10px; left: 10px; }
 
@@ -416,8 +399,6 @@
     </div>
 
   </div>
-
-  <a class="archive-link" href="archive.html">Archive</a>
 
   <!-- Tagline idle: visibile in alto centrato solo durante idle hover -->
   <div class="idle-tagline" id="idleTagline">Different Sounds, One Club.</div>
