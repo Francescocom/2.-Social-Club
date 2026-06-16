@@ -110,7 +110,7 @@
     :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
-      background-size: 100% auto;
+      background-size: cover;
       background-position: top center;
       background-repeat: no-repeat;
     }
@@ -242,7 +242,7 @@
     }
 
     /* ── Griglia foto ── */
-    .photo-grid-wrap { margin: 0 calc(-1 * var(--side)); }
+    .photo-grid-wrap { margin: 0; }
     .photo-grid { display: flex; flex-direction: column; gap: 0; }
     .photo-group { display: flex; gap: 0; }
     .grid-photo-card { flex: 1; position: relative; }
@@ -357,6 +357,20 @@
     }
     .gallery-close-btn.visible { display: block; }
 
+    .gallery-mobile-nav { display: none; }
+    .gallery-prev, .gallery-next {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: var(--ui);
+      font-weight: 400;
+      letter-spacing: var(--ls);
+      line-height: 1;
+      color: #000;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
     /* ── Footer ── */
     .page-footer {
       height: 200px;
@@ -433,7 +447,17 @@
 
       .hero { height: 100svh; }
       .content { padding: 10px; }
-      .photo-grid-wrap { margin: 0 -10px; }
+      .photo-grid-wrap { margin: 0; }
+      .gallery-left { display: none; }
+      .gallery-mobile-nav {
+        display: flex;
+        position: absolute;
+        bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+        left: var(--pad);
+        right: var(--pad);
+        justify-content: space-between;
+        z-index: 10;
+      }
 
       /* Date: solo giorno/mese */
       .date-sep, .date-yr { display: none; }
@@ -570,32 +594,31 @@
       <span class="cta-social-group">Visit Bunny Club<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
     </div>
 
-    <!-- Griglia foto -->
-    <div class="photo-grid-wrap">
-    <div class="photo-grid" id="photoGrid">
 
-      <div class="photo-group group-a">
-        <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>2 Maggio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
-      </div>
+  </div>
 
-      <div class="photo-group group-b">
-        <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
-      </div>
+  <div class="photo-grid-wrap">
+  <div class="photo-grid" id="photoGrid">
 
-      <div class="photo-group group-c">
-        <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
-        <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31 Gennaio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
-      </div>
-
-    </div>
+    <div class="photo-group group-a">
+      <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>2 Maggio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
     </div>
 
+    <div class="photo-group group-b">
+      <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
+    </div>
 
+    <div class="photo-group group-c">
+      <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
+      <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31 Gennaio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
+    </div>
+
+  </div>
   </div>
   <div class="page-footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
@@ -611,6 +634,10 @@
     <div class="gallery-main">
       <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
       <div class="gallery-download" id="galleryDownload">Download</div>
+    </div>
+    <div class="gallery-mobile-nav">
+      <button class="gallery-prev" id="galleryPrev">Previous</button>
+      <button class="gallery-next" id="galleryNext">Next</button>
     </div>
   </div>
   <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
@@ -735,8 +762,8 @@
       const caption     = card.querySelector('.photo-caption');
       const captionHTML = caption ? caption.innerHTML : '';
       img.addEventListener('click', () => {
-        const filename = img.src.split('/').pop();
-        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p.endsWith(filename)));
+        const src = img.getAttribute('src');
+        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p === src));
         openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
       });
     });
@@ -797,6 +824,19 @@
       const src = galleryImages[galleryIdx];
       const a = document.createElement('a');
       a.href = src; a.download = src.split('/').pop(); a.click();
+    });
+
+    const galleryPrev = document.getElementById('galleryPrev');
+    const galleryNext = document.getElementById('galleryNext');
+    galleryPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
+      updateGalleryView();
+    });
+    galleryNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      galleryIdx = (galleryIdx + 1) % galleryImages.length;
+      updateGalleryView();
     });
 
     /* Date: GG.MM.YY — sep e yr nascosti su mobile */

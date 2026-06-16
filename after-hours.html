@@ -21,63 +21,28 @@
 
     body {
       font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #fff;
-      color: #000;
+      background: #fff; color: #000;
     }
 
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; }
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
 
-    /* ── Hero ── */
     .hero {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      background: #000;
-      overflow: hidden;
+      position: relative; width: 100%; height: 100vh;
+      background: #000; overflow: hidden;
     }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-    }
-
+    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
     .hero-frame {
-      position: absolute;
-      left: var(--pad);
-      right: var(--pad);
+      position: absolute; left: var(--pad); right: var(--pad);
       border: clamp(2px, 1.2vw, 12px) solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      opacity: 1;
-      transition: opacity 0.15s ease;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; opacity: 1; transition: opacity 0.15s ease;
     }
     .hero-frame.fade-out { opacity: 0; pointer-events: none; }
+    .hero-title { font-size: clamp(1rem, 11vw, 12.4rem); font-weight: 400; line-height: 1.1; white-space: nowrap; color: #fff; }
 
-    .hero-title {
-      font-size: clamp(1rem, 11vw, 12.4rem);
-      font-weight: 400;
-      line-height: 1.1;
-      white-space: nowrap;
-      color: #fff;
-    }
-
-    .hero-topleft,
-    .hero-topright,
-    .hero-bottomleft,
-    .hero-bottomright {
-      position: absolute;
-      z-index: 60;
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: var(--ls);
-      color: #fff;
-      white-space: pre;
-      text-decoration: none;
+    .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright {
+      position: absolute; z-index: 60; font-size: var(--ui); font-weight: 400;
+      line-height: 1.0; letter-spacing: var(--ls); color: #fff; white-space: pre; text-decoration: none;
     }
     .hero-topleft    { top: var(--pad);    left: var(--pad); }
     .hero-topright   { top: var(--pad);    right: var(--pad); }
@@ -86,295 +51,106 @@
 
     .sc-nav { cursor: pointer; }
     .sc-nav .sc-default { color: #fff; text-decoration: none; }
-    .sc-nav .sc-hover   { display: none; }
+    .sc-nav .sc-hover { display: none; }
     .sc-nav:hover .sc-default { display: none; }
-    .sc-nav:hover .sc-hover   { display: inline; }
+    .sc-nav:hover .sc-hover { display: inline; }
     .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
 
     .fn-nav { cursor: pointer; text-align: right; }
     .fn-nav .fn-hover { display: none; }
     .fn-nav:hover .fn-default { display: none; }
-    .fn-nav:hover .fn-hover   { display: inline; }
+    .fn-nav:hover .fn-hover { display: inline; }
     .fn-nav .fn-hover a { color: #fff; text-decoration: none; }
     .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
 
-    @keyframes explore-flicker {
-      0%, 49%  { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
+    @keyframes explore-flicker { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
     .hero-explore {
-      position: absolute;
-      bottom: var(--pad);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 60;
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: var(--ls);
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-      white-space: nowrap;
-      animation: explore-flicker 0.5s step-start infinite;
+      position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%);
+      z-index: 60; font-size: var(--ui); font-weight: 400; line-height: 1.0;
+      letter-spacing: var(--ls); color: #fff; text-decoration: none; cursor: pointer;
+      white-space: nowrap; animation: explore-flicker 0.5s step-start infinite;
     }
 
-    /* ── Contenuto ── */
-    :root { --gap: 120px; }
     .content {
       padding: var(--gap) var(--side) 0;
-      background-size: 100% auto;
+      background-size: cover;
       background-position: top center;
       background-repeat: no-repeat;
     }
 
-    /* ── Locandine ── */
-    .locandine-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 60px 20px;
-      margin-bottom: 80px;
-    }
+    .locandine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px 20px; margin-bottom: 80px; }
     .locandina-card { display: flex; flex-direction: column; }
     .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
-    .locandina-img-link img {
-      width: 100%;
-      aspect-ratio: 4/5;
-      object-fit: cover;
-      display: block;
-    }
-    .locandina-info {
-      padding-top: 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-    }
-    .locandina-date,
-    .locandina-venue {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-    }
-    .locandina-cta {
-      font-family: 'Londrina Solid', sans-serif;
-      font-size: var(--ui);
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      line-height: 30pt;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
+    .locandina-img-link img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+    .locandina-info { padding-top: 14px; text-align: center; display: flex; flex-direction: column; }
+    .locandina-date, .locandina-venue { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; }
+    .locandina-cta { font-family: 'Londrina Solid', sans-serif; font-size: var(--ui); font-weight: 900; letter-spacing: 0.02em; line-height: 30pt; color: #fff; text-decoration: none; cursor: pointer; }
     .locandina-cta:hover { color: #87f7a6; }
 
-    /* Bio */
-    .description {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: var(--ls);
-      text-align: left;
-      margin-top: 60pt;
-      padding-bottom: 0;
-      color: #fff;
-    }
+    .description { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); text-align: left; margin-top: 60pt; color: #fff; }
 
-    /* CTAs */
-    .cta-row {
-      display: flex;
-      align-items: baseline;
-      padding: 24px 0 calc(var(--gap) + 60pt);
-    }
-    .cta-social-group {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 0 3em;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      color: #fff;
-    }
-    .cta-social-group a {
-      font-size: inherit;
-      font-weight: 400;
-      letter-spacing: inherit;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
+    .cta-row { display: flex; align-items: baseline; padding: 24px 0 calc(var(--gap) + 60pt); }
+    .cta-social-group { display: inline-flex; flex-wrap: wrap; gap: 0 3em; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); color: #fff; }
+    .cta-social-group a { font-size: inherit; font-weight: 400; letter-spacing: inherit; color: #fff; text-decoration: none; cursor: pointer; }
 
-    /* ── Griglia foto ── */
-    .photo-grid-wrap { margin: 0 calc(-1 * var(--side)); }
+    .photo-grid-wrap { margin: 0; }
     .photo-grid { display: flex; flex-direction: column; gap: 0; }
     .photo-group { display: flex; gap: 0; }
     .grid-photo-card { flex: 1; position: relative; }
-    .grid-photo-card img {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      display: block;
-      cursor: pointer;
-    }
-    .photo-caption {
-      position: absolute;
-      top: 0; left: 0;
-      z-index: 1;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-      padding: var(--pad);
-      padding-top: calc(var(--pad) - (1cap - 1ex));
-      pointer-events: none;
-    }
+    .grid-photo-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; cursor: pointer; }
+    .photo-caption { position: absolute; top: 0; left: 0; z-index: 1; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; padding: var(--pad); padding-top: calc(var(--pad) - (1cap - 1ex)); pointer-events: none; }
 
-    /* ── Gallery overlay ── */
-    .photo-overlay {
-      position: fixed;
-      inset: 0;
-      background: #fff;
-      z-index: 300;
-      display: none;
-      overflow: hidden;
-    }
+    .photo-overlay { position: fixed; inset: 0; background: #fff; z-index: 300; display: none; overflow: hidden; }
     .photo-overlay.active { display: block; }
 
-    .gallery-left {
-      position: absolute;
-      top: 0; left: 0;
-      width: 25vw;
-      min-width: 180px;
-      max-width: 340px;
-      height: 100%;
-      overflow-y: auto;
-      padding: var(--pad);
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    .gallery-event-info {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: var(--ls);
-      margin-bottom: 30pt;
-    }
-
+    .gallery-left { position: absolute; top: 0; left: 0; width: 25vw; min-width: 180px; max-width: 340px; height: 100%; overflow-y: auto; padding: var(--pad); display: flex; flex-direction: column; cursor: pointer; z-index: 10; }
+    .gallery-event-info { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); margin-bottom: 30pt; }
     .gallery-nums { display: flex; flex-direction: column; }
-
-    .gallery-num {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: 0;
-      font-feature-settings: "tnum" 1, "onum" 1;
-    }
+    .gallery-num { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: 0; font-feature-settings: "tnum" 1, "onum" 1; }
     .gallery-num.current { visibility: hidden; }
 
     .gallery-main { position: absolute; inset: 0; }
+    .overlay-main-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); height: 100%; width: auto; max-width: 100%; object-fit: contain; cursor: pointer; z-index: 2; }
+    .gallery-download { position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%); font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 1; color: #000; cursor: pointer; z-index: 3; white-space: nowrap; }
 
-    .overlay-main-img {
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      height: 100%;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      cursor: pointer;
-      z-index: 2;
+    .gallery-mobile-nav { display: none; }
+    .gallery-prev, .gallery-next {
+      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls);
+      line-height: 1; color: #000; background: none; border: none; cursor: pointer; padding: 0;
     }
 
-    .gallery-download {
-      position: absolute;
-      bottom: var(--pad);
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 1;
-      color: #000;
-      cursor: pointer;
-      z-index: 3;
-      white-space: nowrap;
-    }
-
-    .gallery-close-btn {
-      position: fixed;
-      top: var(--pad); right: var(--pad);
-      z-index: 320;
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: none;
-      padding: 0;
-      line-height: 0;
-    }
+    .gallery-close-btn { position: fixed; top: var(--pad); right: var(--pad); z-index: 320; background: none; border: none; cursor: pointer; display: none; padding: 0; line-height: 0; }
     .gallery-close-btn.visible { display: block; }
 
-    /* ── Footer ── */
-    .page-footer {
-      height: 200px;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 var(--pad) 20px;
-      text-align: center;
-      gap: 0;
-    }
-    .page-footer p {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #000;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0 2em;
-    }
+    .page-footer { height: 200px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 var(--pad) 20px; text-align: center; gap: 0; }
+    .page-footer p { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #000; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2em; }
     .page-footer a { color: #000; text-decoration: none; }
 
     @media (max-width: 767px) {
       :root { --ui: 17pt; }
-
       .description { line-height: 20pt; padding-bottom: 40pt; }
-      .cta-social-group { line-height: 20pt; }
+      .cta-social-group { line-height: 20pt; flex-direction: column; gap: 0; }
       .page-footer p { line-height: 20pt; }
-
       body { overflow-x: hidden; }
-      .hero-topleft, .hero-topright,
-      .hero-bottomleft, .hero-bottomright { white-space: normal; }
-
+      .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright { white-space: normal; }
       .hero-topleft    { top: 10px;    left: 10px; }
       .hero-topright   { top: 10px;    right: 10px; }
       .hero-bottomleft { bottom: 10px; left: 10px; }
       .hero-bottomright{ bottom: 10px; right: 10px; }
-
       .hero { height: 100svh; }
       .content { padding: 10px; }
-      .photo-grid-wrap { margin: 0 -10px; }
-
-      .locandine-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px 10px;
-        margin-bottom: 40px;
-      }
+      .photo-grid-wrap { margin: 0; }
+      .locandine-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 10px; margin-bottom: 40px; }
       .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
-
-      .cta-social-group { flex-direction: column; gap: 0; }
-
       .photo-group { flex-direction: column; }
       .photo-caption { padding: 10px; line-height: 20pt; }
-
+      .gallery-left { display: none; }
+      .gallery-mobile-nav {
+        display: flex; position: absolute;
+        bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+        left: var(--pad); right: var(--pad); justify-content: space-between; z-index: 10;
+      }
       .sc-nav:hover .sc-hover { display: flex; flex-direction: column; align-items: flex-start; }
       .fn-nav:hover .fn-hover { display: flex; flex-direction: column; align-items: flex-end; }
     }
@@ -382,28 +158,20 @@
 </head>
 <body>
 
-  <!-- Hero con immagine -->
   <div class="hero">
     <div class="hero-bg" style="background-image: url('image 4/AFTER HOURS.jpg')"></div>
-    <div class="hero-frame" id="heroFrame">
-      <span class="hero-title">After Hours</span>
-    </div>
-
+    <div class="hero-frame" id="heroFrame"><span class="hero-title">After Hours</span></div>
     <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a>      <a href="about.html">About us</a>      IT      ©2026</span></div>
     <div class="hero-topright fn-nav"><span class="fn-default">After Hours</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a>      <a href="brat-party.html">Brat Party</a>      <a href="only-rihanna.html">Only Rihanna</a></span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
 
-  <!-- Contenuto -->
   <div class="content" id="content" style="background-image: url('7. Sfondi/AFTER.png')">
 
-    <!-- Griglia locandine -->
     <div class="locandine-grid">
 
       <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/2. After Hours/@superclub_milano Photo shared by The After Hours on February 24, 2026.jpg" alt="After Hours Milano Super Club">
-        </a>
+        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/2. After Hours/@superclub_milano Photo shared by The After Hours on February 24, 2026.jpg" alt=""></a>
         <div class="locandina-info">
           <span class="locandina-date">13.03</span>
           <span class="locandina-venue">Milano</span>
@@ -412,9 +180,7 @@
       </div>
 
       <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/2. After Hours/@magazzinigeneralimilano Photo by The After Hours in MAGAZZINI GENERAL.jpg" alt="After Hours Milano Magazzini Generali">
-        </a>
+        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/2. After Hours/@magazzinigeneralimilano Photo by The After Hours in MAGAZZINI GENERAL.jpg" alt=""></a>
         <div class="locandina-info">
           <span class="locandina-date">11.04</span>
           <span class="locandina-venue">Milano</span>
@@ -423,9 +189,7 @@
       </div>
 
       <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/2. After Hours/@centralinoclub Photo by The After Hours in Centralino Club with @cent.jpg" alt="After Hours Torino Centralino">
-        </a>
+        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/2. After Hours/@centralinoclub Photo by The After Hours in Centralino Club with @cent.jpg" alt=""></a>
         <div class="locandina-info">
           <span class="locandina-date">01.05</span>
           <span class="locandina-venue">Torino</span>
@@ -434,9 +198,7 @@
       </div>
 
       <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/2. After Hours/@gioexe__ Photo by The After Hours in RIVA CLUB with @gioexe__, @tende.jpg" alt="After Hours Napoli Riva Club">
-        </a>
+        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/2. After Hours/@gioexe__ Photo by The After Hours in RIVA CLUB with @gioexe__, @tende.jpg" alt=""></a>
         <div class="locandina-info">
           <span class="locandina-date">02.07</span>
           <span class="locandina-venue">Napoli</span>
@@ -452,38 +214,37 @@
       <span class="cta-social-group">Visit After Hours<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
     </div>
 
-    <!-- Griglia foto -->
-    <div class="photo-grid-wrap">
-    <div class="photo-grid" id="photoGrid">
+  </div>
 
-      <div class="photo-group">
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_019256e908de93e194a89626ca5bcc55.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0a104ad0e958a93b5d26572ab592f0f9.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg" alt=""></div>
-      </div>
+  <div class="photo-grid-wrap">
+  <div class="photo-grid" id="photoGrid">
 
-      <div class="photo-group">
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1432dac31b0ede5c726466491789ee2f.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1c642d0d5ba31ad520921ba2486fe4bb.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg" alt=""></div>
-      </div>
-
-      <div class="photo-group">
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_2c50c16e2875b97d03d188346a8a7d70.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b0911e904aadbfee604845e281026a7.jpg" alt=""></div>
-        <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg" alt=""></div>
-      </div>
-
+    <div class="photo-group">
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_019256e908de93e194a89626ca5bcc55.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_0a104ad0e958a93b5d26572ab592f0f9.jpg" alt=""></div>
     </div>
+
+    <div class="photo-group">
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1432dac31b0ede5c726466491789ee2f.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_1c642d0d5ba31ad520921ba2486fe4bb.jpg" alt=""></div>
+    </div>
+
+    <div class="photo-group">
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_2c50c16e2875b97d03d188346a8a7d70.jpg" alt=""></div>
+      <div class="grid-photo-card"><img src="2. After Hours/2. Foto/original_4b0911e904aadbfee604845e281026a7.jpg" alt=""></div>
     </div>
 
   </div>
+  </div>
+
   <div class="page-footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
     <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
   </div>
 
-  <!-- Gallery overlay -->
   <div class="photo-overlay" id="photoOverlay">
     <div class="gallery-left" id="galleryLeft">
       <div class="gallery-event-info" id="galleryEventInfo"></div>
@@ -493,24 +254,23 @@
       <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
       <div class="gallery-download" id="galleryDownload">Download</div>
     </div>
+    <div class="gallery-mobile-nav">
+      <button class="gallery-prev" id="galleryPrev">Previous</button>
+      <button class="gallery-next" id="galleryNext">Next</button>
+    </div>
   </div>
   <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#000" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
 
   <script>
     const heroFrame = document.getElementById('heroFrame');
-
     function setFrame() {
-      const titleEl  = heroFrame.querySelector('.hero-title');
+      const titleEl = heroFrame.querySelector('.hero-title');
       const naturalH = titleEl.getBoundingClientRect().height;
-      const frameH   = naturalH * 1.1;
-      const frameTop = (window.innerHeight - frameH) / 2;
+      const frameH = naturalH * 1.1;
       heroFrame.style.height = frameH + 'px';
-      heroFrame.style.top    = frameTop + 'px';
+      heroFrame.style.top = (window.innerHeight - frameH) / 2 + 'px';
     }
-    document.fonts.ready.then(() => {
-      setFrame();
-      setTimeout(() => heroFrame.classList.add('fade-out'), 1200);
-    });
+    document.fonts.ready.then(() => { setFrame(); setTimeout(() => heroFrame.classList.add('fade-out'), 1200); });
     window.addEventListener('resize', setFrame);
 
     function heroExploreClick() {
@@ -521,17 +281,16 @@
       }
     }
 
-    /* ── Gallery ── */
     const ALL_PHOTOS = [
+      '2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg',
       '2. After Hours/2. Foto/original_019256e908de93e194a89626ca5bcc55.jpg',
       '2. After Hours/2. Foto/original_0a104ad0e958a93b5d26572ab592f0f9.jpg',
-      '2. After Hours/2. Foto/original_0fcb70771fbb9467a47218694f6cb841.jpg',
+      '2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg',
       '2. After Hours/2. Foto/original_1432dac31b0ede5c726466491789ee2f.jpg',
       '2. After Hours/2. Foto/original_1c642d0d5ba31ad520921ba2486fe4bb.jpg',
-      '2. After Hours/2. Foto/original_22835863f801e5d85a6e2668146b1aea.jpg',
+      '2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg',
       '2. After Hours/2. Foto/original_2c50c16e2875b97d03d188346a8a7d70.jpg',
       '2. After Hours/2. Foto/original_4b0911e904aadbfee604845e281026a7.jpg',
-      '2. After Hours/2. Foto/original_4b48d1bc3917f82047f8f75a6928de9b.jpg',
     ];
 
     const photoOverlay     = document.getElementById('photoOverlay');
@@ -541,9 +300,7 @@
     const galleryNums      = document.getElementById('galleryNums');
     const galleryClose     = document.getElementById('galleryClose');
     const galleryDownload  = document.getElementById('galleryDownload');
-
-    let galleryImages = [];
-    let galleryIdx    = 0;
+    let galleryImages = [], galleryIdx = 0;
 
     function updateGalleryView() {
       overlayMainImg.src = galleryImages[galleryIdx];
@@ -553,8 +310,7 @@
     }
 
     function openCardGallery(captionHTML, images, startIdx) {
-      galleryImages = images;
-      galleryIdx    = startIdx;
+      galleryImages = images; galleryIdx = startIdx;
       galleryEventInfo.innerHTML = captionHTML;
       galleryNums.innerHTML = '';
       images.forEach((_, i) => {
@@ -575,12 +331,12 @@
     }
 
     document.querySelectorAll('.grid-photo-card').forEach(card => {
-      const img         = card.querySelector('img');
-      const caption     = card.querySelector('.photo-caption');
+      const img = card.querySelector('img');
+      const caption = card.querySelector('.photo-caption');
       const captionHTML = caption ? caption.innerHTML : '';
       img.addEventListener('click', () => {
-        const filename = img.src.split('/').pop();
-        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p.endsWith(filename)));
+        const src = img.getAttribute('src');
+        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p === src));
         openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
       });
     });
@@ -621,18 +377,24 @@
     document.addEventListener('keydown', (e) => {
       if (!photoOverlay.classList.contains('active')) return;
       if (e.key === 'Escape') { closeGallery(); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        galleryIdx = (galleryIdx + 1) % galleryImages.length; updateGalleryView();
-      }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length; updateGalleryView();
-      }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { galleryIdx = (galleryIdx + 1) % galleryImages.length; updateGalleryView(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length; updateGalleryView(); }
     });
 
     galleryDownload.addEventListener('click', () => {
       const src = galleryImages[galleryIdx];
-      const a = document.createElement('a');
-      a.href = src; a.download = src.split('/').pop(); a.click();
+      const a = document.createElement('a'); a.href = src; a.download = src.split('/').pop(); a.click();
+    });
+
+    document.getElementById('galleryPrev').addEventListener('click', (e) => {
+      e.stopPropagation();
+      galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
+      updateGalleryView();
+    });
+    document.getElementById('galleryNext').addEventListener('click', (e) => {
+      e.stopPropagation();
+      galleryIdx = (galleryIdx + 1) % galleryImages.length;
+      updateGalleryView();
     });
   </script>
 
