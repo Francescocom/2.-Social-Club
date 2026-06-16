@@ -181,7 +181,7 @@
   <div class="hero">
     <div class="hero-bg" style="background-image: url('image 4/BRAT PARTY.jpg')"></div>
     <div class="hero-frame" id="heroFrame"><span class="hero-title">Brat Party</span></div>
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><br class="nav-br"><span class="nav-item">©2026</span></span></div>
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><span class="nav-sep">      </span><span class="nav-item">©2026</span></span></div>
     <div class="hero-topright fn-nav"><span class="fn-default">Brat Party</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
@@ -463,12 +463,15 @@
       function isMobile() { return window.innerWidth <= 767; }
       scNav.addEventListener('click', function(e) {
         if (!isMobile()) return;
+        if (e.target.closest('.sc-hover a')) return;
+        e.preventDefault();
         scNav.classList.toggle('expanded');
         fnNav.classList.remove('expanded');
         e.stopPropagation();
       });
       fnNav.addEventListener('click', function(e) {
         if (!isMobile()) return;
+        if (e.target.closest('.fn-hover a')) return;
         fnNav.classList.toggle('expanded');
         scNav.classList.remove('expanded');
         e.stopPropagation();

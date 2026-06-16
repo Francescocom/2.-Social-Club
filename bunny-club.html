@@ -528,7 +528,7 @@
     </div>
 
     <!-- Tutto il nav scorre via con il video -->
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><br class="nav-br"><span class="nav-item">©2026</span></span></div>
+    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><span class="nav-sep">      </span><span class="nav-item">©2026</span></span></div>
     <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover"><a href="brat-party.html">Brat Party</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
     <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
   </div>
@@ -868,12 +868,15 @@
       function isMobile() { return window.innerWidth <= 767; }
       scNav.addEventListener('click', function(e) {
         if (!isMobile()) return;
+        if (e.target.closest('.sc-hover a')) return;
+        e.preventDefault();
         scNav.classList.toggle('expanded');
         fnNav.classList.remove('expanded');
         e.stopPropagation();
       });
       fnNav.addEventListener('click', function(e) {
         if (!isMobile()) return;
+        if (e.target.closest('.fn-hover a')) return;
         fnNav.classList.toggle('expanded');
         scNav.classList.remove('expanded');
         e.stopPropagation();

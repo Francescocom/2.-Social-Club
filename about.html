@@ -14,15 +14,25 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
+
     body {
       font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #000;
+      background: #000 url('image 4/ONLY RIHANNA.jpg') center/cover no-repeat fixed;
       color: #fff;
     }
 
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.52);
+      z-index: 0;
+      pointer-events: none;
+    }
 
-    /* ── Nav ── */
+    .page-nav, .content, .page-footer { position: relative; z-index: 1; }
+
     .page-nav {
       display: flex;
       justify-content: space-between;
@@ -32,62 +42,50 @@
       letter-spacing: var(--ls);
       line-height: 1.0;
     }
-    .page-nav a {
-      color: #fff;
-      text-decoration: none;
-    }
+    .page-nav a { color: #fff; text-decoration: none; }
 
-    /* ── Contenuto ── */
-    .content {
-      padding: var(--gap) var(--side) 0;
-    }
+    .content { padding: var(--gap) var(--side) 0; }
 
     .description {
       font-size: var(--ui);
       font-weight: 400;
       line-height: 30pt;
       letter-spacing: var(--ls);
-      margin-top: 0;
-      padding-bottom: 56px;
-    }
-    /* ── Elenco ── */
-    .event-list { padding-bottom: 0; }
-
-    .event-row {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      align-items: center;
-      column-gap: 0.5em;
-      padding: 0;
-      cursor: default;
+      padding-bottom: 80px;
     }
 
-    .format-dot {
-      display: block;
-      width: 1cap;
-      height: 1cap;
-      background: currentColor;
-      border-radius: 50%;
-    }
+    /* Format list — impactful large type */
+    .format-list { padding-bottom: 0; }
 
-    .event-row span {
-      font-size: var(--ui);
+    .format-list:has(.format-link:hover) .format-link { color: rgba(255,255,255,0.15); }
+    .format-list:has(.format-link:hover) .format-link:hover { color: #fff; }
+
+    .format-link {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: clamp(2.5rem, 8vw, 10rem);
       font-weight: 400;
       letter-spacing: var(--ls);
-      line-height: 30pt;
+      line-height: 1.15;
+      color: #fff;
+      text-decoration: none;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      padding: 0.05em 0;
+      transition: color 0.15s;
     }
+    .format-link:last-child { border-bottom: 1px solid rgba(255,255,255,0.25); }
 
-    .event-list:has(.event-row:hover) .event-row { color: rgba(255,255,255,0.2); }
-    .event-list:has(.event-row:hover) .event-row:hover { color: #fff; }
-
-    .row-cta {
+    .format-arrow {
+      font-size: var(--ui);
+      line-height: 1;
       opacity: 0;
       transition: opacity 0.15s;
-      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: 1em;
     }
-    .event-row:hover .row-cta { opacity: 1; }
+    .format-link:hover .format-arrow { opacity: 1; }
 
-    /* ── CTA ── */
     .cta-row {
       display: flex;
       align-items: baseline;
@@ -110,8 +108,8 @@
       cursor: pointer;
     }
 
-    /* ── Footer ── */
     .page-footer {
+      background: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -134,46 +132,19 @@
     }
     .page-footer a { color: #fff; text-decoration: none; }
 
-    /* ── Background images ── */
-    .bg-img {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .bg-img.visible { opacity: 1; }
-
     @media (max-width: 767px) {
       :root { --ui: 17pt; }
-
-      .description,
-      .event-row span,
-      .cta-group a,
-      .page-footer p { line-height: 20pt; }
-
       body { overflow-x: hidden; }
       .page-nav { padding: 10px; }
-
       .content { padding: 10px; }
-
-      .description { margin-top: 0; padding-bottom: 40pt; }
-
+      .description { line-height: 20pt; padding-bottom: 40pt; }
       .cta-group { flex-direction: column; gap: 0; line-height: 20pt; }
+      .page-footer p { line-height: 20pt; }
+      .format-link { font-size: clamp(2.2rem, 11vw, 4rem); }
     }
   </style>
 </head>
 <body>
-
-  <div class="bg-img" data-format="Bunny Club" style="background-image:url('image 3/Bunny.png')"></div>
-  <div class="bg-img" data-format="Brat Party" style="background-image:url('image 3/Brat.png')"></div>
-  <div class="bg-img" data-format="After Hours" style="background-image:url('image 3/After.png')"></div>
-  <div class="bg-img" data-format="Only Rihanna" style="background-image:url('image 3/Rihanna.png')"></div>
-  <div class="bg-img" data-format="Lana Del Rave" style="background-image:url('image 3/Lana.png')"></div>
-  <div class="bg-img" data-format="BimbiFest" style="background-image:url('image 3/Bimbi.png')"></div>
 
   <div class="page-nav">
     <a href="index.html?direct=1">Social Club</a>
@@ -184,13 +155,11 @@
 
     <p class="description">Social Club è un collettivo creativo e un'agenzia eventi che porta in giro per l'Italia format musicali contemporanei, costruiti attorno a identità forti e community reali. Organizziamo serate, tour e concept che uniscono musica, estetica e cultura clubbing, creando esperienze riconoscibili e immersive. Dalle vibes latine di Bunny Club alle sonorità urban pop di Only Rihanna, fino ai concept più notturni e atmosferici, ogni format nasce con un'identità precisa e un pubblico definito. Lavoriamo con club, venue e partner in tutta Italia per trasformare ogni evento in qualcosa che le persone vogliono vivere, condividere e ricordare.</p>
 
-    <div class="event-list">
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>Bunny Club</span></div>
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>Brat Party</span></div>
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>After Hours</span></div>
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>Only Rihanna</span></div>
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>Lana Del Rave</span></div>
-      <div class="event-row"><span class="format-dot"></span><span class="row-cta">Visit Events & Tickets</span><span>BimbiFest</span></div>
+    <div class="format-list">
+      <a class="format-link" href="bunny-club.html">Bunny Club<span class="format-arrow">↗</span></a>
+      <a class="format-link" href="brat-party.html">Brat Party<span class="format-arrow">↗</span></a>
+      <a class="format-link" href="after-hours.html">After Hours<span class="format-arrow">↗</span></a>
+      <a class="format-link" href="only-rihanna.html">Only Rihanna<span class="format-arrow">↗</span></a>
     </div>
 
     <div class="cta-row">
@@ -203,19 +172,6 @@
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
     <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
   </div>
-
-  <script>
-    const bgImgs = Array.from(document.querySelectorAll('.bg-img'));
-    document.querySelectorAll('.event-row').forEach(row => {
-      const name = row.querySelector('span:last-child').textContent.trim();
-      row.addEventListener('mouseenter', () => {
-        bgImgs.forEach(bg => bg.classList.toggle('visible', bg.dataset.format === name));
-      });
-      row.addEventListener('mouseleave', () => {
-        bgImgs.forEach(bg => bg.classList.remove('visible'));
-      });
-    });
-  </script>
 
 </body>
 </html>
