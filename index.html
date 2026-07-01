@@ -732,6 +732,7 @@
       let lastScrollY     = window.scrollY;
       let gestureStartIdx = null; // pill index all'inizio del gesto
       let snapTargetIdx   = 0;   // dove sta andando l'ultimo snap
+      let gesturePending  = false; // congela displayY durante il gesto
 
       window.addEventListener('scroll', () => {
         if (performance.now() < suppressUntil) return;
@@ -744,9 +745,11 @@
         if (Math.abs(delta) > 0) scrollDir = delta > 0 ? 1 : -1;
         lastScrollY = window.scrollY;
 
-        /* Primo evento del gesto: congela l'indice di partenza */
+        /* Primo evento del gesto: congela displayY al pill boundary */
         if (gestureStartIdx === null) {
           gestureStartIdx = Math.round(displayY / pillH);
+          displayY        = gestureStartIdx * pillH;
+          gesturePending  = true;
         }
 
         resetIdleTimer();
@@ -811,8 +814,9 @@
       }
 
       function scheduleSnap() {
-        const startIdx = gestureStartIdx !== null ? gestureStartIdx : Math.round(displayY / pillH);
-        const idx = startIdx + (scrollDir > 0 ? 1 : -1);
+        gesturePending  = false;
+        const startIdx  = gestureStartIdx !== null ? gestureStartIdx : Math.round(displayY / pillH);
+        const idx       = startIdx + (scrollDir > 0 ? 1 : -1);
         gestureStartIdx = null;
         touchSwipeDist  = 0;
         infoBar.classList.add('scrolling');
@@ -840,7 +844,7 @@
       function loop() {
         requestAnimationFrame(loop);
 
-        if (!snapActive) displayY += (window.scrollY - displayY) * 0.11;
+        if (!snapActive && !gesturePending) displayY += (window.scrollY - displayY) * 0.11;
 
         /* Offset: posiziona sempre Set B (centrale) al frame center.
            Set A è sempre sopra, Set C sempre sotto → niente bordo visibile
