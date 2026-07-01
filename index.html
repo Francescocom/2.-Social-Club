@@ -715,7 +715,9 @@
 
       /* ── Wheel: 1 evento per gesto ──
          gestureBlocked rimane true finché arrivano eventi (momentum incluso).
-         Si libera 150ms dopo l'ULTIMO evento — quando il trackpad è davvero fermo. */
+         Si libera quando il momentum si esaurisce — rilevato da:
+         a) deltaY sotto soglia (momentum quasi fermo) → sblocco immediato
+         b) 100ms di silenzio come fallback */
       let gestureBlocked = false;
       let gestureTimer   = null;
       function releaseGesture() { gestureBlocked = false; }
@@ -724,11 +726,20 @@
         e.preventDefault();
         if (overlayBtn.contains(e.target)) return;
 
-        /* Ogni evento (anche bloccato) resetta il timer del silenzio */
-        clearTimeout(gestureTimer);
-        gestureTimer = setTimeout(releaseGesture, 150);
+        if (gestureBlocked) {
+          /* Sblocco anticipato: snap finito e momentum quasi esaurito */
+          if (!isSnapping && Math.abs(e.deltaY) < 6) {
+            clearTimeout(gestureTimer);
+            gestureBlocked = false;
+            /* Non processare questo micro-evento: il prossimo gesto parte da zero */
+            return;
+          }
+          clearTimeout(gestureTimer);
+          gestureTimer = setTimeout(releaseGesture, 100);
+          return;
+        }
 
-        if (gestureBlocked || isSnapping) return;
+        if (isSnapping) return;
 
         if (isIdle && isInitialLoad) {
           gestureBlocked = true;
@@ -738,6 +749,7 @@
         if (isIdle) return;
 
         gestureBlocked = true;
+        gestureTimer = setTimeout(releaseGesture, 100);
         const dir = e.deltaY > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
