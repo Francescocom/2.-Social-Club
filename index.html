@@ -817,20 +817,7 @@
 
       function scheduleSnap() {
         const currentIdx = Math.round(displayY / pillH);
-        const shortSwipe = Math.abs(touchSwipeDist) > 0 && Math.abs(touchSwipeDist) < 70;
-        let idx;
-
-        if (shortSwipe) {
-          idx = currentIdx + (touchSwipeDist > 0 ? 1 : -1);
-        } else {
-          const vel       = getVelocity();
-          const projected = window.scrollY + vel * 160;
-          if (scrollDir > 0) {
-            idx = Math.max(Math.ceil(projected / pillH - 0.02), currentIdx + 1);
-          } else {
-            idx = Math.min(Math.floor(projected / pillH + 0.02), currentIdx - 1);
-          }
-        }
+        const idx = currentIdx + (scrollDir > 0 ? 1 : -1);
         touchSwipeDist = 0;
         infoBar.classList.add('scrolling');
         doSnap(idx * pillH);
