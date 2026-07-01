@@ -713,23 +713,31 @@
         requestAnimationFrame(step);
       }
 
-      /* ── Wheel: 1 evento per gesto, animazione immediata ──
-         gestureActiveUntil blocca eventi successivi (momentum trackpad)
-         per 700ms dal primo evento del gesto — simile a scroll-snap-stop:always */
-      let gestureActiveUntil = 0;
+      /* ── Wheel: 1 evento per gesto ──
+         gestureBlocked rimane true finché arrivano eventi (momentum incluso).
+         Si libera 150ms dopo l'ULTIMO evento — quando il trackpad è davvero fermo. */
+      let gestureBlocked = false;
+      let gestureTimer   = null;
+      function releaseGesture() { gestureBlocked = false; }
 
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
         if (overlayBtn.contains(e.target)) return;
-        const now = performance.now();
-        if (now < gestureActiveUntil || isSnapping) return;
+
+        /* Ogni evento (anche bloccato) resetta il timer del silenzio */
+        clearTimeout(gestureTimer);
+        gestureTimer = setTimeout(releaseGesture, 150);
+
+        if (gestureBlocked || isSnapping) return;
+
         if (isIdle && isInitialLoad) {
-          gestureActiveUntil = now + 700;
+          gestureBlocked = true;
           exitIdle(); launchSpin(); resetIdleTimer();
           return;
         }
         if (isIdle) return;
-        gestureActiveUntil = now + 700;
+
+        gestureBlocked = true;
         const dir = e.deltaY > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
@@ -752,13 +760,18 @@
 
       window.addEventListener('touchend', e => {
         if (!touchHasMoved) return;
-        const now = performance.now();
-        if (now < gestureActiveUntil || isSnapping) return;
-        if (isIdle && isInitialLoad) { gestureActiveUntil = now + 700; exitIdle(); launchSpin(); resetIdleTimer(); return; }
+        if (gestureBlocked || isSnapping) return;
+        if (isIdle && isInitialLoad) {
+          gestureBlocked = true;
+          gestureTimer = setTimeout(releaseGesture, 400);
+          exitIdle(); launchSpin(); resetIdleTimer();
+          return;
+        }
         if (isIdle) return;
         const dy = touchStartY - e.changedTouches[0].clientY;
         if (Math.abs(dy) < 20) return;
-        gestureActiveUntil = now + 700;
+        gestureBlocked = true;
+        gestureTimer = setTimeout(releaseGesture, 400);
         const dir = dy > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
