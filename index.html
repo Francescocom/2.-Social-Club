@@ -714,42 +714,54 @@
       }
 
       /* ── Wheel: 1 evento per gesto ──
-         gestureBlocked rimane true finché arrivano eventi (momentum incluso).
-         Si libera quando il momentum si esaurisce — rilevato da:
-         a) deltaY sotto soglia (momentum quasi fermo) → sblocco immediato
-         b) 100ms di silenzio come fallback */
+         Il momentum del trackpad ha deltaY DECRESCENTE.
+         Un nuovo gesto intenzionale ha deltaY CRESCENTE.
+         Quando rileviamo accelerazione (aumento ≥5px) → nuovo gesto → sblocco immediato.
+         Fallback: 120ms di silenzio se il momentum finisce senza nuovo gesto. */
       let gestureBlocked = false;
       let gestureTimer   = null;
+      let prevAbsDelta   = 0;
       function releaseGesture() { gestureBlocked = false; }
 
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
         if (overlayBtn.contains(e.target)) return;
 
+        const absDelta = Math.abs(e.deltaY);
+
         if (gestureBlocked) {
-          /* Sblocco anticipato: snap finito e momentum quasi esaurito */
-          if (!isSnapping && Math.abs(e.deltaY) < 6) {
+          if (!isSnapping && absDelta >= prevAbsDelta + 5 && absDelta >= 10) {
+            /* Nuovo gesto rilevato: deltaY in accelerazione → sblocco e snap */
             clearTimeout(gestureTimer);
             gestureBlocked = false;
-            /* Non processare questo micro-evento: il prossimo gesto parte da zero */
+            prevAbsDelta   = 1000; /* sentinel: eventi successivi del gesto non riattivano */
+            /* fall through */
+          } else {
+            /* Ancora momentum (deltaY stabile o decrescente) */
+            prevAbsDelta = absDelta;
+            clearTimeout(gestureTimer);
+            gestureTimer = setTimeout(releaseGesture, 120);
             return;
           }
-          clearTimeout(gestureTimer);
-          gestureTimer = setTimeout(releaseGesture, 100);
+        }
+
+        if (isSnapping) {
+          /* Durante animazione: aggiorna prevAbsDelta ma non scattare */
+          prevAbsDelta = absDelta;
           return;
         }
 
-        if (isSnapping) return;
-
         if (isIdle && isInitialLoad) {
           gestureBlocked = true;
+          prevAbsDelta   = 1000;
           exitIdle(); launchSpin(); resetIdleTimer();
           return;
         }
         if (isIdle) return;
 
         gestureBlocked = true;
-        gestureTimer = setTimeout(releaseGesture, 100);
+        prevAbsDelta   = 1000;
+        gestureTimer   = setTimeout(releaseGesture, 120);
         const dir = e.deltaY > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
