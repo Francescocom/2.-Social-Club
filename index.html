@@ -439,19 +439,15 @@
     const idleTagline = document.getElementById('idleTagline');
     const bgImgs      = Array.from(document.querySelectorAll('.bg-img'));
 
-    /* Dati evento per ogni format (ordine: data-img 0→3) */
     const formatInfo = [
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Bunny Club
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Brat Party
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // After Hours
-      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' }, // Only Rihanna
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' },
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' },
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' },
+      { date: 'Sat. 21.04.26', location: 'Magazzini Generali' },
     ];
 
-    /* Hover sul bottone circolare → mostra "Discover All" nel rettangolo (solo desktop) */
     overlayBtn.addEventListener('mouseenter', () => { if (!expanded) frameLabel.classList.add('visible'); });
     overlayBtn.addEventListener('mouseleave', () => frameLabel.classList.remove('visible'));
-    /* Blocca lo scroll della rotella quando il cursore è sopra il bottone */
-    overlayBtn.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
 
     let currentImgIdx = -1;
     let expanded      = false;
@@ -461,13 +457,10 @@
       currentImgIdx = idx;
       bgImgs.forEach((el, i) => el.classList.toggle('visible', i === idx));
       frame.style.setProperty('--frame-bg-img', bgImgs[idx].style.backgroundImage);
-      /* Aggiorna info bar con i dati del format attivo */
       const d = formatInfo[idx];
       infoDate.textContent     = d.date;
       infoLocation.textContent = d.location;
     }
-
-    /* ── Bottone: toggle modalità espansa ── */
 
     document.fonts.ready.then(setup);
 
@@ -475,11 +468,6 @@
       const allPills = Array.from(track.querySelectorAll('.pill'));
       const NUM      = 4;
 
-      /* ── Hover: tracciamo isHovered separato dalla classe CSS
-         così durante lo scroll possiamo togliere la classe
-         e rimetterla quando lo snap è completo.
-         Usiamo mousemove sul documento e controlliamo le coordinate reali
-         del frame — così in expanded mode non si attiva sull'overflow ── */
       let isHovered = false;
 
       function applyHover()  { frame.classList.add('hovered'); }
@@ -492,11 +480,9 @@
         });
       }
 
-      /* ── Idle state ── */
       let isIdle    = false;
       let idleTimer = null;
 
-      /* Animazione contatori velocissima */
       function animateCounter(el, target, duration) {
         const start = performance.now();
         function step(now) {
@@ -563,17 +549,15 @@
 
       /* Spin: 1 giro completo + atterraggio su format random in 1.8s */
       function launchSpin() {
-        const randomFmt  = Math.floor(Math.random() * 4);
-        const curIdx     = Math.round(displayY / pillH);
-        const curInSet   = ((curIdx % 6) + 6) % 6;
-        const extra      = ((randomFmt - curInSet) + 6) % 6;
-        const targetIdx  = curIdx + 8 + extra; // 1 giro
-        const target     = targetIdx * pillH;
+        const randomFmt = Math.floor(Math.random() * NUM);
+        const curIdx    = Math.round(displayY / pillH);
+        const curInSet  = ((curIdx % NUM) + NUM) % NUM;
+        const extra     = ((randomFmt - curInSet) + NUM) % NUM;
+        const target    = (curIdx + 2 * NUM + extra) * pillH;
 
         infoBar.classList.add('scrolling');
-        isSnapping    = true;
-        snapActive    = true;
-        suppressUntil = performance.now() + 2200;
+        isSnapping = true;
+        snapActive = true;
 
         const startY   = displayY;
         const dist     = target - startY;
@@ -584,24 +568,20 @@
           if (!isSnapping) return;
           if (!t0) t0 = t;
           const p = Math.min((t - t0) / duration, 1);
-          /* ease-in-out cubico: parte piano, accelera, poi decelera */
           const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
           displayY = startY + dist * e;
           if (p < 1) {
             requestAnimationFrame(spinStep);
           } else {
-            displayY      = target;
-            isSnapping    = false;
-            snapActive    = false;
-            try { window.scrollTo({ top: target, behavior: 'instant' }); }
-            catch(e) { window.scrollTo(0, target); }
+            displayY   = target;
+            isSnapping = false;
+            snapActive = false;
             infoBar.classList.remove('scrolling');
           }
         }
         requestAnimationFrame(spinStep);
       }
 
-      /* Idle label click: stopPropagation per non triggerare anche il frame listener */
       idleLabel.addEventListener('click', (e) => {
         e.stopPropagation();
         exitIdle();
@@ -609,7 +589,6 @@
         resetIdleTimer();
       });
 
-      /* Tap sul rettangolo centrale → esce dal loader/idle */
       frame.addEventListener('click', () => {
         if (isIdle) { exitIdle(); launchSpin(); resetIdleTimer(); }
       });
@@ -620,17 +599,14 @@
         document.body.classList.add('initial-loader');
         enterIdle();
         if (window.innerWidth <= 767) {
-          /* Mobile: CTA (tagline + stats) compaiono subito */
           showStats();
-          /* Dopo 2s: Enter sostituisce Social Club */
           setTimeout(() => {
             if (isInitialLoad) document.body.classList.add('auto-enter');
           }, 2000);
         }
       }
-      resetIdleTimer(); /* countdown per inattività */
+      resetIdleTimer();
 
-      /* Clic su pill → apre pagina format */
       const FORMAT_PAGES = ['bunny-club.html', 'brat-party.html', 'after-hours.html', 'only-rihanna.html'];
       allPills.forEach(pill => {
         const page = FORMAT_PAGES[parseInt(pill.dataset.img)];
@@ -646,7 +622,6 @@
         overlayBtn.classList.toggle('active', expanded);
         infoBar.classList.toggle('hidden', expanded);
         if (expanded) {
-          /* Apre elenco: disattiva hover, ripristina track nascosto dall'hover del bottone */
           isHovered = false;
           removeHover();
           track.style.visibility = '';
@@ -658,7 +633,6 @@
         resetIdleTimer();
         if (isIdle) {
           frame.classList.add('interactive');
-          /* Mostra stats solo quando il cursore è dentro il frame */
           const r = frame.getBoundingClientRect();
           const inside = e.clientX >= r.left && e.clientX <= r.right &&
                          e.clientY >= r.top  && e.clientY <= r.bottom;
@@ -678,33 +652,20 @@
         }
       });
 
-      /* ── Scroll geometry + Frame height ──
-         Strategia identica all'idle-label "Social Club":
-           idle-label → position:absolute; inset:0; display:flex; align-items:center
-           Ogni pill  → height = frameH; display:flex; align-items:center
-         In entrambi i casi il CSS centra il testo in frameH, zero matematica JS. */
       let pillH      = 0;
       let singleSetH = 0;
       let frameH     = 0;
-      const xAdj     = 0;   // non serve: pill riempie il frame come l'idle-label
 
       function setFrameHeight() {
-        /* 1. Leggi altezza naturale del testo (rimuovi height esplicita se c'è) */
         allPills.forEach(p => p.style.height = '');
         void allPills[0].offsetHeight;
         const naturalH = allPills[0].getBoundingClientRect().height;
-
-        /* 2. Frame: 10% più alto del testo, centrato nel viewport */
         frameH = naturalH * 1.1;
         const frameTop = (scene.clientHeight - frameH) / 2;
         frame.style.height = frameH + 'px';
         frame.style.top    = frameTop + 'px';
         overlayBtn.style.width  = frameH + 'px';
         overlayBtn.style.height = frameH + 'px';
-
-        /* 3. Pill height = CONTENT area del frame (dentro al bordo).
-              L'idle-label usa inset:0 → altezza = frameH − 2×borderWidth.
-              Stessa misura qui → align-items:center produce centering identico. */
         const borderW  = parseFloat(getComputedStyle(frame).borderTopWidth);
         const contentH = frameH - 2 * borderW;
         allPills.forEach(p => p.style.height = contentH + 'px');
@@ -713,77 +674,19 @@
       }
 
       setFrameHeight();
-      document.body.style.height = singleSetH * 40 + 'px';
-      /* suppressUntil dichiarato prima del scrollTo iniziale
-         così l'evento scroll asincrono che genera non nasconde la info bar */
-      let suppressUntil = performance.now() + 800;
-      window.scrollTo(0, singleSetH * 20);
+
+      /* displayY è puramente virtuale: non esiste scroll reale nella pagina */
+      let displayY = singleSetH * 4;
+      let snapActive = false;
+      let isSnapping = false;
+
       showImg(0);
       frame.style.setProperty('--frame-bg-img', bgImgs[0].style.backgroundImage);
 
-      /* ── Scroll virtuale ── */
-      let displayY   = window.scrollY;
-      let snapActive = false;
-
-      /* ── Snap 1-evento-per-gesto ── */
-      let snapTimer       = null;
-      let isSnapping      = false;
-      let scrollDir       = 1;
-      let lastScrollY     = window.scrollY;
-      let gestureStartIdx = null; // pill index all'inizio del gesto
-      let snapTargetIdx   = 0;   // dove sta andando l'ultimo snap
-      let gesturePending  = false; // congela displayY durante il gesto
-
-      window.addEventListener('scroll', () => {
-        if (performance.now() < suppressUntil) return;
-        if (isSnapping) return; /* snap in corso: ignora finché non finisce */
-
-        /* Scroll durante il loader iniziale → passa all'homepage */
-        if (isIdle && isInitialLoad) { exitIdle(); resetIdleTimer(); }
-
-        const delta = window.scrollY - lastScrollY;
-        if (Math.abs(delta) > 0) scrollDir = delta > 0 ? 1 : -1;
-        lastScrollY = window.scrollY;
-
-        /* Primo evento del gesto: congela displayY al pill boundary */
-        if (gestureStartIdx === null) {
-          gestureStartIdx = Math.round(displayY / pillH);
-          displayY        = gestureStartIdx * pillH;
-          gesturePending  = true;
-        }
-
-        resetIdleTimer();
-        if (isHovered) removeHover();
-        if (!isIdle) infoBar.classList.add('scrolling');
-
-        clearTimeout(snapTimer);
-        snapTimer = setTimeout(scheduleSnap, 75);
-      }, { passive: true });
-
-      function easeOut(t) {
-        return 1 - Math.pow(1 - t, 3);
-      }
-
-      /* ── Touch: misura distanza swipe per distinguere corto da lungo ── */
-      let touchSwipeDist = 0;
-      let touchStartY    = 0;
-      window.addEventListener('touchstart', e => {
-        touchStartY    = e.touches[0].clientY;
-        touchSwipeDist = 0;
-      }, { passive: true });
-      window.addEventListener('touchmove', e => {
-        touchSwipeDist = touchStartY - e.touches[0].clientY;
-      }, { passive: true });
-
-      /* scrollTo istantaneo: ferma il momentum iOS/Android */
-      const snapScrollTo = (y) => {
-        try { window.scrollTo({ top: y, behavior: 'instant' }); }
-        catch(e) { window.scrollTo(0, y); }
-      };
+      function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
       function doSnap(target) {
         target = Math.round(target);
-        snapTargetIdx = Math.round(target / pillH);
         if (Math.abs(target - displayY) < 1) return;
         if (isSnapping) { isSnapping = false; snapActive = false; }
         isSnapping = true;
@@ -800,12 +703,9 @@
           if (p < 1) {
             requestAnimationFrame(step);
           } else {
-            displayY      = target;
-            isSnapping    = false;
-            snapActive    = false;
-            suppressUntil = performance.now() + 600;
-            snapScrollTo(target);
-            lastScrollY = target; /* evita scrollDir errata al gesto successivo */
+            displayY   = target;
+            isSnapping = false;
+            snapActive = false;
             if (isHovered) applyHover();
             infoBar.classList.remove('scrolling');
           }
@@ -813,17 +713,48 @@
         requestAnimationFrame(step);
       }
 
-      function scheduleSnap() {
-        gesturePending  = false;
-        const startIdx  = gestureStartIdx !== null ? gestureStartIdx : Math.round(displayY / pillH);
-        const idx       = startIdx + (scrollDir > 0 ? 1 : -1);
-        gestureStartIdx = null;
-        touchSwipeDist  = 0;
+      /* ── Wheel: 1 evento per gesto, animazione immediata ── */
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (overlayBtn.contains(e.target)) return;
+        if (isSnapping) return;
+        if (isIdle && isInitialLoad) { exitIdle(); launchSpin(); resetIdleTimer(); return; }
+        if (isIdle) return;
+        const dir = e.deltaY > 0 ? 1 : -1;
+        resetIdleTimer();
+        if (isHovered) removeHover();
         infoBar.classList.add('scrolling');
-        doSnap(idx * pillH);
-      }
+        doSnap((Math.round(displayY / pillH) + dir) * pillH);
+      }, { passive: false });
 
-      /* Arrow keys: 1 formato per tasto */
+      /* ── Touch: swipe up/down = 1 evento ── */
+      let touchStartY   = 0;
+      let touchHasMoved = false;
+
+      window.addEventListener('touchstart', e => {
+        touchStartY   = e.touches[0].clientY;
+        touchHasMoved = false;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', e => {
+        touchHasMoved = true;
+      }, { passive: true });
+
+      window.addEventListener('touchend', e => {
+        if (!touchHasMoved) return;
+        if (isSnapping) return;
+        if (isIdle && isInitialLoad) { exitIdle(); launchSpin(); resetIdleTimer(); return; }
+        if (isIdle) return;
+        const dy = touchStartY - e.changedTouches[0].clientY;
+        if (Math.abs(dy) < 20) return;
+        const dir = dy > 0 ? 1 : -1;
+        resetIdleTimer();
+        if (isHovered) removeHover();
+        infoBar.classList.add('scrolling');
+        doSnap((Math.round(displayY / pillH) + dir) * pillH);
+      }, { passive: true });
+
+      /* Arrow keys */
       document.addEventListener('keydown', (e) => {
         if (isIdle) return;
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
@@ -844,20 +775,13 @@
       function loop() {
         requestAnimationFrame(loop);
 
-        if (!snapActive && !gesturePending) displayY += (window.scrollY - displayY) * 0.11;
-
-        /* Offset: posiziona sempre Set B (centrale) al frame center.
-           Set A è sempre sopra, Set C sempre sotto → niente bordo visibile
-           dello scroll anche in expanded mode. */
-        const offset = -(displayY % singleSetH) - singleSetH + xAdj;
+        /* displayY è controllato solo da wheel/touch/snap — nessun lerp */
+        const offset = -(displayY % singleSetH) - singleSetH;
         track.style.transform = 'translateY(' + offset + 'px)';
 
-        /* Format attivo: calcolato direttamente da displayY per evitare
-           sfarfallio al wrap tra i tre set identici */
         const activeDataImg = ((Math.round(displayY / pillH) % NUM) + NUM) % NUM;
         showImg(activeDataImg);
 
-        /* Pulizia stili inline quando cambia format */
         if (activeDataImg !== prevActiveDataImg) {
           allPills.forEach(p => {
             if (parseInt(p.dataset.img) === prevActiveDataImg) {
@@ -869,13 +793,10 @@
           prevActiveDataImg = activeDataImg;
         }
 
-        /* in-frame su TUTTE le pill con lo stesso data-img → nessun salto
-           al confine tra Set A / B / C (stesso contenuto, effetto continuo) */
         allPills.forEach(p => {
           p.classList.toggle('in-frame', parseInt(p.dataset.img) === activeDataImg);
         });
 
-        /* Aggiorna background-position per ogni pill in-frame */
         if (frame.classList.contains('hovered')) {
           allPills.forEach(p => {
             if (parseInt(p.dataset.img) !== activeDataImg) return;
@@ -885,28 +806,16 @@
             span.style.backgroundPosition = (-r.left) + 'px ' + (-r.top + offset) + 'px';
           });
         }
-
       }
 
       requestAnimationFrame(loop);
 
       window.addEventListener('resize', () => {
-        /* Cancella snap in corso per evitare che sovrascriva displayY */
         isSnapping = false;
         snapActive = false;
-
-        /* Salva quale format è attivo prima di ricalcolare */
         const oldIdx = (Math.round(displayY / pillH) % NUM + NUM) % NUM;
-
-        /* Ricalcola tutto (font-size cambia con vw) */
         setFrameHeight();
-        document.body.style.height = singleSetH * 40 + 'px';
-
-        /* Riposiziona allo stesso format, centro del loop infinito */
-        const newY = singleSetH * 20 + oldIdx * pillH;
-        suppressUntil = performance.now() + 600;
-        displayY = newY;
-        window.scrollTo(0, newY);
+        displayY = singleSetH * 4 + oldIdx * pillH;
       });
     }
   </script>
