@@ -735,6 +735,7 @@
 
       window.addEventListener('scroll', () => {
         if (performance.now() < suppressUntil) return;
+        if (isSnapping) return; /* snap in corso: ignora finché non finisce */
 
         /* Scroll durante il loader iniziale → passa all'homepage */
         if (isIdle && isInitialLoad) { exitIdle(); resetIdleTimer(); }
@@ -745,14 +746,13 @@
 
         /* Primo evento del gesto: congela l'indice di partenza */
         if (gestureStartIdx === null) {
-          gestureStartIdx = isSnapping ? snapTargetIdx : Math.round(displayY / pillH);
+          gestureStartIdx = Math.round(displayY / pillH);
         }
 
         resetIdleTimer();
         if (isHovered) removeHover();
         if (!isIdle) infoBar.classList.add('scrolling');
 
-        if (isSnapping) { isSnapping = false; snapActive = false; }
         clearTimeout(snapTimer);
         snapTimer = setTimeout(scheduleSnap, 75);
       }, { passive: true });
@@ -802,6 +802,7 @@
             snapActive    = false;
             suppressUntil = performance.now() + 600;
             snapScrollTo(target);
+            lastScrollY = target; /* evita scrollDir errata al gesto successivo */
             if (isHovered) applyHover();
             infoBar.classList.remove('scrolling');
           }
