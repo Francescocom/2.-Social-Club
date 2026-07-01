@@ -725,12 +725,13 @@
       let displayY   = window.scrollY;
       let snapActive = false;
 
-      /* ── Snap con momentum ── */
-      let velHistory = [];
-      let snapTimer  = null;
-      let isSnapping = false;
-      let scrollDir  = 1; // direzione ultimo scroll
-      let lastScrollY = window.scrollY;
+      /* ── Snap 1-evento-per-gesto ── */
+      let snapTimer       = null;
+      let isSnapping      = false;
+      let scrollDir       = 1;
+      let lastScrollY     = window.scrollY;
+      let gestureStartIdx = null; // pill index all'inizio del gesto
+      let snapTargetIdx   = 0;   // dove sta andando l'ultimo snap
 
       window.addEventListener('scroll', () => {
         if (performance.now() < suppressUntil) return;
@@ -738,16 +739,16 @@
         /* Scroll durante il loader iniziale → passa all'homepage */
         if (isIdle && isInitialLoad) { exitIdle(); resetIdleTimer(); }
 
-        const now   = performance.now();
         const delta = window.scrollY - lastScrollY;
         if (Math.abs(delta) > 0) scrollDir = delta > 0 ? 1 : -1;
         lastScrollY = window.scrollY;
 
-        velHistory.push({ y: window.scrollY, t: now });
-        velHistory = velHistory.filter(p => now - p.t < 120);
+        /* Primo evento del gesto: congela l'indice di partenza */
+        if (gestureStartIdx === null) {
+          gestureStartIdx = isSnapping ? snapTargetIdx : Math.round(displayY / pillH);
+        }
 
         resetIdleTimer();
-        /* Mentre si scrolla: togli il bianco e nascondi info bar */
         if (isHovered) removeHover();
         if (!isIdle) infoBar.classList.add('scrolling');
 
@@ -755,14 +756,6 @@
         clearTimeout(snapTimer);
         snapTimer = setTimeout(scheduleSnap, 75);
       }, { passive: true });
-
-      function getVelocity() {
-        if (velHistory.length < 2) return 0;
-        const a = velHistory[0];
-        const b = velHistory[velHistory.length - 1];
-        const dt = b.t - a.t;
-        return dt > 0 ? (b.y - a.y) / dt : 0;
-      }
 
       function easeOut(t) {
         return 1 - Math.pow(1 - t, 3);
@@ -787,6 +780,7 @@
 
       function doSnap(target) {
         target = Math.round(target);
+        snapTargetIdx = Math.round(target / pillH);
         if (Math.abs(target - displayY) < 1) return;
         if (isSnapping) { isSnapping = false; snapActive = false; }
         isSnapping = true;
@@ -816,9 +810,10 @@
       }
 
       function scheduleSnap() {
-        const currentIdx = Math.round(displayY / pillH);
-        const idx = currentIdx + (scrollDir > 0 ? 1 : -1);
-        touchSwipeDist = 0;
+        const startIdx = gestureStartIdx !== null ? gestureStartIdx : Math.round(displayY / pillH);
+        const idx = startIdx + (scrollDir > 0 ? 1 : -1);
+        gestureStartIdx = null;
+        touchSwipeDist  = 0;
         infoBar.classList.add('scrolling');
         doSnap(idx * pillH);
       }
