@@ -713,13 +713,23 @@
         requestAnimationFrame(step);
       }
 
-      /* ── Wheel: 1 evento per gesto, animazione immediata ── */
+      /* ── Wheel: 1 evento per gesto, animazione immediata ──
+         gestureActiveUntil blocca eventi successivi (momentum trackpad)
+         per 700ms dal primo evento del gesto — simile a scroll-snap-stop:always */
+      let gestureActiveUntil = 0;
+
       window.addEventListener('wheel', (e) => {
         e.preventDefault();
         if (overlayBtn.contains(e.target)) return;
-        if (isSnapping) return;
-        if (isIdle && isInitialLoad) { exitIdle(); launchSpin(); resetIdleTimer(); return; }
+        const now = performance.now();
+        if (now < gestureActiveUntil || isSnapping) return;
+        if (isIdle && isInitialLoad) {
+          gestureActiveUntil = now + 700;
+          exitIdle(); launchSpin(); resetIdleTimer();
+          return;
+        }
         if (isIdle) return;
+        gestureActiveUntil = now + 700;
         const dir = e.deltaY > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
@@ -742,11 +752,13 @@
 
       window.addEventListener('touchend', e => {
         if (!touchHasMoved) return;
-        if (isSnapping) return;
-        if (isIdle && isInitialLoad) { exitIdle(); launchSpin(); resetIdleTimer(); return; }
+        const now = performance.now();
+        if (now < gestureActiveUntil || isSnapping) return;
+        if (isIdle && isInitialLoad) { gestureActiveUntil = now + 700; exitIdle(); launchSpin(); resetIdleTimer(); return; }
         if (isIdle) return;
         const dy = touchStartY - e.changedTouches[0].clientY;
         if (Math.abs(dy) < 20) return;
+        gestureActiveUntil = now + 700;
         const dir = dy > 0 ? 1 : -1;
         resetIdleTimer();
         if (isHovered) removeHover();
