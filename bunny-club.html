@@ -1,928 +1,146 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bunny Club — Social Club</title>
-
-  <style>
-    @font-face {
-      font-family: 'Helvetica Now Display';
-      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
-      font-weight: 400; font-style: normal; font-display: block;
-    }
-    @font-face {
-      font-family: 'Londrina Solid';
-      src: url('fonts/LondrinaSolid-Black.ttf') format('truetype');
-      font-weight: 900; font-style: normal; font-display: block;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #fff;
-      color: #000;
-    }
-
-    /* ── Tipo base ── */
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; }
-
-    /* ── Hero ── */
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      background: #000;
-      overflow: hidden;
-    }
-    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-
-    .hero-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-frame {
-      position: absolute;
-      left: var(--pad);
-      right: var(--pad);
-      border: clamp(2px, 1.2vw, 12px) solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      opacity: 1;
-      transition: opacity 0.15s ease;
-      /* top & height via JS */
-    }
-    .hero-frame.fade-out { opacity: 0; pointer-events: none; }
-
-    .hero-title {
-      font-size: clamp(1rem, 11vw, 12.4rem);
-      font-weight: 400;
-      line-height: 1.1;
-      white-space: nowrap;
-      color: #fff;
-    }
-
-    /* ── Nav tutti dentro .hero, scrollano via con il video ── */
-
-    .hero-topleft,
-    .hero-topright,
-    .hero-bottomleft,
-    .hero-bottomright {
-      position: absolute;
-      z-index: 60;
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: var(--ls);
-      color: #fff;
-      white-space: pre;
-      text-decoration: none;
-    }
-    .hero-topleft    { top: var(--pad);    left: var(--pad); }
-    .hero-topright   { top: var(--pad);    right: var(--pad); }
-    .hero-bottomleft { bottom: var(--pad); left: var(--pad); }
-    .hero-bottomright{ bottom: var(--pad); right: var(--pad); }
-
-    /* Social Club top-left hover */
-    .sc-nav { cursor: pointer; }
-    .sc-nav .sc-default { color: #fff; text-decoration: none; }
-    .sc-nav .sc-hover   { display: none; }
-    .sc-nav:hover .sc-default { display: none; }
-    .sc-nav:hover .sc-hover   { display: inline; }
-    .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
-
-    /* Format nav top-right hover */
-    .fn-nav { cursor: pointer; text-align: right; }
-    .fn-nav .fn-hover { display: none; }
-    .fn-nav:hover .fn-default { display: none; }
-    .fn-nav:hover .fn-hover   { display: inline; }
-    .fn-nav .fn-hover a { color: #fff; text-decoration: none; }
-    /* Nasconde Social Club quando il format nav è in hover */
-    .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
-
-    /* ── Contenuto ── */
-    :root { --gap: 120px; }
-    .content {
-      padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: top center;
-      background-repeat: no-repeat;
-    }
-
-    /* ── Locandine ── */
-    .locandine-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 60px 20px;
-      margin-bottom: 80px;
-    }
-    .locandina-card { display: flex; flex-direction: column; }
-    .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
-    .locandina-img-link img {
-      width: 100%;
-      aspect-ratio: 4/5;
-      object-fit: cover;
-      display: block;
-    }
-    .locandina-info {
-      padding-top: 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-    }
-    .locandina-date,
-    .locandina-venue {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-    }
-    .locandina-cta {
-      font-family: 'Londrina Solid', sans-serif;
-      font-size: var(--ui);
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      line-height: 30pt;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .locandina-cta:hover { color: #87f7a6; }
-
-    /* Bio */
-    .description {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: var(--ls);
-      text-align: left;
-      margin-top: 60pt;
-      padding-bottom: 56px;
-      color: #fff;
-    }
-
-    /* Elenco eventi */
-    .event-list { padding-bottom: 0; }
-
-    .event-row {
-      display: grid;
-      grid-template-columns: 20fr 47fr 33fr;
-      align-items: center;
-      padding: 0;
-      cursor: default;
-      transition: background 0s;
-    }
-    .event-row:hover { background: #87f7a6; }
-    .col-status a { color: inherit; text-decoration: none; cursor: pointer; }
-
-    .event-row span {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    .event-row span:first-child { font-feature-settings: "tnum" 1, "onum" 1; letter-spacing: 0; }
-    .date-dot { margin: 0 -0.1em; }
-    .col-status { text-align: right; }
-
-    /* CTAs */
-    .cta-row {
-      display: flex;
-      align-items: baseline;
-      padding: 24px 0 calc(var(--gap) + 60pt);
-    }
-    .cta-social-group {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 0 3em;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      color: #fff;
-    }
-    .cta-social-group a {
-      font-size: inherit;
-      font-weight: 400;
-      letter-spacing: inherit;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    /* Bottone "Scroll for Tickets" centrato in fondo al video */
-    @keyframes explore-flicker {
-      0%, 49%  { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-    .hero-explore {
-      position: absolute;
-      bottom: var(--pad);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 60;
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: var(--ls);
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-      white-space: nowrap;
-      animation: explore-flicker 0.5s step-start infinite;
-    }
-
-    /* ── Griglia foto ── */
-    .photo-grid-wrap { margin: 0; }
-    .photo-grid { display: flex; flex-direction: column; gap: 0; }
-    .photo-group { display: flex; gap: 0; }
-    .grid-photo-card { flex: 1; position: relative; }
-    .grid-photo-card img {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      display: block;
-      cursor: pointer;
-    }
-    .photo-caption {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-      padding: var(--pad);
-      padding-top: calc(var(--pad) - (1cap - 1ex));
-      pointer-events: none;
-    }
-
-    /* ── Gallery overlay ── */
-    .photo-overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 300;
-      display: none;
-      overflow: hidden;
-    }
-    .photo-overlay.active { display: block; }
-
-    .gallery-left {
-      position: absolute;
-      top: 0; left: 0;
-      width: 25vw;
-      min-width: 180px;
-      max-width: 340px;
-      height: 100%;
-      overflow-y: auto;
-      padding: var(--pad);
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      z-index: 10;
-      color: #fff;
-    }
-
-    .gallery-event-info {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: var(--ls);
-      margin-bottom: 30pt;
-    }
-
-    .gallery-nums { display: flex; flex-direction: column; }
-
-    .gallery-num {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: 0;
-      font-feature-settings: "tnum" 1, "onum" 1;
-    }
-    .gallery-num.current { visibility: hidden; }
-
-    .gallery-main { position: absolute; inset: 0; }
-
-    .overlay-main-img {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 100%;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .gallery-download {
-      position: absolute;
-      bottom: var(--pad);
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 1;
-      color: #fff;
-      cursor: pointer;
-      z-index: 3;
-      white-space: nowrap;
-    }
-
-    .gallery-close-btn {
-      position: fixed;
-      top: var(--pad);
-      right: var(--pad);
-      z-index: 320;
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: none;
-      padding: 0;
-      line-height: 0;
-    }
-    .gallery-close-btn.visible { display: block; }
-
-    .gallery-mobile-nav { display: none; }
-    .gallery-prev, .gallery-next {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 1;
-      color: #fff;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    /* ── Footer ── */
-    .page-footer {
-      height: 200px;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 var(--pad) 20px;
-      text-align: center;
-      gap: 0;
-    }
-    .page-footer p {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0 2em;
-    }
-    .page-footer a {
-      color: #fff;
-      text-decoration: none;
-    }
-
-    @keyframes ticket-blink {
-      0%, 49%  { color: #000; }
-      50%, 100% { color: #87f7a6; }
-    }
-    .event-row:hover .col-status a {
-      animation: ticket-blink 0.38s step-start infinite;
-    }
-
-    @keyframes row-flash {
-      0%, 100% { background: transparent; }
-      30%, 70%  { background: #87f7a6; }
-    }
-    .event-row.flash { animation: row-flash 0.15s ease; }
-
-    @keyframes tabloid {
-      0%, 15%  { transform: translateX(0); }
-      70%, 85% { transform: translateX(var(--marquee-dist, -30px)); }
-      86%      { transform: translateX(0); }
-      100%     { transform: translateX(0); }
-    }
-    .marquee-text { display: inline-block; white-space: nowrap; }
-    .marquee-text.active { animation: tabloid 5s steps(20, end) infinite; }
-
-    @media (max-width: 767px) {
-      :root { --ui: 17pt; }
-
-      /* Interlinea proporzionale */
-      .description,
-      .event-row span,
-      .event-row .col-status a,
-      .cta-row a,
-      .photo-caption,
-      .page-footer p { line-height: 20pt; }
-      .cta-social-group { line-height: 20pt; }
-
-      /* Fix scroll orizzontale */
-      body { overflow-x: hidden; }
-      .hero-topleft, .hero-topright,
-      .hero-bottomleft, .hero-bottomright { white-space: normal; }
-
-      /* Nav padding allineato a 10px */
-      .hero-topleft    { top: 10px;    left: 10px; }
-      .hero-topright   { top: 10px;    right: 10px; }
-      .hero-bottomleft { bottom: 10px; left: 10px; }
-      .hero-bottomright{ bottom: 10px; right: 10px; }
-
-      .hero { height: 100svh; }
-      .content { padding: 10px; }
-      .photo-grid-wrap { margin: 0; }
-      .gallery-left { display: none; }
-      .gallery-mobile-nav {
-        display: flex;
-        position: absolute;
-        bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
-        left: var(--pad);
-        right: var(--pad);
-        justify-content: space-between;
-        z-index: 10;
-      }
-
-      /* Date: solo giorno/mese */
-      .date-sep, .date-yr { display: none; }
-
-      /* Righe elenco: colonne auto/1fr/auto con gap uguale */
-      .event-row {
-        align-items: center;
-        grid-template-columns: auto 1fr auto;
-        column-gap: 1.2em;
-      }
-      .date-dot { margin: 0; }
-      .marquee-text { vertical-align: middle; }
-
-      /* Locandine: 2 colonne su mobile */
-      .locandine-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px 10px;
-        margin-bottom: 40px;
-      }
-      .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
-
-      /* Spazio dopo bio: 2 righe */
-      .description { padding-bottom: 40pt; }
-
-      /* CTA: solo "Ticket" */
-      .cta-long { display: none; }
-
-      /* CTA social: uno sotto l'altro a sinistra */
-      .cta-social-group { flex-direction: column; gap: 0; }
-
-      /* Foto: tutte impilate 2:3 senza margine */
-      .photo-group { flex-direction: column; }
-      .photo-caption { padding: 10px; line-height: 20pt; }
-
-      /* Reset hover on mobile; use JS click toggle */
-      .sc-nav:hover .sc-default { display: inline; }
-      .sc-nav:hover .sc-hover { display: none; }
-      .fn-nav:hover .fn-default { display: inline; }
-      .fn-nav:hover .fn-hover { display: none; }
-      .hero:has(.fn-nav:hover) .sc-nav { visibility: visible; }
-
-      .sc-nav.expanded .sc-hover {
-        display: flex; flex-direction: column; align-items: flex-start;
-        white-space: normal; margin-top: 4px;
-      }
-      .sc-nav.expanded .sc-hover .nav-sep,
-      .sc-nav.expanded .sc-hover .nav-br { display: none; }
-      .sc-nav.expanded .sc-hover a,
-      .sc-nav.expanded .sc-hover .nav-item { line-height: 20pt; }
-      .fn-nav.expanded .fn-hover {
-        display: flex; flex-direction: column; align-items: flex-end;
-        white-space: normal; margin-top: 4px;
-      }
-      .fn-nav.expanded .fn-hover .nav-sep { display: none; }
-      .fn-nav.expanded .fn-hover a { line-height: 20pt; }
-    }
-  </style>
+  <meta name="description" content="Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l&#x27;artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Regular.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/LondrinaSolid-Black.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/data/bunny-club.js"></script>
+  <script src="assets/js/format.js" defer></script>
 </head>
 <body>
-
-  <!-- Hero con video -->
-  <div class="hero">
-    <div class="hero-bg" style="background-image: url('image 4/BUNNY CLUB.jpg')"></div>
-    <video class="hero-video" autoplay muted loop playsinline poster="image 4/BUNNY CLUB.jpg">
-      <source src="1. Bad Bunny/1. Video/-VISUAL 4 - B.BUNNY.mp4" type="video/mp4">
+<div class="format__page" style="--fg:#fff;--cta-hover:#87f7a6">
+  <div class="FormatHero__hero">
+    <div class="FormatHero__heroBg" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/a616a5e916b9c71b6531fde26684b591827dcadf-2560x1706.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    </div>
+    <video class="FormatHero__heroVideo" autoPlay="" muted="" loop="" playsInline="" poster="https://cdn.sanity.io/images/73aqq96k/production/a616a5e916b9c71b6531fde26684b591827dcadf-2560x1706.jpg?w=2200&amp;q=80&amp;auto=format" preload="metadata">
+      <source src="https://cdn.sanity.io/files/73aqq96k/production/67ccb84712e0bf4d019cf82ab6191e1268aff602.mp4" type="video/mp4"/>
     </video>
-    <div class="hero-frame" id="heroFrame">
-      <span class="hero-title">Bunny Club</span>
+    <div class="FormatHero__heroFrame"><span class="FormatHero__heroTitle">Bunny Club</span></div>
+    <div class="TopNav__wrap">
+      <div class="TopNav__topLeft"><a class="TopNav__scDefault" href="index.html?direct=1">Social Club</a><span class="TopNav__scHover"><a href="index.html?direct=1">Home</a><span class="TopNav__navSep">      </span><a href="about.html">About us</a><span class="TopNav__navSep">      </span><a href="https://www.socialclubevents.it/en/bunny-club">EN</a><span class="TopNav__navSep">      </span><span>©2026</span></span></div>
+      <div class="TopNav__topRight "><span class="TopNav__fnDefault">Bunny Club</span><span class="TopNav__fnHover"><span><a href="brat-party.html">Brat Party</a></span><span><span class="TopNav__navSep">      </span><a href="after-hours.html">After Hours</a></span><span><span class="TopNav__navSep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></span></div>
     </div>
-
-    <!-- Tutto il nav scorre via con il video -->
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><span class="nav-sep">      </span><span class="nav-item">©2026</span></span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Bunny Club</span><span class="fn-hover"><a href="brat-party.html">Brat Party</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
-    <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
+    <div class="FormatHero__heroExplore"><a href="#tickets">Scroll for Tickets</a><a class="FormatHero__heroGallery" href="#gallery">Scroll for Gallery</a></div>
   </div>
-
-  <!-- Contenuto -->
-  <div class="content" id="content" style="background-image: url('7. Sfondi/BUNNY CLUB.png')">
-
-    <!-- Griglia locandine -->
-    <div class="locandine-grid">
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@acqueminerali_discoteca Photo by Bunny Club in Imola with @acqueminer.jpg" alt="Bunny Club Imola">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">29.05</span>
-          <span class="locandina-venue">Imola</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+  <div id="tickets" class="format__content" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/4d98a8ac3926d832504ade588696427072a8558a-2000x1506.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    <div class="format__locandine">
+      <div class="format__card"><a href="https://link.dice.fm/OCesudMLi5b" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — MILANO 5.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/489b4251726d0579a5d3acc9c5fae1cc46bbea34-2215x2755.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">5.09</span><span class="format__cardVenue">MILANO</span><a href="https://link.dice.fm/OCesudMLi5b" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@demodeclub Photo by Bunny Club in Bloom Beach Bar with @demodeclub, @.jpg" alt="Bunny Club Molfetta">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">31.05</span>
-          <span class="locandina-venue">Molfetta</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><a href="https://www.ticketsms.it/event/Bunny-Club-La-Festa-Bad-Bunny-Catania-Afrobar-05-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — CATANIA 5.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/e7433c27e962f9a47857b76136fe94a7a6b8fb99-1080x1350.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">5.09</span><span class="format__cardVenue">CATANIA</span><a href="https://www.ticketsms.it/event/Bunny-Club-La-Festa-Bad-Bunny-Catania-Afrobar-05-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@circolomagnolia Photo by Bunny Club in Milano with @circolomagnolia,.jpg" alt="Bunny Club Milano">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">19.06</span>
-          <span class="locandina-venue">Milano</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><a href="https://www.ticketsms.it/event/El-Bunny-Club-Jesolo-Ilmuretto-05-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — JESOLO 5.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/258af2a394aa30ba97c19e5afe153b10fa686e70-1080x1350.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">5.09</span><span class="format__cardVenue">JESOLO</span><a href="https://www.ticketsms.it/event/El-Bunny-Club-Jesolo-Ilmuretto-05-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@ermore_deleo Photo by Bunny Club in MAMAMIA with @ermore_deleo, @mama.jpg" alt="Bunny Club Senigallia">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">20.06</span>
-          <span class="locandina-venue">Senigallia</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><a href="https://link.dice.fm/3nje6X4eJ5b" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — PRAGUE 12.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/6fb52293e451c41037a6ad6a1a2065b0f1e35935-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">12.09</span><span class="format__cardVenue">PRAGUE</span><a href="https://link.dice.fm/3nje6X4eJ5b" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@eursocialpark Photo shared by Bunny Club on June 08, 2026 tagging @eu.jpg" alt="Bunny Club Roma">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">25.06</span>
-          <span class="locandina-venue">Roma</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><a href="https://demodeclub.it/evento/bunny-club-plaza-bay-barletta" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — BARLETTA 19.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/caa545daf5adad9911ef2a3d68e9f295d760dd97-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">19.09</span><span class="format__cardVenue">BARLETTA</span><a href="https://demodeclub.it/evento/bunny-club-plaza-bay-barletta" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank">
-          <img src="6. Serate/1. Bad Bunny/@ilmuretto_official Photo shared by Bunny Club on June 15, 2026 taggin.jpg" alt="Bunny Club Jesolo">
-        </a>
-        <div class="locandina-info">
-          <span class="locandina-date">30.07 · 6.08 · 13.08</span>
-          <span class="locandina-venue">Jesolo</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><a href="https://xceed.me/it/torino/event/bad-bunny-night/243093/channel/bunker" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — TORINO 25.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/7fa93ee2e2ef770185d6e7a69627c2162700ad65-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">25.09</span><span class="format__cardVenue">TORINO</span><a href="https://xceed.me/it/torino/event/bad-bunny-night/243093/channel/bunker" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
       </div>
-
+      <div class="format__card"><a href="https://www.ticketsms.it/event/Bunny-Club-Trieste-Magazzino-27-26-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — TRIESTE 26.09" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/c1a982280b56bf091324c26a46ab0c9ec333d2e7-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">26.09</span><span class="format__cardVenue">TRIESTE</span><a href="https://www.ticketsms.it/event/Bunny-Club-Trieste-Magazzino-27-26-09-2026" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
+      </div>
+      <div class="format__card"><a href="https://www.boxerticket.it/eventi/bunny-club" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — BOLOGNA 2.10" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/9192df72cfbfab91814252a6df6ec1eb3d6b3a03-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">2.10</span><span class="format__cardVenue">BOLOGNA</span><a href="https://www.boxerticket.it/eventi/bunny-club" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
+      </div>
+      <div class="format__card"><a href="https://link.dice.fm/Q1df54a5dad5" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — ROMA 2.10" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/5cd5c46f810bcbce0bdaa9b5baf31fc183aa84f4-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">2.10</span><span class="format__cardVenue">ROMA</span><a href="https://link.dice.fm/Q1df54a5dad5" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
+      </div>
+      <div class="format__card"><a href="https://demodeclub.it/evento/opening-season-bunny-club" target="_blank" rel="noopener noreferrer" class="format__cardImgLink"><span class="format__cardImg"><img alt="Bunny Club — BARI 3.10" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/d756361b4f52053df3a797d3b5e411cd221cc73a-2160x2700.png?w=900&amp;auto=format"/></span></a><div class="format__cardInfo"><span class="format__cardDate">3.10</span><span class="format__cardVenue">BARI</span><a href="https://demodeclub.it/evento/opening-season-bunny-club" target="_blank" rel="noopener noreferrer" class="format__cardCta">Compra Tickets</a></div>
+      </div>
     </div>
-
-    <p class="description">Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l'artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.</p>
-
-    <div class="cta-row">
-      <span class="cta-social-group">Visit Bunny Club<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
-    </div>
-
-
+    <p class="format__description">Il Bunny Club è la prima e principale festa italiana interamente dedicata a Bad Bunny, l&#x27;artista portoricano re della latin trap e del reggaeton. Si tratta di un format itinerante che si svolge nei principali club italiani, offrendo una notte di perreo, dembow e più grandi successi della musica latina contemporanea.</p>
+    <div class="format__ctaRow"><span class="format__ctaGroup">Visit Bunny Club<span>Instagram</span><span>Facebook</span><span>Open on Dice</span></span></div>
   </div>
-
-  <div class="photo-grid-wrap">
-  <div class="photo-grid" id="photoGrid">
-
-    <div class="photo-group group-a">
-      <div class="grid-photo-card"><div class="photo-caption">Il Muretto, Jesolo<br>2 Maggio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Magazzini Generali, Milano<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Riva Club, Napoli<br>30 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg" alt=""></div>
+  <div id="gallery" class="PhotoGallery__gridWrap">
+    <div class="PhotoGallery__grid">
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">MAGNOLIA
+5 Settembre 2026
+143 foto</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: MAGNOLIA
+5 Settembre 2026"><span class="PhotoGallery__cardImg"><img alt="MAGNOLIA
+5 Settembre 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/81249d1f2d5f2cf53d82018eb33cb62316bac1a4-1867x2800.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Riva Club, Napoli
+14 Agosto 2026
+121 foto</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Riva Club, Napoli
+14 Agosto 2026"><span class="PhotoGallery__cardImg"><img alt="Riva Club, Napoli
+14 Agosto 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/ba7a6cf4bb5401e67f2a5d791e3ea02366b202a0-1667x2500.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Il Muretto, Jesolo
+2 Maggio 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Il Muretto, Jesolo
+2 Maggio 2026"><span class="PhotoGallery__cardImg"><img alt="Il Muretto, Jesolo
+2 Maggio 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/da204fd571c2df130f214407683189fd6be632ce-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Riva Club, Napoli
+30 Aprile 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Riva Club, Napoli
+30 Aprile 2026"><span class="PhotoGallery__cardImg"><img alt="Riva Club, Napoli
+30 Aprile 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/3dcc1868a5d93e4a5b30386fe698ca040b043c2e-2000x1333.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Magazzini Generali, Milano
+25 Aprile 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Magazzini Generali, Milano
+25 Aprile 2026"><span class="PhotoGallery__cardImg"><img alt="Magazzini Generali, Milano
+25 Aprile 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/ea8dc2e7cb24768f88ea9cfdab7b1c89f12a8192-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Hall, Padova
+25 Aprile 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Hall, Padova
+25 Aprile 2026"><span class="PhotoGallery__cardImg"><img alt="Hall, Padova
+25 Aprile 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/41bc69b14c98224efcbc25c1ca38b59011af8c57-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Boma Club, Bologna
+11 Aprile 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Boma Club, Bologna
+11 Aprile 2026"><span class="PhotoGallery__cardImg"><img alt="Boma Club, Bologna
+11 Aprile 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/92ba246c479142d3a26ce308c686a5707631cba1-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Démodé, Bari
+11 Aprile 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Démodé, Bari
+11 Aprile 2026"><span class="PhotoGallery__cardImg"><img alt="Démodé, Bari
+11 Aprile 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/27a723b29281fab0ee886c125e864b1e5561cbf2-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Hacienda, Roma
+28 Marzo 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Hacienda, Roma
+28 Marzo 2026"><span class="PhotoGallery__cardImg"><img alt="Hacienda, Roma
+28 Marzo 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/3c1865609d55c98b5d7f62a29f9a705fc612382a-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">New Age, Treviso
+21 Marzo 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: New Age, Treviso
+21 Marzo 2026"><span class="PhotoGallery__cardImg"><img alt="New Age, Treviso
+21 Marzo 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/009c5ff6ce9a977401209eb4970da045d1b2a73c-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Base, Milano
+31 Gennaio 2026</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Base, Milano
+31 Gennaio 2026"><span class="PhotoGallery__cardImg"><img alt="Base, Milano
+31 Gennaio 2026" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/1bc58f55dc688d8e413fc8ff2e94252a1399225e-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
     </div>
-
-    <div class="photo-group group-b">
-      <div class="grid-photo-card"><div class="photo-caption">Boma Club, Bologna<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Hacienda, Roma<br>28 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Démodé, Bari<br>11 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg" alt=""></div>
-    </div>
-
-    <div class="photo-group group-c">
-      <div class="grid-photo-card"><div class="photo-caption">New Age, Treviso<br>21 Marzo 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Hall, Padova<br>25 Aprile 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""></div>
-      <div class="grid-photo-card"><div class="photo-caption">Base, Milano<br>31 Gennaio 2026</div><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""></div>
-    </div>
-
   </div>
-  </div>
-  <div class="page-footer">
+  <footer class="Footer__footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
-    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
-  </div>
-
-  <!-- Gallery overlay -->
-  <div class="photo-overlay" id="photoOverlay">
-    <div class="gallery-left" id="galleryLeft">
-      <div class="gallery-event-info" id="galleryEventInfo"></div>
-      <div class="gallery-nums" id="galleryNums"></div>
-    </div>
-    <div class="gallery-main">
-      <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
-      <div class="gallery-download" id="galleryDownload">Download</div>
-    </div>
-    <div class="gallery-mobile-nav">
-      <button class="gallery-prev" id="galleryPrev">Previous</button>
-      <button class="gallery-next" id="galleryNext">Next</button>
-    </div>
-  </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
-
-  <script>
-    const heroFrame = document.getElementById('heroFrame');
-
-    function setFrame() {
-      const titleEl  = heroFrame.querySelector('.hero-title');
-      const naturalH = titleEl.getBoundingClientRect().height;
-      const frameH   = naturalH * 1.1;
-      const frameTop = (window.innerHeight - frameH) / 2;
-      heroFrame.style.height = frameH + 'px';
-      heroFrame.style.top    = frameTop + 'px';
-    }
-    document.fonts.ready.then(() => {
-      setFrame();
-      setTimeout(() => heroFrame.classList.add('fade-out'), 1200);
-    });
-    window.addEventListener('resize', setFrame);
-
-    /* ── All photos pool ── */
-    const ALL_PHOTOS = [
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-30.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-31.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-32.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg',
-    ];
-
-    /* ── Row flash cascade (sequential) ── */
-    const eventRows = Array.from(document.querySelectorAll('.event-row'));
-
-    function flashRows() {
-      const FLASH_DUR = 150;
-      eventRows.forEach((row, i) => {
-        setTimeout(() => {
-          row.classList.add('flash');
-          setTimeout(() => row.classList.remove('flash'), FLASH_DUR);
-        }, i * FLASH_DUR);
-      });
-    }
-
-    /* ── Scroll for Tickets ── */
-    function heroExploreClick() {
-      if (window.innerWidth > 767) {
-        window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
-      } else {
-        document.querySelector('.locandine-grid').scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    /* ── Gallery ── */
-    const photoOverlay     = document.getElementById('photoOverlay');
-    const overlayMainImg   = document.getElementById('overlayMainImg');
-    const galleryLeft      = document.getElementById('galleryLeft');
-    const galleryEventInfo = document.getElementById('galleryEventInfo');
-    const galleryNums      = document.getElementById('galleryNums');
-    const galleryClose     = document.getElementById('galleryClose');
-    const galleryDownload  = document.getElementById('galleryDownload');
-
-    let galleryImages = [];
-    let galleryIdx    = 0;
-
-    function updateGalleryView() {
-      overlayMainImg.src = galleryImages[galleryIdx];
-      Array.from(galleryNums.querySelectorAll('.gallery-num')).forEach((el, i) => {
-        el.classList.toggle('current', i === galleryIdx);
-      });
-    }
-
-    function openCardGallery(captionHTML, images, startIdx) {
-      galleryImages = images;
-      galleryIdx    = startIdx;
-      galleryEventInfo.innerHTML = captionHTML;
-      galleryNums.innerHTML = '';
-      images.forEach((_, i) => {
-        const el = document.createElement('div');
-        el.className = 'gallery-num' + (i === startIdx ? ' current' : '');
-        el.textContent = String(i + 1).padStart(2, '0');
-        el.addEventListener('mouseenter', () => {
-          galleryIdx = i;
-          updateGalleryView();
-        });
-        galleryNums.appendChild(el);
-      });
-      overlayMainImg.src = images[startIdx];
-      document.body.style.overflow = 'hidden';
-      photoOverlay.classList.add('active');
-      galleryClose.classList.add('visible');
-    }
-
-    function closeGallery() {
-      photoOverlay.classList.remove('active');
-      galleryClose.classList.remove('visible');
-      document.body.style.overflow = '';
-    }
-
-    /* Per-card click: opens full photo pool starting at clicked photo */
-    document.querySelectorAll('.grid-photo-card').forEach(card => {
-      const img         = card.querySelector('img');
-      const caption     = card.querySelector('.photo-caption');
-      const captionHTML = caption ? caption.innerHTML : '';
-      img.addEventListener('click', () => {
-        const src = img.getAttribute('src');
-        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p === src));
-        openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
-      });
-    });
-
-    /* Click on image = next */
-    overlayMainImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    /* Wheel scroll to navigate — throttled so 1 image per gesture */
-    let wheelLast = 0;
-    photoOverlay.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const now = Date.now();
-      if (now - wheelLast < 400) return;
-      wheelLast = now;
-      galleryIdx = e.deltaY > 0
-        ? (galleryIdx + 1) % galleryImages.length
-        : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    }, { passive: false });
-
-    /* Touch swipe */
-    let touchStartX = 0;
-    photoOverlay.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    photoOverlay.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) {
-        galleryIdx = dx < 0
-          ? (galleryIdx + 1) % galleryImages.length
-          : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-        updateGalleryView();
-      }
-    }, { passive: true });
-
-    /* Close on left panel or X button */
-    galleryLeft.addEventListener('click', closeGallery);
-    galleryClose.addEventListener('click', closeGallery);
-
-    /* Keyboard navigation */
-    document.addEventListener('keydown', (e) => {
-      if (!photoOverlay.classList.contains('active')) return;
-      if (e.key === 'Escape') { closeGallery(); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        galleryIdx = (galleryIdx + 1) % galleryImages.length;
-        updateGalleryView();
-      }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-        updateGalleryView();
-      }
-    });
-
-    /* Download */
-    galleryDownload.addEventListener('click', () => {
-      const src = galleryImages[galleryIdx];
-      const a = document.createElement('a');
-      a.href = src; a.download = src.split('/').pop(); a.click();
-    });
-
-    const galleryPrev = document.getElementById('galleryPrev');
-    const galleryNext = document.getElementById('galleryNext');
-    galleryPrev.addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    });
-    galleryNext.addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    photoOverlay.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
-
-    (function() {
-      const scNav = document.querySelector('.sc-nav');
-      const fnNav = document.querySelector('.fn-nav');
-      function isMobile() { return window.innerWidth <= 767; }
-      scNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.sc-hover a')) return;
-        e.preventDefault();
-        scNav.classList.toggle('expanded');
-        fnNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      fnNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.fn-hover a')) return;
-        fnNav.classList.toggle('expanded');
-        scNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      document.addEventListener('click', function() {
-        scNav.classList.remove('expanded');
-        fnNav.classList.remove('expanded');
-      });
-    })();
-
-    /* Date: GG.MM.YY — sep e yr nascosti su mobile */
-    document.querySelectorAll('.event-row span:first-child').forEach(span => {
-      const parts = span.textContent.split('.');
-      if (parts.length === 3) {
-        span.innerHTML = `${parts[0]}<span class="date-dot">.</span>${parts[1]}<span class="date-dot date-sep">.</span><span class="date-yr">${parts[2]}</span>`;
-      } else {
-        span.innerHTML = span.textContent.replace(/\./g, '<span class="date-dot">.</span>');
-      }
-    });
-
-    /* Marquee tabloid per testi lunghi su mobile */
-    function applyMarquee() {
-      if (window.innerWidth > 767) return;
-      document.querySelectorAll('.event-row').forEach(row => {
-        const venueSpan = row.querySelectorAll('span')[1];
-        if (!venueSpan || venueSpan.querySelector('.marquee-text')) return;
-        const inner = document.createElement('span');
-        inner.className = 'marquee-text';
-        inner.textContent = venueSpan.textContent;
-        venueSpan.textContent = '';
-        venueSpan.style.textOverflow = 'clip';
-        venueSpan.appendChild(inner);
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          const overflow = inner.scrollWidth - venueSpan.offsetWidth;
-          if (overflow > 2) {
-            inner.style.setProperty('--marquee-dist', `-${overflow}px`);
-            inner.classList.add('active');
-          }
-        }));
-      });
-    }
-    document.fonts.ready.then(applyMarquee);
-  </script>
-
+    <p><span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a><a href="privacy.html">Privacy Policies</a><a href="cookies.html">Cookies Policy</a><a href="legal.html">Legal Notes</a></p>
+  </footer>
+</div>
 </body>
 </html>

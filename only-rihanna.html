@@ -1,477 +1,90 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Only Rihanna — Social Club</title>
-
-  <style>
-    @font-face {
-      font-family: 'Helvetica Now Display';
-      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
-      font-weight: 400; font-style: normal; font-display: block;
-    }
-    @font-face {
-      font-family: 'Londrina Solid';
-      src: url('fonts/LondrinaSolid-Black.ttf') format('truetype');
-      font-weight: 900; font-style: normal; font-display: block;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #fff; color: #000;
-    }
-
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
-
-    .hero {
-      position: relative; width: 100%; height: 100vh;
-      background: #000; overflow: hidden;
-    }
-    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-    .hero-frame {
-      position: absolute; left: var(--pad); right: var(--pad);
-      border: clamp(2px, 1.2vw, 12px) solid #fff;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; opacity: 1; transition: opacity 0.15s ease;
-    }
-    .hero-frame.fade-out { opacity: 0; pointer-events: none; }
-    .hero-title { font-size: clamp(1rem, 11vw, 12.4rem); font-weight: 400; line-height: 1.1; white-space: nowrap; color: #fff; }
-
-    .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright {
-      position: absolute; z-index: 60; font-size: var(--ui); font-weight: 400;
-      line-height: 1.0; letter-spacing: var(--ls); color: #fff; white-space: pre; text-decoration: none;
-    }
-    .hero-topleft    { top: var(--pad);    left: var(--pad); }
-    .hero-topright   { top: var(--pad);    right: var(--pad); }
-    .hero-bottomleft { bottom: var(--pad); left: var(--pad); }
-    .hero-bottomright{ bottom: var(--pad); right: var(--pad); }
-
-    .sc-nav { cursor: pointer; }
-    .sc-nav .sc-default { color: #fff; text-decoration: none; }
-    .sc-nav .sc-hover { display: none; }
-    .sc-nav:hover .sc-default { display: none; }
-    .sc-nav:hover .sc-hover { display: inline; }
-    .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
-
-    .fn-nav { cursor: pointer; text-align: right; }
-    .fn-nav .fn-hover { display: none; }
-    .fn-nav:hover .fn-default { display: none; }
-    .fn-nav:hover .fn-hover { display: inline; }
-    .fn-nav .fn-hover a { color: #fff; text-decoration: none; }
-    .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
-
-    @keyframes explore-flicker { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-    .hero-explore {
-      position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%);
-      z-index: 60; font-size: var(--ui); font-weight: 400; line-height: 1.0;
-      letter-spacing: var(--ls); color: #fff; text-decoration: none; cursor: pointer;
-      white-space: nowrap; animation: explore-flicker 0.5s step-start infinite;
-    }
-
-    .content {
-      padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: top center;
-      background-repeat: no-repeat;
-    }
-
-    .locandine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px 20px; margin-bottom: 80px; }
-    .locandina-card { display: flex; flex-direction: column; }
-    .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
-    .locandina-img-link img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
-    .locandina-info { padding-top: 14px; text-align: center; display: flex; flex-direction: column; }
-    .locandina-date, .locandina-venue { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; }
-    .locandina-cta { font-family: 'Londrina Solid', sans-serif; font-size: var(--ui); font-weight: 900; letter-spacing: 0.02em; line-height: 30pt; color: #fff; text-decoration: none; cursor: pointer; }
-    .locandina-cta:hover { color: #87f7a6; }
-
-    .description { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); text-align: left; margin-top: 60pt; color: #fff; }
-
-    .cta-row { display: flex; align-items: baseline; padding: 24px 0 calc(var(--gap) + 60pt); }
-    .cta-social-group { display: inline-flex; flex-wrap: wrap; gap: 0 3em; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); color: #fff; }
-    .cta-social-group a { font-size: inherit; font-weight: 400; letter-spacing: inherit; color: #fff; text-decoration: none; cursor: pointer; }
-
-    .photo-grid-wrap { margin: 0; }
-    .photo-grid { display: flex; flex-direction: column; gap: 0; }
-    .photo-group { display: flex; gap: 0; }
-    .grid-photo-card { flex: 1; position: relative; }
-    .grid-photo-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; cursor: pointer; }
-    .photo-caption { position: absolute; top: 0; left: 0; z-index: 1; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; padding: var(--pad); padding-top: calc(var(--pad) - (1cap - 1ex)); pointer-events: none; }
-
-    .photo-overlay { position: fixed; inset: 0; background: #000; z-index: 300; display: none; overflow: hidden; }
-    .photo-overlay.active { display: block; }
-
-    .gallery-left { position: absolute; top: 0; left: 0; width: 25vw; min-width: 180px; max-width: 340px; height: 100%; overflow-y: auto; padding: var(--pad); display: flex; flex-direction: column; cursor: pointer; z-index: 10; color: #fff; }
-    .gallery-event-info { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); margin-bottom: 30pt; }
-    .gallery-nums { display: flex; flex-direction: column; }
-    .gallery-num { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: 0; font-feature-settings: "tnum" 1, "onum" 1; }
-    .gallery-num.current { visibility: hidden; }
-
-    .gallery-main { position: absolute; inset: 0; }
-    .overlay-main-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); height: 100%; width: auto; max-width: 100%; object-fit: contain; cursor: pointer; z-index: 2; }
-    .gallery-download { position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%); font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 1; color: #fff; cursor: pointer; z-index: 3; white-space: nowrap; }
-
-    .gallery-mobile-nav { display: none; }
-    .gallery-prev, .gallery-next {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls);
-      line-height: 1; color: #fff; background: none; border: none; cursor: pointer; padding: 0;
-    }
-
-    .gallery-close-btn { position: fixed; top: var(--pad); right: var(--pad); z-index: 320; background: none; border: none; cursor: pointer; display: none; padding: 0; line-height: 0; }
-    .gallery-close-btn.visible { display: block; }
-
-    .page-footer { height: 200px; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 var(--pad) 20px; text-align: center; gap: 0; }
-    .page-footer p { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2em; }
-    .page-footer a { color: #fff; text-decoration: none; }
-
-    @media (max-width: 767px) {
-      :root { --ui: 17pt; }
-      .description { line-height: 20pt; padding-bottom: 40pt; }
-      .cta-social-group { line-height: 20pt; flex-direction: column; gap: 0; }
-      .page-footer p { line-height: 20pt; }
-      body { overflow-x: hidden; }
-      .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright { white-space: normal; }
-      .hero-topleft    { top: 10px;    left: 10px; }
-      .hero-topright   { top: 10px;    right: 10px; }
-      .hero-bottomleft { bottom: 10px; left: 10px; }
-      .hero-bottomright{ bottom: 10px; right: 10px; }
-      .hero { height: 100svh; }
-      .content { padding: 10px; }
-      .photo-grid-wrap { margin: 0; }
-      .locandine-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 10px; margin-bottom: 40px; }
-      .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
-      .photo-group { flex-direction: column; }
-      .photo-caption { padding: 10px; line-height: 20pt; }
-      .gallery-left { display: none; }
-      .gallery-mobile-nav {
-        display: flex; position: absolute;
-        bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
-        left: var(--pad); right: var(--pad); justify-content: space-between; z-index: 10;
-      }
-      /* Reset hover on mobile; use JS click toggle */
-      .sc-nav:hover .sc-default { display: inline; }
-      .sc-nav:hover .sc-hover { display: none; }
-      .fn-nav:hover .fn-default { display: inline; }
-      .fn-nav:hover .fn-hover { display: none; }
-      .hero:has(.fn-nav:hover) .sc-nav { visibility: visible; }
-
-      .sc-nav.expanded .sc-hover {
-        display: flex; flex-direction: column; align-items: flex-start;
-        white-space: normal; margin-top: 4px;
-      }
-      .sc-nav.expanded .sc-hover .nav-sep,
-      .sc-nav.expanded .sc-hover .nav-br { display: none; }
-      .sc-nav.expanded .sc-hover a,
-      .sc-nav.expanded .sc-hover .nav-item { line-height: 20pt; }
-      .fn-nav.expanded .fn-hover {
-        display: flex; flex-direction: column; align-items: flex-end;
-        white-space: normal; margin-top: 4px;
-      }
-      .fn-nav.expanded .fn-hover .nav-sep { display: none; }
-      .fn-nav.expanded .fn-hover a { line-height: 20pt; }
-    }
-  </style>
+  <meta name="description" content="Only Rihanna è il primo party a tema interamente dedicato alla musica, allo stile e all&#x27;attitudine di Rihanna. Durante la serata, il DJ set propone esclusivamente hit, remix e collaborazioni della cantante barbadiana, accompagnati da visuals ispirati ai suoi videoclip e tour.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Regular.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/LondrinaSolid-Black.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/data/only-rihanna.js"></script>
+  <script src="assets/js/format.js" defer></script>
 </head>
 <body>
-
-  <div class="hero">
-    <div class="hero-bg" style="background-image: url('image 4/ONLY RIHANNA.jpg')"></div>
-    <div class="hero-frame" id="heroFrame"><span class="hero-title">Only Rihanna</span></div>
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><span class="nav-sep">      </span><span class="nav-item">©2026</span></span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Only Rihanna</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="brat-party.html">Brat Party</a></span></div>
-    <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
+<div class="format__page" style="--fg:#fff;--cta-hover:#87f7a6">
+  <div class="FormatHero__hero">
+    <div class="FormatHero__heroBg" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/00dc174bcf34fae15030b0d0b6dba8c6a2b67f23-2560x1706.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    </div>
+    <div class="FormatHero__heroFrame"><span class="FormatHero__heroTitle">Only Rihanna</span></div>
+    <div class="TopNav__wrap">
+      <div class="TopNav__topLeft"><a class="TopNav__scDefault" href="index.html?direct=1">Social Club</a><span class="TopNav__scHover"><a href="index.html?direct=1">Home</a><span class="TopNav__navSep">      </span><a href="about.html">About us</a><span class="TopNav__navSep">      </span><a href="https://www.socialclubevents.it/en/only-rihanna">EN</a><span class="TopNav__navSep">      </span><span>©2026</span></span></div>
+      <div class="TopNav__topRight "><span class="TopNav__fnDefault">Only Rihanna</span><span class="TopNav__fnHover"><span><a href="bunny-club.html">Bunny Club</a></span><span><span class="TopNav__navSep">      </span><a href="brat-party.html">Brat Party</a></span><span><span class="TopNav__navSep">      </span><a href="after-hours.html">After Hours</a></span></span></div>
+    </div>
+    <div class="FormatHero__heroExplore"><a href="#tickets">Scroll for Tickets</a><a class="FormatHero__heroGallery" href="#gallery">Scroll for Gallery</a></div>
   </div>
-
-  <div class="content" id="content" style="background-image: url('7. Sfondi/RIHANNA.png')">
-
-    <div class="locandine-grid">
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@fiveudine Photo by Only Rihanna in Five Udine with @fiveudine, @tende.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">06.02</span>
-          <span class="locandina-venue">Udine</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+  <div id="tickets" class="format__content" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/9ae2286a71d66da3fff72e9a1093366464fd55f7-2000x1506.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    <div class="format__locandine">
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Only Rihanna — Udine 06.02" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/00eabb9a24852fb6b851b8a931f1792895b6e663-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">06.02</span><span class="format__cardVenue">Udine</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@demodeclub Photo shared by Only Rihanna on January 29, 2026 tagging @.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">14.02</span>
-          <span class="locandina-venue">Bari</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Only Rihanna — Bari 14.02" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/1359a7fdc8f0f73d804389d56bc5e7c721779fbf-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">14.02</span><span class="format__cardVenue">Bari</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@vipertheatre Photo by Only Rihanna in Otel with @vipertheatre, @otel_.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">20.02</span>
-          <span class="locandina-venue">Firenze</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Only Rihanna — Firenze 20.02" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/3caa7c4a0f9036eb9c10f3cbf144dafa32d0aa5d-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">20.02</span><span class="format__cardVenue">Firenze</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@vibemusiczone Photo by Only Rihanna in VIBE Music Zone with @vibemusi.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">07.03</span>
-          <span class="locandina-venue">Bergamo</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Only Rihanna — Bergamo 07.03" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/700a65c6e6ead8ad2ff6fc969e0e6e11998e406f-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">07.03</span><span class="format__cardVenue">Bergamo</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@hacienda_roma Photo by Only Rihanna in hacienda_rome with @hacienda_r.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">08.05</span>
-          <span class="locandina-venue">Roma</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Only Rihanna — Roma 08.05" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/a0fcc3e5054d7ad9865c2e4bd64cd8507f02874d-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">08.05</span><span class="format__cardVenue">Roma</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
     </div>
-
-    <p class="description">Only Rihanna è il primo party a tema interamente dedicato alla musica, allo stile e all'attitudine di Rihanna. Durante la serata, il DJ set propone esclusivamente hit, remix e collaborazioni della cantante barbadiana, accompagnati da visuals ispirati ai suoi videoclip e tour.</p>
-
-    <div class="cta-row">
-      <span class="cta-social-group">Visit Only Rihanna<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
-    </div>
-
+    <p class="format__description">Only Rihanna è il primo party a tema interamente dedicato alla musica, allo stile e all&#x27;attitudine di Rihanna. Durante la serata, il DJ set propone esclusivamente hit, remix e collaborazioni della cantante barbadiana, accompagnati da visuals ispirati ai suoi videoclip e tour.</p>
+    <div class="format__ctaRow"><span class="format__ctaGroup">Visit Only Rihanna<span>Instagram</span><span>Facebook</span><span>Open on Dice</span></span></div>
   </div>
-
-  <div class="photo-grid-wrap">
-  <div class="photo-grid" id="photoGrid">
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
+  <div id="gallery" class="PhotoGallery__gridWrap">
+    <div class="PhotoGallery__grid">
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/138618afb31f83d164f14de52fdf76d9e89907d9-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/84fca22433feeb572c9bbd050790ff98a7051507-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/efbe4ea8f42f954732133d6bac632e300f388cdc-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/207dd8cca74040fc0877e078046d965a0b571226-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/2a50e5bd03a5ee5f531d92076faa5494ed191cd6-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/223e50c40a85f6e37d7c447d1954af09aff31c63-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/1bc58f55dc688d8e413fc8ff2e94252a1399225e-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/009c5ff6ce9a977401209eb4970da045d1b2a73c-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Only Rihanna</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Only Rihanna"><span class="PhotoGallery__cardImg"><img alt="Only Rihanna" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/41bc69b14c98224efcbc25c1ca38b59011af8c57-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
     </div>
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-    </div>
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg" alt=""><div class="photo-caption">Only Rihanna</div></div>
-    </div>
-
   </div>
-  </div>
-
-  <div class="page-footer">
+  <footer class="Footer__footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
-    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
-  </div>
-
-  <div class="photo-overlay" id="photoOverlay">
-    <div class="gallery-left" id="galleryLeft">
-      <div class="gallery-event-info" id="galleryEventInfo"></div>
-      <div class="gallery-nums" id="galleryNums"></div>
-    </div>
-    <div class="gallery-main">
-      <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
-      <div class="gallery-download" id="galleryDownload">Download</div>
-    </div>
-    <div class="gallery-mobile-nav">
-      <button class="gallery-prev" id="galleryPrev">Previous</button>
-      <button class="gallery-next" id="galleryNext">Next</button>
-    </div>
-  </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
-
-  <script>
-    const heroFrame = document.getElementById('heroFrame');
-    function setFrame() {
-      const titleEl = heroFrame.querySelector('.hero-title');
-      const naturalH = titleEl.getBoundingClientRect().height;
-      const frameH = naturalH * 1.1;
-      heroFrame.style.height = frameH + 'px';
-      heroFrame.style.top = (window.innerHeight - frameH) / 2 + 'px';
-    }
-    document.fonts.ready.then(() => { setFrame(); setTimeout(() => heroFrame.classList.add('fade-out'), 1200); });
-    window.addEventListener('resize', setFrame);
-
-    function heroExploreClick() {
-      if (window.innerWidth > 767) {
-        window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
-      } else {
-        document.querySelector('.locandine-grid').scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    const ALL_PHOTOS = [
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-30.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-31.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-32.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg',
-    ];
-
-    const photoOverlay     = document.getElementById('photoOverlay');
-    const overlayMainImg   = document.getElementById('overlayMainImg');
-    const galleryLeft      = document.getElementById('galleryLeft');
-    const galleryEventInfo = document.getElementById('galleryEventInfo');
-    const galleryNums      = document.getElementById('galleryNums');
-    const galleryClose     = document.getElementById('galleryClose');
-    const galleryDownload  = document.getElementById('galleryDownload');
-    let galleryImages = [], galleryIdx = 0;
-
-    function updateGalleryView() {
-      overlayMainImg.src = galleryImages[galleryIdx];
-      Array.from(galleryNums.querySelectorAll('.gallery-num')).forEach((el, i) => {
-        el.classList.toggle('current', i === galleryIdx);
-      });
-    }
-
-    function openCardGallery(captionHTML, images, startIdx) {
-      galleryImages = images; galleryIdx = startIdx;
-      galleryEventInfo.innerHTML = captionHTML;
-      galleryNums.innerHTML = '';
-      images.forEach((_, i) => {
-        const el = document.createElement('div');
-        el.className = 'gallery-num' + (i === startIdx ? ' current' : '');
-        el.textContent = String(i + 1).padStart(2, '0');
-        el.addEventListener('mouseenter', () => { galleryIdx = i; updateGalleryView(); });
-        galleryNums.appendChild(el);
-      });
-      overlayMainImg.src = images[startIdx];
-      document.body.style.overflow = 'hidden';
-      photoOverlay.classList.add('active');
-      galleryClose.classList.add('visible');
-    }
-
-    function closeGallery() {
-      photoOverlay.classList.remove('active');
-      galleryClose.classList.remove('visible');
-      document.body.style.overflow = '';
-    }
-
-    document.querySelectorAll('.grid-photo-card').forEach(card => {
-      const img = card.querySelector('img');
-      const caption = card.querySelector('.photo-caption');
-      const captionHTML = caption ? caption.innerHTML : '';
-      img.addEventListener('click', () => {
-        const src = img.getAttribute('src');
-        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p === src));
-        openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
-      });
-    });
-
-    overlayMainImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    let wheelLast = 0;
-    photoOverlay.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const now = Date.now();
-      if (now - wheelLast < 400) return;
-      wheelLast = now;
-      galleryIdx = e.deltaY > 0
-        ? (galleryIdx + 1) % galleryImages.length
-        : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    }, { passive: false });
-
-    let touchStartX = 0;
-    photoOverlay.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    photoOverlay.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) {
-        galleryIdx = dx < 0
-          ? (galleryIdx + 1) % galleryImages.length
-          : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-        updateGalleryView();
-      }
-    }, { passive: true });
-
-    galleryLeft.addEventListener('click', closeGallery);
-    galleryClose.addEventListener('click', closeGallery);
-
-    document.addEventListener('keydown', (e) => {
-      if (!photoOverlay.classList.contains('active')) return;
-      if (e.key === 'Escape') { closeGallery(); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { galleryIdx = (galleryIdx + 1) % galleryImages.length; updateGalleryView(); }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length; updateGalleryView(); }
-    });
-
-    galleryDownload.addEventListener('click', () => {
-      const src = galleryImages[galleryIdx];
-      const a = document.createElement('a'); a.href = src; a.download = src.split('/').pop(); a.click();
-    });
-
-    document.getElementById('galleryPrev').addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    });
-    document.getElementById('galleryNext').addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    photoOverlay.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
-
-    (function() {
-      const scNav = document.querySelector('.sc-nav');
-      const fnNav = document.querySelector('.fn-nav');
-      function isMobile() { return window.innerWidth <= 767; }
-      scNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.sc-hover a')) return;
-        e.preventDefault();
-        scNav.classList.toggle('expanded');
-        fnNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      fnNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.fn-hover a')) return;
-        fnNav.classList.toggle('expanded');
-        scNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      document.addEventListener('click', function() {
-        scNav.classList.remove('expanded');
-        fnNav.classList.remove('expanded');
-      });
-    })();
-  </script>
-
+    <p><span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a><a href="privacy.html">Privacy Policies</a><a href="cookies.html">Cookies Policy</a><a href="legal.html">Legal Notes</a></p>
+  </footer>
+</div>
 </body>
 </html>

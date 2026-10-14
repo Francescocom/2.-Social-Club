@@ -1,487 +1,92 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Brat Party — Social Club</title>
-
-  <style>
-    @font-face {
-      font-family: 'Helvetica Now Display';
-      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
-      font-weight: 400; font-style: normal; font-display: block;
-    }
-    @font-face {
-      font-family: 'Londrina Solid';
-      src: url('fonts/LondrinaSolid-Black.ttf') format('truetype');
-      font-weight: 900; font-style: normal; font-display: block;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #fff; color: #000;
-    }
-
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
-
-    .hero {
-      position: relative; width: 100%; height: 100vh;
-      background: #000; overflow: hidden;
-    }
-    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-    .hero-frame {
-      position: absolute; left: var(--pad); right: var(--pad);
-      border: clamp(2px, 1.2vw, 12px) solid #fff;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; opacity: 1; transition: opacity 0.15s ease;
-    }
-    .hero-frame.fade-out { opacity: 0; pointer-events: none; }
-    .hero-title { font-size: clamp(1rem, 11vw, 12.4rem); font-weight: 400; line-height: 1.1; white-space: nowrap; color: #fff; }
-
-    .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright {
-      position: absolute; z-index: 60; font-size: var(--ui); font-weight: 400;
-      line-height: 1.0; letter-spacing: var(--ls); color: #fff; white-space: pre; text-decoration: none;
-    }
-    .hero-topleft    { top: var(--pad);    left: var(--pad); }
-    .hero-topright   { top: var(--pad);    right: var(--pad); }
-    .hero-bottomleft { bottom: var(--pad); left: var(--pad); }
-    .hero-bottomright{ bottom: var(--pad); right: var(--pad); }
-
-    .sc-nav { cursor: pointer; }
-    .sc-nav .sc-default { color: #fff; text-decoration: none; }
-    .sc-nav .sc-hover { display: none; }
-    .sc-nav:hover .sc-default { display: none; }
-    .sc-nav:hover .sc-hover { display: inline; }
-    .sc-nav .sc-hover a { color: #fff; text-decoration: none; }
-
-    .fn-nav { cursor: pointer; text-align: right; }
-    .fn-nav .fn-hover { display: none; }
-    .fn-nav:hover .fn-default { display: none; }
-    .fn-nav:hover .fn-hover { display: inline; }
-    .fn-nav .fn-hover a { color: #fff; text-decoration: none; }
-    .hero:has(.fn-nav:hover) .sc-nav { visibility: hidden; }
-
-    @keyframes explore-flicker { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-    .hero-explore {
-      position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%);
-      z-index: 60; font-size: var(--ui); font-weight: 400; line-height: 1.0;
-      letter-spacing: var(--ls); color: #fff; text-decoration: none; cursor: pointer;
-      white-space: nowrap; animation: explore-flicker 0.5s step-start infinite;
-    }
-
-    /* Brat: sfondo verde, testo nero */
-    .content {
-      padding: var(--gap) var(--side) 0;
-      background-size: cover;
-      background-position: top center;
-      background-repeat: no-repeat;
-    }
-
-    .locandine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px 20px; margin-bottom: 80px; }
-    .locandina-card { display: flex; flex-direction: column; }
-    .locandina-img-link { display: block; overflow: hidden; cursor: pointer; }
-    .locandina-img-link img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
-    .locandina-info { padding-top: 14px; text-align: center; display: flex; flex-direction: column; }
-    .locandina-date, .locandina-venue { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; }
-    .locandina-cta { font-family: 'Londrina Solid', sans-serif; font-size: var(--ui); font-weight: 900; letter-spacing: 0.02em; line-height: 30pt; color: #000; text-decoration: none; cursor: pointer; }
-    .locandina-cta:hover { color: #fff; }
-
-    .description { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); text-align: left; margin-top: 60pt; }
-
-    .cta-row { display: flex; align-items: baseline; padding: 24px 0 calc(var(--gap) + 60pt); }
-    .cta-social-group { display: inline-flex; flex-wrap: wrap; gap: 0 3em; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); }
-    .cta-social-group a { font-size: inherit; font-weight: 400; letter-spacing: inherit; color: #000; text-decoration: none; cursor: pointer; }
-
-    .photo-grid-wrap { margin: 0; }
-    .photo-grid { display: flex; flex-direction: column; gap: 0; }
-    .photo-group { display: flex; gap: 0; }
-    .grid-photo-card { flex: 1; position: relative; }
-    .grid-photo-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; cursor: pointer; }
-    .photo-caption { position: absolute; top: 0; left: 0; z-index: 1; font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; padding: var(--pad); padding-top: calc(var(--pad) - (1cap - 1ex)); pointer-events: none; }
-
-    .photo-overlay { position: fixed; inset: 0; background: #000; z-index: 300; display: none; overflow: hidden; }
-    .photo-overlay.active { display: block; }
-
-    .gallery-left { position: absolute; top: 0; left: 0; width: 25vw; min-width: 180px; max-width: 340px; height: 100%; overflow-y: auto; padding: var(--pad); display: flex; flex-direction: column; cursor: pointer; z-index: 10; color: #fff; }
-    .gallery-event-info { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: var(--ls); margin-bottom: 30pt; }
-    .gallery-nums { display: flex; flex-direction: column; }
-    .gallery-num { font-size: var(--ui); font-weight: 400; line-height: 30pt; letter-spacing: 0; font-feature-settings: "tnum" 1, "onum" 1; }
-    .gallery-num.current { visibility: hidden; }
-
-    .gallery-main { position: absolute; inset: 0; }
-    .overlay-main-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); height: 100%; width: auto; max-width: 100%; object-fit: contain; cursor: pointer; z-index: 2; }
-    .gallery-download { position: absolute; bottom: var(--pad); left: 50%; transform: translateX(-50%); font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 1; color: #fff; cursor: pointer; z-index: 3; white-space: nowrap; }
-
-    .gallery-mobile-nav { display: none; }
-    .gallery-prev, .gallery-next {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls);
-      line-height: 1; color: #fff; background: none; border: none; cursor: pointer; padding: 0;
-    }
-
-    .gallery-close-btn { position: fixed; top: var(--pad); right: var(--pad); z-index: 320; background: none; border: none; cursor: pointer; display: none; padding: 0; line-height: 0; }
-    .gallery-close-btn.visible { display: block; }
-
-    .page-footer { height: 200px; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 var(--pad) 20px; text-align: center; gap: 0; }
-    .page-footer p { font-size: var(--ui); font-weight: 400; letter-spacing: var(--ls); line-height: 30pt; color: #fff; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2em; }
-    .page-footer a { color: #fff; text-decoration: none; }
-
-    @media (max-width: 767px) {
-      :root { --ui: 17pt; }
-      .description { line-height: 20pt; padding-bottom: 40pt; }
-      .cta-social-group { line-height: 20pt; flex-direction: column; gap: 0; }
-      .page-footer p { line-height: 20pt; }
-      body { overflow-x: hidden; }
-      .hero-topleft, .hero-topright, .hero-bottomleft, .hero-bottomright { white-space: normal; }
-      .hero-topleft    { top: 10px;    left: 10px; }
-      .hero-topright   { top: 10px;    right: 10px; }
-      .hero-bottomleft { bottom: 10px; left: 10px; }
-      .hero-bottomright{ bottom: 10px; right: 10px; }
-      .hero { height: 100svh; }
-      .content { padding: 10px; }
-      .photo-grid-wrap { margin: 0; }
-      .locandine-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 10px; margin-bottom: 40px; }
-      .locandina-date, .locandina-venue, .locandina-cta { line-height: 20pt; }
-      .photo-group { flex-direction: column; }
-      .photo-caption { padding: 10px; line-height: 20pt; }
-      .gallery-left { display: none; }
-      .gallery-mobile-nav {
-        display: flex; position: absolute;
-        bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
-        left: var(--pad); right: var(--pad); justify-content: space-between; z-index: 10;
-      }
-      /* Reset hover on mobile; use JS click toggle */
-      .sc-nav:hover .sc-default { display: inline; }
-      .sc-nav:hover .sc-hover { display: none; }
-      .fn-nav:hover .fn-default { display: inline; }
-      .fn-nav:hover .fn-hover { display: none; }
-      .hero:has(.fn-nav:hover) .sc-nav { visibility: visible; }
-
-      .sc-nav.expanded .sc-hover {
-        display: flex; flex-direction: column; align-items: flex-start;
-        white-space: normal; margin-top: 4px;
-      }
-      .sc-nav.expanded .sc-hover .nav-sep,
-      .sc-nav.expanded .sc-hover .nav-br { display: none; }
-      .sc-nav.expanded .sc-hover a,
-      .sc-nav.expanded .sc-hover .nav-item { line-height: 20pt; }
-      .fn-nav.expanded .fn-hover {
-        display: flex; flex-direction: column; align-items: flex-end;
-        white-space: normal; margin-top: 4px;
-      }
-      .fn-nav.expanded .fn-hover .nav-sep { display: none; }
-      .fn-nav.expanded .fn-hover a { line-height: 20pt; }
-    }
-  </style>
+  <meta name="description" content="Il Brat Party è un evento clubbing itinerante italiano ispirato all&#x27;estetica &quot;brat&quot; e all&#x27;omonimo album di Charli XCX. Le serate offrono pop frenetico, hyperpop, elettronica e club classics, incarnando un&#x27;attitudine ribelle, sfacciata e libera. Nata dal trend virale, la festa celebra uno stile anticonformista e audace.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Regular.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/LondrinaSolid-Black.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/data/brat-party.js"></script>
+  <script src="assets/js/format.js" defer></script>
 </head>
 <body>
-
-  <div class="hero">
-    <div class="hero-bg" style="background-image: url('image 4/BRAT PARTY.jpg')"></div>
-    <div class="hero-frame" id="heroFrame"><span class="hero-title">Brat Party</span></div>
-    <div class="hero-topleft sc-nav"><a class="sc-default" href="index.html?direct=1">Social Club</a><span class="sc-hover"><a href="index.html?direct=1">Home</a><span class="nav-sep">      </span><a href="about.html">About us</a><span class="nav-sep">      </span><span class="nav-item">IT</span><span class="nav-sep">      </span><span class="nav-item">©2026</span></span></div>
-    <div class="hero-topright fn-nav"><span class="fn-default">Brat Party</span><span class="fn-hover"><a href="bunny-club.html">Bunny Club</a><span class="nav-sep">      </span><a href="after-hours.html">After Hours</a><span class="nav-sep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></div>
-    <a class="hero-explore" onclick="heroExploreClick()">Scroll for Tickets</a>
+<div class="format__page" style="--fg:#000;--cta-hover:#fff">
+  <div class="FormatHero__hero">
+    <div class="FormatHero__heroBg" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/9abe3653503eb2338efe317c92cd9c338282a52a-2560x1706.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    </div>
+    <div class="FormatHero__heroFrame"><span class="FormatHero__heroTitle">Brat Party</span></div>
+    <div class="TopNav__wrap">
+      <div class="TopNav__topLeft"><a class="TopNav__scDefault" href="index.html?direct=1">Social Club</a><span class="TopNav__scHover"><a href="index.html?direct=1">Home</a><span class="TopNav__navSep">      </span><a href="about.html">About us</a><span class="TopNav__navSep">      </span><a href="https://www.socialclubevents.it/en/brat-party">EN</a><span class="TopNav__navSep">      </span><span>©2026</span></span></div>
+      <div class="TopNav__topRight "><span class="TopNav__fnDefault">Brat Party</span><span class="TopNav__fnHover"><span><a href="bunny-club.html">Bunny Club</a></span><span><span class="TopNav__navSep">      </span><a href="after-hours.html">After Hours</a></span><span><span class="TopNav__navSep">      </span><a href="only-rihanna.html">Only Rihanna</a></span></span></div>
+    </div>
+    <div class="FormatHero__heroExplore"><a href="#tickets">Scroll for Tickets</a><a class="FormatHero__heroGallery" href="#gallery">Scroll for Gallery</a></div>
   </div>
-
-  <div class="content" id="content" style="background-image: url('7. Sfondi/BRAT.png')">
-
-    <div class="locandine-grid">
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/3. Brat Party/@locomotivclub Photo by brat party in LOCOMOTIV CLUB Bologna with @loc-2.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">28.03</span>
-          <span class="locandina-venue">Bologna</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+  <div id="tickets" class="format__content" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/2b51897e5ff8c3e09232f70ffd4e92caec2824e3-2000x1013.png?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    <div class="format__locandine">
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Bologna 28.03" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/a120c873cf94789be1e0e71b1872828ced1e3808-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">28.03</span><span class="format__cardVenue">Bologna</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/3. Brat Party/@lumierepisa Photo by brat party in Lumiere Pisa with @lumierepisa, an.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">10.04</span>
-          <span class="locandina-venue">Pisa</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Pisa 10.04" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/95f54722a6d416066ad5d4e97453170bcc80c937-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">10.04</span><span class="format__cardVenue">Pisa</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/6. Rihanna/@vipertheatre Photo by brat party in Otel with @vipertheatre, @panther.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">18.04</span>
-          <span class="locandina-venue">Firenze</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Firenze 18.04" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/59257502746c3db30111da5f26040b0643cf823d-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">18.04</span><span class="format__cardVenue">Firenze</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/3. Brat Party/@locomotivclub Photo by brat party in LOCOMOTIV CLUB Bologna with @loc-1.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">08.05</span>
-          <span class="locandina-venue">Bologna</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Bologna 08.05" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/d59e3e764e3de26b4f86333a73f3fbd5f973752a-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">08.05</span><span class="format__cardVenue">Bologna</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/3. Brat Party/@zeroclub.bg Photo by brat party in Zero Club with @zeroclub.bg, and @.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">15.05</span>
-          <span class="locandina-venue">Bergamo</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Bergamo 15.05" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/14690f8389698164ff94290f6e60af98671f1535-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">15.05</span><span class="format__cardVenue">Bergamo</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
-      <div class="locandina-card">
-        <a class="locandina-img-link" href="#" target="_blank"><img src="6. Serate/3. Brat Party/@beaddje Photo by brat party in Centralino Club with @beaddje, @tenden.jpg" alt=""></a>
-        <div class="locandina-info">
-          <span class="locandina-date">23.05</span>
-          <span class="locandina-venue">Torino</span>
-          <a class="locandina-cta" href="#" target="_blank">Compra Tickets</a>
-        </div>
+      <div class="format__card"><span class="format__cardImgLink"><span class="format__cardImg"><img alt="Brat Party — Torino 23.05" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 25vw" src="https://cdn.sanity.io/images/73aqq96k/production/510dda70a596ae2c279e04b5f33d1bcfb1799887-960x1200.jpg?w=900&amp;auto=format"/></span></span><div class="format__cardInfo"><span class="format__cardDate">23.05</span><span class="format__cardVenue">Torino</span><span class="format__cardCta">Compra Tickets</span></div>
       </div>
-
     </div>
-
-    <p class="description">Il Brat Party è un evento clubbing itinerante italiano ispirato all'estetica "brat" e all'omonimo album di Charli XCX. Le serate offrono pop frenetico, hyperpop, elettronica e club classics, incarnando un'attitudine ribelle, sfacciata e libera. Nata dal trend virale, la festa celebra uno stile anticonformista e audace.</p>
-
-    <div class="cta-row">
-      <span class="cta-social-group">Visit Brat Party<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="#" target="_blank">Open on Dice</a></span>
-    </div>
-
+    <p class="format__description">Il Brat Party è un evento clubbing itinerante italiano ispirato all&#x27;estetica &quot;brat&quot; e all&#x27;omonimo album di Charli XCX. Le serate offrono pop frenetico, hyperpop, elettronica e club classics, incarnando un&#x27;attitudine ribelle, sfacciata e libera. Nata dal trend virale, la festa celebra uno stile anticonformista e audace.</p>
+    <div class="format__ctaRow"><span class="format__ctaGroup">Visit Brat Party<span>Instagram</span><span>Facebook</span><span>Open on Dice</span></span></div>
   </div>
-
-  <div class="photo-grid-wrap">
-  <div class="photo-grid" id="photoGrid">
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
+  <div id="gallery" class="PhotoGallery__gridWrap">
+    <div class="PhotoGallery__grid">
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/ee4a6759f226610444851f8049df641cf267142d-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/31c4771986b168e73b52796fb473bfa9cc87e23d-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/704120a7b53f1ecbfc98681cc067d95f4df1254e-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/a598ea45fd871382648adf83e65d6364920ac15c-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/f6d15aaa89e62c8618b1e02dbad70cbff05435c6-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/44d0a5b7c9e0f6fef5fba9b88d6995ba33168347-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/6b7d3d113595314c6b563a06f2cecdf558e2ceaf-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/8dde3b4b7a138fca9262ac5f7c7ec207d2a90d86-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
+      <div class="PhotoGallery__card">
+        <div class="PhotoGallery__caption">Brat Party</div>
+        <button class="PhotoGallery__cardBtn" aria-label="Apri galleria: Brat Party"><span class="PhotoGallery__cardImg"><img alt="Brat Party" loading="lazy" decoding="async" data-nimg="fill" style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" sizes="(max-width: 767px) 50vw, 33vw" src="https://cdn.sanity.io/images/73aqq96k/production/a4480c01e7ee5c2f274af7c5673e499c3756c060-1333x2000.jpg?w=1200&amp;auto=format"/></span></button>
+      </div>
     </div>
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-    </div>
-
-    <div class="photo-group">
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-      <div class="grid-photo-card"><img src="1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg" alt=""><div class="photo-caption">Brat Party</div></div>
-    </div>
-
   </div>
-  </div>
-
-  <div class="page-footer">
+  <footer class="Footer__footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
-    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
-  </div>
-
-  <div class="photo-overlay" id="photoOverlay">
-    <div class="gallery-left" id="galleryLeft">
-      <div class="gallery-event-info" id="galleryEventInfo"></div>
-      <div class="gallery-nums" id="galleryNums"></div>
-    </div>
-    <div class="gallery-main">
-      <img class="overlay-main-img" id="overlayMainImg" src="" alt="">
-      <div class="gallery-download" id="galleryDownload">Download</div>
-    </div>
-    <div class="gallery-mobile-nav">
-      <button class="gallery-prev" id="galleryPrev">Previous</button>
-      <button class="gallery-next" id="galleryNext">Next</button>
-    </div>
-  </div>
-  <button class="gallery-close-btn" id="galleryClose"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#fff" stroke-width="2.25" stroke-linecap="round"><line x1="3" y1="3" x2="33" y2="33"/><line x1="33" y1="3" x2="3" y2="33"/></svg></button>
-
-  <script>
-    const heroFrame = document.getElementById('heroFrame');
-    function setFrame() {
-      const titleEl = heroFrame.querySelector('.hero-title');
-      const naturalH = titleEl.getBoundingClientRect().height;
-      const frameH = naturalH * 1.1;
-      heroFrame.style.height = frameH + 'px';
-      heroFrame.style.top = (window.innerHeight - frameH) / 2 + 'px';
-    }
-    document.fonts.ready.then(() => { setFrame(); setTimeout(() => heroFrame.classList.add('fade-out'), 1200); });
-    window.addEventListener('resize', setFrame);
-
-    function heroExploreClick() {
-      if (window.innerWidth > 767) {
-        window.scrollTo({ top: document.querySelector('.hero').offsetHeight, behavior: 'smooth' });
-      } else {
-        document.querySelector('.locandine-grid').scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    const ALL_PHOTOS = [
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-3.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-5.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-7.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-15.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-16.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-25.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-27.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-30.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-31.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-32.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-34.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-47.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-58.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-68.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-82.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-92.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-93.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-97.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-99.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-101.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-105.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-107.jpg',
-      '1. Bad Bunny/2. Foto/bunnyclub©davidetacco-111.jpg',
-    ];
-
-    const photoOverlay     = document.getElementById('photoOverlay');
-    const overlayMainImg   = document.getElementById('overlayMainImg');
-    const galleryLeft      = document.getElementById('galleryLeft');
-    const galleryEventInfo = document.getElementById('galleryEventInfo');
-    const galleryNums      = document.getElementById('galleryNums');
-    const galleryClose     = document.getElementById('galleryClose');
-    const galleryDownload  = document.getElementById('galleryDownload');
-    let galleryImages = [], galleryIdx = 0;
-
-    function updateGalleryView() {
-      overlayMainImg.src = galleryImages[galleryIdx];
-      Array.from(galleryNums.querySelectorAll('.gallery-num')).forEach((el, i) => {
-        el.classList.toggle('current', i === galleryIdx);
-      });
-    }
-
-    function openCardGallery(captionHTML, images, startIdx) {
-      galleryImages = images; galleryIdx = startIdx;
-      galleryEventInfo.innerHTML = captionHTML;
-      galleryNums.innerHTML = '';
-      images.forEach((_, i) => {
-        const el = document.createElement('div');
-        el.className = 'gallery-num' + (i === startIdx ? ' current' : '');
-        el.textContent = String(i + 1).padStart(2, '0');
-        el.addEventListener('mouseenter', () => { galleryIdx = i; updateGalleryView(); });
-        galleryNums.appendChild(el);
-      });
-      overlayMainImg.src = images[startIdx];
-      document.body.style.overflow = 'hidden';
-      photoOverlay.classList.add('active');
-      galleryClose.classList.add('visible');
-    }
-
-    function closeGallery() {
-      photoOverlay.classList.remove('active');
-      galleryClose.classList.remove('visible');
-      document.body.style.overflow = '';
-    }
-
-    document.querySelectorAll('.grid-photo-card').forEach(card => {
-      const img = card.querySelector('img');
-      const caption = card.querySelector('.photo-caption');
-      const captionHTML = caption ? caption.innerHTML : '';
-      img.addEventListener('click', () => {
-        const src = img.getAttribute('src');
-        const startIdx = Math.max(0, ALL_PHOTOS.findIndex(p => p === src));
-        openCardGallery(captionHTML, ALL_PHOTOS, startIdx);
-      });
-    });
-
-    overlayMainImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    let wheelLast = 0;
-    photoOverlay.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const now = Date.now();
-      if (now - wheelLast < 400) return;
-      wheelLast = now;
-      galleryIdx = e.deltaY > 0
-        ? (galleryIdx + 1) % galleryImages.length
-        : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    }, { passive: false });
-
-    let touchStartX = 0;
-    photoOverlay.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    photoOverlay.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) {
-        galleryIdx = dx < 0
-          ? (galleryIdx + 1) % galleryImages.length
-          : (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-        updateGalleryView();
-      }
-    }, { passive: true });
-
-    galleryLeft.addEventListener('click', closeGallery);
-    galleryClose.addEventListener('click', closeGallery);
-
-    document.addEventListener('keydown', (e) => {
-      if (!photoOverlay.classList.contains('active')) return;
-      if (e.key === 'Escape') { closeGallery(); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { galleryIdx = (galleryIdx + 1) % galleryImages.length; updateGalleryView(); }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length; updateGalleryView(); }
-    });
-
-    galleryDownload.addEventListener('click', () => {
-      const src = galleryImages[galleryIdx];
-      const a = document.createElement('a'); a.href = src; a.download = src.split('/').pop(); a.click();
-    });
-
-    document.getElementById('galleryPrev').addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx - 1 + galleryImages.length) % galleryImages.length;
-      updateGalleryView();
-    });
-    document.getElementById('galleryNext').addEventListener('click', (e) => {
-      e.stopPropagation();
-      galleryIdx = (galleryIdx + 1) % galleryImages.length;
-      updateGalleryView();
-    });
-
-    photoOverlay.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
-
-    (function() {
-      const scNav = document.querySelector('.sc-nav');
-      const fnNav = document.querySelector('.fn-nav');
-      function isMobile() { return window.innerWidth <= 767; }
-      scNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.sc-hover a')) return;
-        e.preventDefault();
-        scNav.classList.toggle('expanded');
-        fnNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      fnNav.addEventListener('click', function(e) {
-        if (!isMobile()) return;
-        if (e.target.closest('.fn-hover a')) return;
-        fnNav.classList.toggle('expanded');
-        scNav.classList.remove('expanded');
-        e.stopPropagation();
-      });
-      document.addEventListener('click', function() {
-        scNav.classList.remove('expanded');
-        fnNav.classList.remove('expanded');
-      });
-    })();
-  </script>
-
+    <p><span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a><a href="privacy.html">Privacy Policies</a><a href="cookies.html">Cookies Policy</a><a href="legal.html">Legal Notes</a></p>
+  </footer>
+</div>
 </body>
 </html>

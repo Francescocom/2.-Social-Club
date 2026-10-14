@@ -1,214 +1,37 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About — Social Club</title>
-
-  <style>
-    @font-face {
-      font-family: 'Helvetica Now Display';
-      src: url('fonts/HelveticaNowDisplay-Regular.otf') format('opentype');
-      font-weight: 400; font-style: normal; font-display: block;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root { --ui: 25pt; --ls: 0.01em; --pad: 20px; --side: 13vw; --gap: 120px; }
-
-    body {
-      font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, sans-serif;
-      background: #000 url('image 4/ONLY RIHANNA.jpg') center/cover no-repeat fixed;
-      color: #fff;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.52);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .bg-layer {
-      position: fixed;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 0.45s;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .page-nav, .content, .page-footer { position: relative; z-index: 2; }
-
-    .page-nav {
-      display: flex;
-      justify-content: space-between;
-      padding: var(--pad) var(--pad);
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 1.0;
-    }
-    .page-nav a { color: #fff; text-decoration: none; }
-
-    .content { padding: var(--gap) var(--side) 0; }
-
-    .description {
-      font-size: var(--ui);
-      font-weight: 400;
-      line-height: 30pt;
-      letter-spacing: var(--ls);
-      padding-bottom: 80px;
-    }
-
-    /* Format list — impactful large type */
-    .format-list { padding-bottom: 0; }
-
-    .format-list:has(.format-link:hover) .format-link { color: rgba(255,255,255,0.15); }
-    .format-list:has(.format-link:hover) .format-link:hover { color: #fff; }
-
-    .format-link {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      font-size: clamp(2.5rem, 8vw, 10rem);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 1.15;
-      color: #fff;
-      text-decoration: none;
-      border-top: 1px solid rgba(255,255,255,0.25);
-      padding: 0.05em 0;
-      transition: color 0.15s;
-    }
-    .format-link:last-child { border-bottom: 1px solid rgba(255,255,255,0.25); }
-
-    .format-arrow {
-      font-size: var(--ui);
-      line-height: 1;
-      opacity: 0;
-      transition: opacity 0.15s;
-      flex-shrink: 0;
-      margin-left: 1em;
-    }
-    .format-link:hover .format-arrow { opacity: 1; }
-
-    .cta-row {
-      display: flex;
-      align-items: baseline;
-      padding: 24px 0 calc(var(--gap) + 60pt);
-    }
-    .cta-group {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 0 3em;
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-    }
-    .cta-group a {
-      font-size: inherit;
-      font-weight: 400;
-      letter-spacing: inherit;
-      color: #fff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .page-footer {
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 var(--pad) 20px;
-      text-align: center;
-      gap: 0;
-      height: 200px;
-      justify-content: flex-end;
-    }
-    .page-footer p {
-      font-size: var(--ui);
-      font-weight: 400;
-      letter-spacing: var(--ls);
-      line-height: 30pt;
-      color: #fff;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0 2em;
-    }
-    .page-footer a { color: #fff; text-decoration: none; }
-
-    @media (max-width: 767px) {
-      :root { --ui: 17pt; }
-      body { overflow-x: hidden; }
-      .page-nav { padding: 10px; }
-      .content { padding: 10px; }
-      .description { line-height: 20pt; padding-bottom: 40pt; }
-      .cta-group { flex-direction: column; gap: 0; line-height: 20pt; }
-      .page-footer p { line-height: 20pt; }
-      .format-link { font-size: clamp(2.2rem, 11vw, 4rem); }
-    }
-  </style>
+  <meta name="description" content="Social Club è un collettivo creativo e un’agenzia eventi: serate, tour e concept che uniscono musica, estetica e cultura clubbing in tutta Italia.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Regular.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Bold.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/LondrinaSolid-Black.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/about.js" defer></script>
 </head>
 <body>
-
-  <div class="bg-layer" id="bg-bunny-club"   style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-2.jpg')"></div>
-  <div class="bg-layer" id="bg-brat-party"   style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-83.jpg')"></div>
-  <div class="bg-layer" id="bg-after-hours"  style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-22.jpg')"></div>
-  <div class="bg-layer" id="bg-only-rihanna" style="background-image:url('1. Bad Bunny/2. Foto/bunnyclub©davidetacco-61.jpg')"></div>
-
-  <div class="page-nav">
-    <a href="index.html?direct=1">Social Club</a>
-    <span>About</span>
-  </div>
-
-  <div class="content">
-
-    <p class="description">Social Club è un collettivo creativo e un'agenzia eventi che porta in giro per l'Italia format musicali contemporanei, costruiti attorno a identità forti e community reali. Organizziamo serate, tour e concept che uniscono musica, estetica e cultura clubbing, creando esperienze riconoscibili e immersive. Dalle vibes latine di Bunny Club alle sonorità urban pop di Only Rihanna, fino ai concept più notturni e atmosferici, ogni format nasce con un'identità precisa e un pubblico definito. Lavoriamo con club, venue e partner in tutta Italia per trasformare ogni evento in qualcosa che le persone vogliono vivere, condividere e ricordare.</p>
-
-    <div class="format-list">
-      <a class="format-link" href="bunny-club.html">Bunny Club<span class="format-arrow">↗</span></a>
-      <a class="format-link" href="brat-party.html">Brat Party<span class="format-arrow">↗</span></a>
-      <a class="format-link" href="after-hours.html">After Hours<span class="format-arrow">↗</span></a>
-      <a class="format-link" href="only-rihanna.html">Only Rihanna<span class="format-arrow">↗</span></a>
+<div class="about__page" style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/00dc174bcf34fae15030b0d0b6dba8c6a2b67f23-2560x1706.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+  <nav class="about__nav"><a href="index.html?direct=1">Social Club</a><span>About</span></nav>
+  <div class="about__content">
+    <p class="about__description">Social Club è un collettivo creativo e un&#x27;agenzia eventi che porta in giro per l&#x27;Italia format musicali contemporanei, costruiti attorno a identità forti e community reali. Organizziamo serate, tour e concept che uniscono musica, estetica e cultura clubbing, creando esperienze riconoscibili e immersive. Dalle vibes latine di Bunny Club alle sonorità urban pop di Only Rihanna, fino ai concept più notturni e atmosferici, ogni format nasce con un&#x27;identità precisa e un pubblico definito. Lavoriamo con club, venue e partner in tutta Italia per trasformare ogni evento in qualcosa che le persone vogliono vivere, condividere e ricordare.</p>
+    <div class="about__bgLayer " style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/da204fd571c2df130f214407683189fd6be632ce-1333x2000.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
     </div>
-
-    <div class="cta-row">
-      <span class="cta-group">Social Club<a href="#" target="_blank">Instagram</a><a href="#" target="_blank">Facebook</a><a href="mailto:info@socialclub.it">Mail us</a></span>
+    <div class="about__bgLayer " style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/ee4a6759f226610444851f8049df641cf267142d-1333x2000.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
     </div>
-
+    <div class="about__bgLayer " style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/223e50c40a85f6e37d7c447d1954af09aff31c63-1333x2000.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    </div>
+    <div class="about__bgLayer " style="background-image:url(&#x27;https://cdn.sanity.io/images/73aqq96k/production/138618afb31f83d164f14de52fdf76d9e89907d9-1333x2000.jpg?w=2200&amp;q=80&amp;auto=format&#x27;)">
+    </div>
+    <div class="about__formatList"><a class="about__formatLink" href="bunny-club.html">Bunny Club<span class="about__arrow">↗</span></a><a class="about__formatLink" href="brat-party.html">Brat Party<span class="about__arrow">↗</span></a><a class="about__formatLink" href="after-hours.html">After Hours<span class="about__arrow">↗</span></a><a class="about__formatLink" href="only-rihanna.html">Only Rihanna<span class="about__arrow">↗</span></a></div>
+    <div class="about__ctaRow"><span class="about__ctaGroup">Social Club<span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a></span></div>
   </div>
-
-  <div class="page-footer">
+  <footer class="Footer__footer">
     <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
-    <p><span>Instagram</span><span>Facebook</span><span>Mail us</span><span>Privacy Policies</span><span>Cookies Policy</span><span>Legal Notes</span></p>
-  </div>
-
-  <script>
-    (function() {
-      const bgMap = {
-        'bunny-club.html':  document.getElementById('bg-bunny-club'),
-        'brat-party.html':  document.getElementById('bg-brat-party'),
-        'after-hours.html': document.getElementById('bg-after-hours'),
-        'only-rihanna.html':document.getElementById('bg-only-rihanna'),
-      };
-      document.querySelectorAll('.format-link').forEach(link => {
-        const bg = bgMap[link.getAttribute('href')];
-        if (!bg) return;
-        link.addEventListener('mouseenter', () => {
-          Object.values(bgMap).forEach(el => { el.style.opacity = '0'; });
-          bg.style.opacity = '1';
-        });
-        link.addEventListener('mouseleave', () => {
-          bg.style.opacity = '0';
-        });
-      });
-    })();
-  </script>
+    <p><span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a><a href="privacy.html">Privacy Policies</a><a href="cookies.html">Cookies Policy</a><a href="legal.html">Legal Notes</a></p>
+  </footer>
+</div>
 </body>
 </html>
