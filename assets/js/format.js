@@ -1,8 +1,9 @@
 // Pagina format — porting 1:1 dei componenti FormatHero, TopNav e PhotoGallery del sito live.
 
-// ── FormatHero: cornice col titolo centrata, poi fade-out ──
+// ── FormatHero: cornice col titolo centrata, poi fade-out e al suo posto i link Tickets / Gallery ──
 (function () {
   var frame = document.querySelector('.FormatHero__heroFrame');
+  var explore = document.querySelector('.FormatHero__heroExplore');
   if (!frame) return;
   function measure() {
     var h = 1.1 * frame.querySelector('span').getBoundingClientRect().height;
@@ -12,7 +13,10 @@
   document.fonts.ready.then(function () {
     measure();
     frame.classList.add('FormatHero__measured');
-    setTimeout(function () { frame.classList.add('FormatHero__fadeOut'); }, 1200);
+    setTimeout(function () {
+      frame.classList.add('FormatHero__fadeOut');
+      if (explore) explore.classList.add('FormatHero__exploreVisible');
+    }, 1200);
   });
   window.addEventListener('resize', measure);
 })();

@@ -589,42 +589,37 @@ button {
   font-weight: 400;
   line-height: 1.1;
 }
-@keyframes FormatHero__exploreFlicker {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  to {
-    opacity: 0;
-  }
-}
+/* Link Tickets / Gallery: al centro, compaiono quando sparisce il titolo */
 .FormatHero__heroExplore {
-  bottom: var(--pad);
+  top: 50%;
   z-index: 60;
   justify-items: center;
-  gap: calc(var(--line) - var(--ui));
-  animation: 0.5s step-start infinite FormatHero__exploreFlicker;
+  gap: 0.15em;
+  font-size: clamp(2.5rem, 5vw, 5rem);
   display: grid;
   position: absolute;
   left: 50%;
-  transform: translate(-50%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.FormatHero__heroExplore.FormatHero__exploreVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 .FormatHero__heroExplore a {
-  font-size: var(--ui);
+  font-size: inherit;
   letter-spacing: var(--ls);
   color: #fff;
   white-space: nowrap;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.1;
   text-decoration: none;
 }
-.FormatHero__heroGallery {
-  display: none;
-}
 @media (max-width: 767px) {
-  .FormatHero__heroGallery {
-    display: block;
+  .FormatHero__heroExplore {
+    font-size: 9vw;
   }
 }
 .PhotoGallery__gridWrap {
