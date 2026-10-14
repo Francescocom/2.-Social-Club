@@ -593,10 +593,12 @@ button {
 .FormatHero__heroExplore {
   top: 50%;
   z-index: 60;
-  justify-items: center;
-  gap: 0.15em;
+  align-items: baseline;
+  gap: 0.3em;
   font-size: clamp(2.5rem, 5vw, 5rem);
-  display: grid;
+  white-space: nowrap;
+  color: #fff;
+  display: flex;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -618,6 +620,10 @@ button {
     opacity: 0;
   }
 }
+.FormatHero__heroExplore > * {
+  animation: 0.5s step-start infinite FormatHero__exploreFlicker;
+  line-height: 1.1;
+}
 .FormatHero__heroExplore a {
   font-size: inherit;
   letter-spacing: var(--ls);
@@ -626,10 +632,9 @@ button {
   font-weight: 400;
   line-height: 1.1;
   text-decoration: none;
-  animation: 0.5s step-start infinite FormatHero__exploreFlicker;
 }
 /* in hover smettono di lampeggiare, restano accesi e cliccabili */
-.FormatHero__heroExplore:hover a {
+.FormatHero__heroExplore:hover > * {
   animation: none;
 }
 .FormatHero__heroExplore a:hover {
