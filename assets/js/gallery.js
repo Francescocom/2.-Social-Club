@@ -22,15 +22,30 @@
     return e;
   }
 
-  // ── Vista indice ──
-  var index = document.querySelector('[data-view="index"]');
-  albums.forEach(function (a) {
+  // ── Vista indice (10 album alla volta, poi "Show more") ──
+  var PAGE = 10;
+  var index = document.querySelector('.Gallery__index');
+  var more = document.querySelector('.Gallery__showMore');
+  var shown = 0;
+  function showNext() {
+    albums.slice(shown, shown + PAGE).forEach(addRow);
+    shown = Math.min(albums.length, shown + PAGE);
+    more.hidden = shown >= albums.length;
+  }
+  more.querySelector('button').addEventListener('click', showNext);
+
+  function addRow(a) {
     var row = el('div', 'Gallery__row');
     var text = el('a', 'Gallery__rowText');
     text.href = albumUrl(a);
-    text.appendChild(el('span', 'Gallery__rowVenue', lines(a)[0]));
-    text.appendChild(el('span', 'Gallery__rowDate', lines(a).slice(1).join(' ')));
-    text.appendChild(el('span', 'Gallery__rowCount', count(a)));
+    var info = el('span', 'Gallery__rowInfo');
+    info.appendChild(el('span', 'Gallery__rowVenue', lines(a)[0]));
+    var meta = el('span', 'Gallery__rowMeta');
+    if (lines(a).length > 1) meta.appendChild(el('span', 'Gallery__rowDate', lines(a).slice(1).join(' ')));
+    meta.appendChild(el('span', 'Gallery__rowCount', count(a)));
+    info.appendChild(meta);
+    text.appendChild(info);
+    text.appendChild(el('span', 'Gallery__rowSee', 'See Album'));
     row.appendChild(text);
 
     var strip = el('div', 'Gallery__strip');
@@ -49,7 +64,8 @@
     row.appendChild(strip);
     index.appendChild(row);
     dragScroll(strip);
-  });
+  }
+  showNext();
 
   // trascinamento col mouse sulle strisce (su touch scorrono già da sole)
   function dragScroll(strip) {
@@ -88,7 +104,36 @@
     link.appendChild(box);
     card.appendChild(link);
     covers.appendChild(card);
+    loopOnHover(card, im, a);
   });
+
+  // desktop: in hover la copertina scorre le foto dell'album come una gif
+  function loopOnHover(card, im, a) {
+    if (a.photos.length < 2) return;
+    var cover = im.src, timer = null, frames = null, i = 0;
+    card.addEventListener('mouseenter', function () {
+      if (!window.matchMedia('(hover: hover)').matches) return;
+      if (!frames) {
+        frames = a.photos.slice(0, 12).map(function (p) {
+          var f = new Image();
+          f.src = img(p.download || p.full, 'w=700&h=875&fit=crop');
+          return f;
+        });
+      }
+      i = 0;
+      timer = setInterval(function () {
+        // salta i fotogrammi non ancora caricati
+        for (var k = 0; k < frames.length; k++) {
+          i = (i + 1) % frames.length;
+          if (frames[i].complete && frames[i].naturalWidth) { im.src = frames[i].src; break; }
+        }
+      }, 220);
+    });
+    card.addEventListener('mouseleave', function () {
+      clearInterval(timer);
+      im.src = cover;
+    });
+  }
 
   // ── Switch tra le viste (ricordata per le prossime visite) ──
   var buttons = document.querySelectorAll('.Gallery__viewBtn');

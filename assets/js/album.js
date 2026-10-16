@@ -31,7 +31,7 @@
     document.title = title[0] + ' — Gallery ' + FORMATS[slug] + ' — Social Club';
     var back = document.querySelector('.Album__back');
     back.href = slug + '-gallery.html';
-    back.textContent = 'Gallery ' + FORMATS[slug];
+    document.querySelector('.Album__tickets').href = slug + '.html#tickets';
     var event = document.querySelector('.Album__event');
     event.href = slug + '.html';
     event.textContent = FORMATS[slug];
