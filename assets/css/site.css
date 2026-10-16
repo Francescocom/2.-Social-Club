@@ -527,7 +527,7 @@ button {
     white-space: normal;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: 4px;
+    margin-top: calc((var(--line) - var(--ui)) / 2); /* passo costante = --line, come le tendine Gallery */
     display: flex;
   }
   .TopNav__topRight.TopNav__expanded
@@ -1507,12 +1507,26 @@ a.format__cardCta:hover {
   height: 100%;
   display: block;
 }
-/* in hover compare "Open" in alto a sinistra, impaginato come le didascalie delle copertine */
+.Album__item {
+  position: relative;
+}
+.Album__thumb {
+  width: 100%;
+}
+/* in hover compare "Open & Download" in alto a sinistra, impaginato come le didascalie delle copertine */
 .Album__open {
   display: none;
 }
+.Album__open a {
+  pointer-events: auto;
+  color: #fff;
+  text-decoration: none;
+}
+.Album__open a:hover {
+  color: var(--hero-hover, #87f7a6);
+}
 @media (hover: hover) {
-  .Album__thumb:hover .Album__open {
+  .Album__item:hover .Album__open {
     display: block;
   }
 }

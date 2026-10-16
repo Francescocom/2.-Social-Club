@@ -15,6 +15,10 @@
   document.head.appendChild(s);
 
   function img(url, p) { return url.split('?')[0] + '?' + p + '&auto=format&q=70'; }
+  // ?dl= fa scaricare il file da Sanity invece di aprirlo nel browser
+  function downloadUrl(p, i) {
+    return (p.download || p.full).split('?')[0] + '?dl=social-club-' + (i + 1) + '.jpg';
+  }
   function el(tag, cls, text) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -49,9 +53,16 @@
       im.alt = '';
       im.src = img(p.download || p.full, 'w=500&h=750&fit=crop');
       b.appendChild(im);
-      b.appendChild(el('span', 'PhotoGallery__caption Album__open', 'Open'));
       b.addEventListener('click', function () { open(i, true); });
-      grid.appendChild(b);
+      // "Open" è il clic sulla foto; "Download" scarica il file originale
+      var label = el('span', 'PhotoGallery__caption Album__open', 'Open & ');
+      var dl = el('a', null, 'Download');
+      dl.href = downloadUrl(p, i);
+      label.appendChild(dl);
+      var item = el('div', 'Album__item');
+      item.appendChild(b);
+      item.appendChild(label);
+      grid.appendChild(item);
     });
 
     // ── Lightbox ──
@@ -115,7 +126,7 @@
     function update() {
       var n = String(idx + 1).padStart(2, '0') + ' / ' + String(photos.length).padStart(2, '0');
       info.textContent = title.join('      ') + '      ' + n;
-      download.href = photos[idx].download || photos[idx].full;
+      download.href = downloadUrl(photos[idx], idx);
       prevBtn.disabled = idx === 0;
       nextBtn.disabled = idx === photos.length - 1;
       load(idx);
