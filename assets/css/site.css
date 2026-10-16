@@ -1242,31 +1242,29 @@ a.format__cardCta:hover {
   .Gallery__switch {
     white-space: normal;
   }
+  .Gallery__switch {
+    position: relative;
+  }
+  /* tendina aperta: livello sopra la pagina, fondo nero a tutta larghezza.
+     Le righe seguono l'interlinea del sito (--line) a partire dall'etichetta. */
   .Gallery__switch.Gallery__expanded .Gallery__switchList {
+    position: absolute;
+    top: 100%;
+    left: calc(-1 * var(--pad));
+    width: 100vw;
+    padding-top: calc((var(--line) - var(--ui)) / 2);
+    padding-bottom: var(--pad);
+    background: #000;
     flex-direction: column;
-    align-items: flex-start;
-    margin-top: 4px;
     display: flex;
   }
   .Gallery__switch.Gallery__expanded .Gallery__sep {
     display: none;
   }
-  .Gallery__switch.Gallery__expanded a {
-    line-height: var(--line);
-  }
-  /* tendina aperta: fondo nero a tutta larghezza, per leggerla sopra le foto */
   .Gallery__switch.Gallery__expanded .Gallery__switchList a {
-    background: #000;
-    width: 100vw;
-    padding: 0.15em var(--pad);
-    margin-left: calc(-1 * var(--pad));
+    line-height: var(--line);
+    padding: 0 var(--pad);
     display: block;
-  }
-  .Gallery__switch.Gallery__expanded .Gallery__switchList {
-    margin-top: 0;
-  }
-  .Gallery__switch.Gallery__expanded .Gallery__switchList > span {
-    display: flex;
   }
 }
 /* in alto a destra: Go to Tickets + icone indice / copertine */
@@ -1507,11 +1505,16 @@ a.format__cardCta:hover {
   object-fit: cover;
   width: 100%;
   height: 100%;
-  transition: opacity 0.15s;
   display: block;
 }
-.Album__thumb:hover img {
-  opacity: 0.75;
+/* in hover compare "Open" in alto a sinistra, impaginato come le didascalie delle copertine */
+.Album__open {
+  display: none;
+}
+@media (hover: hover) {
+  .Album__thumb:hover .Album__open {
+    display: block;
+  }
 }
 @media (max-width: 1100px) {
   .Album__grid {

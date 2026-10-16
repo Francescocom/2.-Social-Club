@@ -49,6 +49,7 @@
       im.alt = '';
       im.src = img(p.download || p.full, 'w=500&h=750&fit=crop');
       b.appendChild(im);
+      b.appendChild(el('span', 'PhotoGallery__caption Album__open', 'Open'));
       b.addEventListener('click', function () { open(i, true); });
       grid.appendChild(b);
     });
