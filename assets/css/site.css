@@ -640,6 +640,16 @@ button {
 .FormatHero__heroExplore a:hover {
   color: var(--hero-hover, #87f7a6);
 }
+/* Prova: Tickets e Gallery nella font di "Compra Tickets", la & resta Helvetica.
+   Stessa altezza delle maiuscole delle due font, quindi stesso corpo. */
+.FormatHero__heroExplore a {
+  font-family: var(--font-londrina), sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.FormatHero__heroExplore {
+  gap: 0.22em;
+}
 @media (max-width: 767px) {
   .FormatHero__heroExplore {
     font-size: 9vw;
@@ -1147,3 +1157,388 @@ a.format__cardCta:hover {
   text-decoration: underline;
 }
 
+
+/* ═════════ Pagina evento: anteprima ultimi album + "More in Gallery" ═════════ */
+.PhotoGallery__cardBtn {
+  color: inherit;
+  text-decoration: none;
+}
+@media (min-width: 768px) {
+  .PhotoGallery__grid .PhotoGallery__card:nth-child(n + 4) {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .PhotoGallery__grid .PhotoGallery__card:nth-child(n + 5) {
+    display: none;
+  }
+}
+.PhotoGallery__more {
+  background: #000;
+  text-align: center;
+  padding: var(--gap) var(--pad) 0;
+}
+.PhotoGallery__more a {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  letter-spacing: var(--ls);
+  font-weight: 400;
+  line-height: 1.1;
+  color: #fff;
+  text-decoration: none;
+}
+.PhotoGallery__more a:hover {
+  color: var(--hero-hover, #87f7a6);
+}
+@media (max-width: 767px) {
+  .PhotoGallery__more {
+    padding-top: 40pt;
+  }
+  .PhotoGallery__more a {
+    font-size: 9vw;
+  }
+}
+
+/* ═════════ Pagina Gallery (elenco album di un format) ═════════ */
+.Gallery__page {
+  color: #fff;
+  background: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.Gallery__nav {
+  top: var(--pad);
+  left: var(--pad);
+  right: var(--pad);
+  z-index: 60;
+  font-size: var(--ui);
+  letter-spacing: var(--ls);
+  font-weight: 400;
+  line-height: 1;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex;
+  position: absolute;
+}
+.Gallery__nav a {
+  color: #fff;
+  text-decoration: none;
+}
+/* in alto a sinistra: passa da una gallery all'altra (come il menu format delle pagine evento) */
+.Gallery__switch {
+  white-space: pre;
+  cursor: pointer;
+}
+.Gallery__switchList {
+  display: none;
+}
+@media (min-width: 768px) {
+  .Gallery__switch:hover .Gallery__switchCurrent {
+    display: none;
+  }
+  .Gallery__switch:hover .Gallery__switchList {
+    display: inline;
+  }
+}
+@media (max-width: 767px) {
+  .Gallery__switch {
+    white-space: normal;
+  }
+  .Gallery__switch.Gallery__expanded .Gallery__switchList {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 4px;
+    display: flex;
+  }
+  .Gallery__switch.Gallery__expanded .Gallery__sep {
+    display: none;
+  }
+  .Gallery__switch.Gallery__expanded a {
+    line-height: var(--line);
+  }
+}
+/* in alto a destra: icone indice / copertine */
+.Gallery__views {
+  gap: 0.6em;
+  display: flex;
+}
+.Gallery__viewBtn {
+  font-size: inherit;
+  cursor: pointer;
+  opacity: 0.35;
+  background: 0 0;
+  border: none;
+  padding: 0;
+  line-height: 0;
+}
+.Gallery__viewBtn[aria-pressed="true"],
+.Gallery__viewBtn:hover {
+  opacity: 1;
+}
+.Gallery__viewBtn svg {
+  width: 0.72em;
+  height: 0.72em;
+  display: block;
+}
+.Gallery__content {
+  padding-top: calc(var(--pad) * 2 + var(--line) * 2);
+  flex: 1;
+}
+.Gallery__view[hidden] {
+  display: none;
+}
+
+/* Vista indice: una riga di testo per album + striscia di miniature che scorre in orizzontale */
+.Gallery__row + .Gallery__row {
+  margin-top: var(--line);
+}
+.Gallery__rowText {
+  font-size: var(--ui);
+  letter-spacing: var(--ls);
+  line-height: var(--line);
+  color: #fff;
+  padding: 0 var(--pad) calc(var(--pad) / 2);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto;
+  gap: 0 2em;
+  text-decoration: none;
+  display: grid;
+}
+.Gallery__rowText:hover {
+  color: var(--hero-hover, #87f7a6);
+}
+.Gallery__rowCount {
+  text-align: right;
+  font-feature-settings: "tnum" 1;
+}
+.Gallery__strip {
+  height: 220px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+  display: flex;
+  overflow-x: auto;
+}
+.Gallery__strip::-webkit-scrollbar {
+  display: none;
+}
+.Gallery__strip.Gallery__dragging {
+  cursor: grabbing;
+}
+.Gallery__strip a {
+  flex: none;
+  height: 100%;
+  display: block;
+}
+.Gallery__strip img {
+  width: auto;
+  height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+  background: #111;
+  display: block;
+}
+@media (max-width: 767px) {
+  .Gallery__rowText {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .Gallery__rowVenue {
+    grid-column: 1 / -1;
+  }
+  .Gallery__strip {
+    height: 140px;
+  }
+}
+
+/* Vista copertine: come la griglia attuale ma più densa */
+.Gallery__covers {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: grid;
+}
+@media (min-width: 1700px) {
+  .Gallery__covers {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+.Gallery__covers .PhotoGallery__cardImg {
+  aspect-ratio: 4/5;
+}
+.Gallery__covers .PhotoGallery__cardImg img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+@media (max-width: 1100px) {
+  .Gallery__covers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .Gallery__covers {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 10px;
+  }
+}
+.Gallery__ctaRow {
+  font-size: var(--ui);
+  letter-spacing: var(--ls);
+  padding: var(--gap) var(--pad) 0;
+  text-align: center;
+}
+.Gallery__ctaRow a {
+  color: #fff;
+  text-decoration: none;
+}
+.Gallery__ctaRow a:hover {
+  color: var(--hero-hover, #87f7a6);
+}
+@media (max-width: 767px) {
+  .Gallery__ctaRow {
+    padding-top: 40pt;
+  }
+}
+
+/* ═════════ Pagina album: tutte le foto in griglia fitta ═════════ */
+.Album__head {
+  font-size: var(--ui);
+  letter-spacing: var(--ls);
+  line-height: var(--line);
+  white-space: pre-line;
+  padding: calc(var(--pad) * 2 + var(--line) * 2) var(--pad) var(--line);
+}
+.Album__grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  display: grid;
+}
+.Album__thumb {
+  aspect-ratio: 2/3;
+  cursor: zoom-in;
+  background: #111;
+  border: none;
+  padding: 0;
+  display: block;
+  position: relative;
+}
+.Album__thumb img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.15s;
+  display: block;
+}
+.Album__thumb:hover img {
+  opacity: 0.75;
+}
+@media (max-width: 1100px) {
+  .Album__grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .Album__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ═════════ Lightbox: foto a tutta pagina, scorrimento laterale animato ═════════ */
+.Lightbox {
+  z-index: 300;
+  color: #fff;
+  touch-action: none;
+  background: #000;
+  animation: 0.2s Lightbox__in;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+@keyframes Lightbox__in {
+  0% {
+    opacity: 0;
+  }
+}
+.Lightbox__track {
+  height: 100%;
+  will-change: transform;
+  transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  display: flex;
+}
+.Lightbox__track.Lightbox__dragging {
+  transition: none;
+}
+.Lightbox__slide {
+  flex: none;
+  width: 100vw;
+  height: 100%;
+  padding: calc(var(--pad) * 2 + var(--ui)) var(--pad);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.Lightbox__slide img {
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+  cursor: pointer;
+}
+.Lightbox__info,
+.Lightbox__bar {
+  font-size: var(--ui);
+  letter-spacing: var(--ls);
+  font-weight: 400;
+  line-height: 1;
+  z-index: 2;
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+}
+.Lightbox__info {
+  top: var(--pad);
+  white-space: pre;
+  font-feature-settings: "tnum" 1;
+  padding-right: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.Lightbox__bar {
+  bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+  grid-template-columns: 1fr auto 1fr;
+  display: grid;
+}
+.Lightbox__bar > :first-child {
+  justify-self: start;
+}
+.Lightbox__bar > :last-child {
+  justify-self: end;
+}
+.Lightbox__bar a,
+.Lightbox__bar button {
+  font: inherit;
+  letter-spacing: inherit;
+  color: #fff;
+  cursor: pointer;
+  background: 0 0;
+  border: none;
+  padding: 0;
+  text-decoration: none;
+}
+.Lightbox__bar a:hover,
+.Lightbox__bar button:hover {
+  color: var(--hero-hover, #87f7a6);
+}
+.Lightbox__bar button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .Lightbox__info {
+    white-space: normal;
+    line-height: var(--line);
+  }
+  .Lightbox__slide {
+    padding: calc(var(--pad) * 2 + var(--line) * 2) 0;
+  }
+}

@@ -5,10 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gallery After Hours — Social Club</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/HelveticaNowDisplay-Regular.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
-  <style>body { background: #fff; }</style>
+  <script src="assets/data/after-hours.js"></script>
+  <script src="assets/js/gallery.js" defer></script>
 </head>
-<body>
-<!-- Gallery After Hours: tutti gli album fotografici (da progettare) -->
+<body data-format="after-hours">
+<div class="Gallery__page">
+  <nav class="Gallery__nav">
+    <div class="Gallery__switch"><span class="Gallery__switchCurrent">Gallery After Hours</span><span class="Gallery__switchList"><span><a href="bunny-club-gallery.html">Gallery Bunny Club</a></span><span><span class="Gallery__sep">      </span><a href="brat-party-gallery.html">Gallery Brat Party</a></span><span><span class="Gallery__sep">      </span><a href="only-rihanna-gallery.html">Gallery Only Rihanna</a></span></span></div>
+    <div class="Gallery__views">
+      <button class="Gallery__viewBtn" data-show="index" aria-label="Vista indice" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="1" y1="4" x2="23" y2="4"/><rect x="1" y="8" width="5" height="4"/><rect x="9" y="8" width="5" height="4"/><rect x="17" y="8" width="6" height="4"/><line x1="1" y1="16" x2="23" y2="16"/><rect x="1" y="20" width="5" height="3"/><rect x="9" y="20" width="5" height="3"/><rect x="17" y="20" width="6" height="3"/></svg></button>
+      <button class="Gallery__viewBtn" data-show="covers" aria-label="Vista copertine" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="1" width="9" height="9"/><rect x="14" y="1" width="9" height="9"/><rect x="1" y="14" width="9" height="9"/><rect x="14" y="14" width="9" height="9"/></svg></button>
+    </div>
+  </nav>
+  <main class="Gallery__content">
+    <!-- album generati da assets/js/gallery.js con i dati di assets/data/after-hours.js -->
+    <div class="Gallery__view Gallery__index" data-view="index"></div>
+    <div class="Gallery__view Gallery__covers" data-view="covers" hidden></div>
+    <div class="Gallery__ctaRow"><a href="after-hours.html">Back to After Hours</a></div>
+  </main>
+  <footer class="Footer__footer">
+    <p><span>Social Club Srls.</span><span>Via Viale Strada 6, 20123 Milano (MI), Italy</span></p>
+    <p><span>Instagram</span><span>Facebook</span><a href="mailto:info@socialclubevents.it">Mail us</a><a href="privacy.html">Privacy Policies</a><a href="cookies.html">Cookies Policy</a><a href="legal.html">Legal Notes</a></p>
+  </footer>
+</div>
 </body>
 </html>
