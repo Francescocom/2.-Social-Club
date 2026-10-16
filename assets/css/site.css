@@ -635,7 +635,7 @@ button {
 }
 /* in hover smettono di lampeggiare, restano accesi e cliccabili */
 .FormatHero__heroExplore:hover > * {
-  animation: none;
+  opacity: 1 !important;
 }
 .FormatHero__heroExplore a:hover {
   color: var(--hero-hover, #87f7a6);
@@ -1176,13 +1176,13 @@ a.format__cardCta:hover {
 .PhotoGallery__more {
   background: #000;
   text-align: center;
-  padding: var(--gap) var(--pad) 0;
+  padding: var(--pad) var(--pad) 0;
 }
 .PhotoGallery__more a {
-  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-size: var(--ui);
   letter-spacing: var(--ls);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: var(--line);
   color: #fff;
   text-decoration: none;
 }
@@ -1191,10 +1191,8 @@ a.format__cardCta:hover {
 }
 @media (max-width: 767px) {
   .PhotoGallery__more {
-    padding-top: 40pt;
-  }
-  .PhotoGallery__more a {
-    font-size: 9vw;
+    padding-top: 0;
+    padding-bottom: 40pt;
   }
 }
 
@@ -1256,13 +1254,13 @@ a.format__cardCta:hover {
   .Gallery__switch.Gallery__expanded a {
     line-height: var(--line);
   }
-  /* tendina aperta: fondo nero lungo quanto ogni riga, per leggerla sopra le foto */
-  .Gallery__switch.Gallery__expanded .Gallery__switchCurrent,
+  /* tendina aperta: fondo nero a tutta larghezza, per leggerla sopra le foto */
   .Gallery__switch.Gallery__expanded .Gallery__switchList a {
     background: #000;
-    padding: 0.15em 0.3em;
-    margin-left: -0.3em;
-    display: inline-block;
+    width: 100vw;
+    padding: 0.15em var(--pad);
+    margin-left: calc(-1 * var(--pad));
+    display: block;
   }
   .Gallery__switch.Gallery__expanded .Gallery__switchList {
     margin-top: 0;
@@ -1273,18 +1271,29 @@ a.format__cardCta:hover {
 }
 /* in alto a destra: Go to Tickets + icone indice / copertine */
 .Gallery__right {
-  align-items: center;
-  gap: 2em;
+  align-items: baseline;
+  gap: 1.6em; /* come i 6 spazi tra le voci dei menu */
   display: flex;
 }
-.Gallery__nav .Gallery__tickets:hover,
-.Gallery__nav .Gallery__switchList a:hover,
-.Gallery__nav .Album__back:hover,
-.Gallery__nav .Album__event:hover {
+/* hover verde negli header: pagine evento, gallery, album e foto a tutta pagina */
+.TopNav__topLeft a:hover,
+.TopNav__topRight a:hover,
+.Gallery__nav a:hover,
+.Gallery__viewBtn:hover,
+.PhotoGallery__close:hover {
   color: var(--hero-hover, #87f7a6);
 }
-.Gallery__nav > *,
-.Gallery__right > * {
+.PhotoGallery__close:hover svg {
+  stroke: var(--hero-hover, #87f7a6);
+}
+@media (hover: hover) {
+  .Gallery__switch:hover .Gallery__switchCurrent {
+    color: var(--hero-hover, #87f7a6);
+  }
+}
+.Gallery__nav > a,
+.Gallery__right > *,
+.Gallery__switchCurrent {
   white-space: nowrap;
 }
 @media (max-width: 767px) {
@@ -1297,26 +1306,29 @@ a.format__cardCta:hover {
   }
 }
 .Gallery__views {
-  gap: 0.6em;
+  gap: 0.5em;
   display: flex;
 }
 .Gallery__viewBtn {
-  font-size: inherit;
+  font: inherit;
+  color: #fff;
   cursor: pointer;
-  opacity: 0.35;
+  opacity: 0.4;
   background: 0 0;
   border: none;
   padding: 0;
-  line-height: 0;
+  line-height: 1;
 }
 .Gallery__viewBtn[aria-pressed="true"],
 .Gallery__viewBtn:hover {
   opacity: 1;
 }
+/* 0.712em = altezza delle maiuscole di Helvetica Now: l'icona sta tra linea di base e maiuscole */
 .Gallery__viewBtn svg {
-  width: 0.72em;
-  height: 0.72em;
-  display: block;
+  width: 0.712em;
+  height: 0.712em;
+  vertical-align: baseline;
+  display: inline-block;
 }
 .Gallery__content {
   padding-top: calc(var(--pad) * 2 + var(--line) * 2);
@@ -1365,7 +1377,7 @@ a.format__cardCta:hover {
   color: var(--hero-hover, #87f7a6);
 }
 .Gallery__rowText:hover .Gallery__rowSee {
-  animation: none;
+  opacity: 1 !important; /* vince sull'animazione senza fermarla: resta in fase con le altre */
 }
 .Gallery__strip {
   height: 220px;

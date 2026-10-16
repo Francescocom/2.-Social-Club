@@ -92,7 +92,7 @@
   var covers = document.querySelector('[data-view="covers"]');
   albums.forEach(function (a) {
     var card = el('div', 'PhotoGallery__card');
-    card.appendChild(el('div', 'PhotoGallery__caption', a.caption + (a.photos.length > 1 ? '\n' + count(a) : '')));
+    card.appendChild(el('div', 'PhotoGallery__caption', a.caption));
     var link = el('a', 'PhotoGallery__cardBtn');
     link.href = albumUrl(a);
     var box = el('span', 'PhotoGallery__cardImg');
