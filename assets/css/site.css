@@ -1273,22 +1273,7 @@ a.format__cardCta:hover {
   gap: 1.6em; /* come i 6 spazi tra le voci dei menu */
   display: flex;
 }
-/* hover verde negli header: pagine evento, gallery, album e foto a tutta pagina */
-.TopNav__topLeft a:hover,
-.TopNav__topRight a:hover,
-.Gallery__nav a:hover,
-.Gallery__viewBtn:hover,
-.PhotoGallery__close:hover {
-  color: var(--hero-hover, #87f7a6);
-}
-.PhotoGallery__close:hover svg {
-  stroke: var(--hero-hover, #87f7a6);
-}
-@media (hover: hover) {
-  .Gallery__switch:hover .Gallery__switchCurrent {
-    color: var(--hero-hover, #87f7a6);
-  }
-}
+/* header (pagine evento, gallery, album): nessun colore in hover, come sul sito */
 .Gallery__nav > a,
 .Gallery__right > *,
 .Gallery__switchCurrent {
@@ -1660,4 +1645,18 @@ a.format__cardCta:hover {
 }
 .Gallery__showMore[hidden] {
   display: none;
+}
+
+/* touch: niente verde "appiccicato" dopo il tap (su telefono l'hover non esiste) */
+@media (hover: none) {
+  .FormatHero__heroExplore a:hover,
+  .PhotoGallery__more a:hover,
+  .Gallery__rowText:hover,
+  .Gallery__ctaRow a:hover,
+  .Gallery__showMore button:hover,
+  .Album__open a:hover,
+  .Lightbox__bar a:hover,
+  .Lightbox__bar button:hover {
+    color: #fff;
+  }
 }
